@@ -1,2 +1,2 @@
 # front-end
-마라탕탕후루후루
+[2024 Likelion] 중앙해커톤
