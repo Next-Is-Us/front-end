@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 
 const Start = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>오늘의 맘에 오신 것을 환영해요!</Text>
-      <Text style={styles.subText}>어떤 사용자로 활동할<br/>
-      예정이신가요?</Text>
-
+      <Text style={styles.subText}>어떤 사용자로 활동할</Text>
+      <Text style={[styles.subText, { marginBottom: 32 }]}>예정이신가요?</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
           <Image
-            source={{ uri: 'https://your-image-url.com/image1.png' }}
+            source={require('../assets/images/Woman.png')}
             style={styles.image}
           />
           <Text style={styles.buttonText}>엄마</Text>
@@ -36,52 +36,82 @@ const Start = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: '#fff',
     padding: 20,
   },
   headerText: {
-   
+    marginTop: 88,
+    color: '#767676',
+    fontFamily: 'Pretendard',
     fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing: -0.35,
+    marginBottom: 4,
   },
   subText: {
-    fontSize: 18,
-    marginBottom: 20,
+    color: '#111',
+    fontFamily: 'Pretendard',
+    fontSize: 24,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 34,
+    letterSpacing: -0.35,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 30,
+    marginBottom: 296,
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#E8EAF6',
+    justifyContent: 'center',
+    width: 165,
+    height: 165,
+    borderRadius: 24,
+    alignItems: 'center',
+    backgroundColor: '#F7F7FB',
     padding: 10,
-    borderRadius: 10,
   },
   image: {
-    width: 80,
-    height: 80,
-    marginBottom: 8,
+    width: 60,
+    height: 60,
+    marginBottom: 12,
   },
   buttonText: {
     fontSize: 18,
+    color: '#111',
+    fontFamily: 'Pretendard',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 26,
+    letterSpacing: -0.45,
   },
   nextButton: {
-    backgroundColor: '#6200EE',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
+    backgroundColor: 'rgba(163, 15, 250, 0.15)',
+    paddingTop: 14,
+    paddingBottom: 14,
+    paddingLeft: 16,
+    paddingRight: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
     width: '100%',
+    borderRadius: 12,
   },
   nextButtonText: {
     color: '#fff',
-    fontSize: 20,
     textAlign: 'center',
+    fontFamily: 'Pretendard',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 24,
+    letterSpacing: -0.4,
   },
 });
 
