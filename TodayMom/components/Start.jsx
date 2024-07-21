@@ -1,32 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { SvgUri } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 
 const Start = () => {
+  const [selectedButton, setSelectedButton] = useState(null);
+  const navigation = useNavigation();
+
+  const handlePress = (buttonId) => {
+    setSelectedButton(buttonId);
+  };
+
+  const getButtonStyle = (buttonId) => {
+    if (selectedButton === buttonId) {
+      return [styles.button, styles.selectedButton];
+    }
+    return styles.button;
+  };
+
+  const getTextStyle = (buttonId) => {
+    if (selectedButton === buttonId) {
+      return [styles.buttonText, styles.selectedButtonText];
+    }
+    return styles.buttonText;
+  };
+
+  const getNextButtonStyle = () => {
+    if (selectedButton) {
+      return [styles.nextButton, styles.nextButtonActive];
+    }
+    return styles.nextButton;
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>오늘의 맘에 오신 것을 환영해요!</Text>
       <Text style={styles.subText}>어떤 사용자로 활동할</Text>
       <Text style={[styles.subText, { marginBottom: 32 }]}>예정이신가요?</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={getButtonStyle('mom')}
+          onPress={() => handlePress('mom')}
+        >
           <Image
             source={require('../assets/images/Woman.png')}
             style={styles.image}
+            resizeMode="contain"
           />
-          <Text style={styles.buttonText}>엄마</Text>
+          <Text style={getTextStyle('mom')}>엄마</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={getButtonStyle('daughter')}
+          onPress={() => handlePress('daughter')}
+        >
           <Image
-            source={{ uri: 'https://your-image-url.com/image2.png' }}
+            source={require('../assets/images/Daughter.png')}
             style={styles.image}
+            resizeMode="contain"
           />
-          <Text style={styles.buttonText}>자녀</Text>
+          <Text style={getTextStyle('daughter')}>자녀</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.nextButton}>
+      <TouchableOpacity
+        style={getNextButtonStyle()}
+        onPress={() => {
+          navigation.navigate('Nickname');
+        }}
+      >
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>
     </View>
@@ -40,6 +81,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     padding: 20,
+  },
+  selectedButtonText: {
+    color: '#A30FFA',
+  },
+  nextButtonActive: {
+    backgroundColor: '#A30FFA',
   },
   headerText: {
     marginTop: 88,
@@ -73,13 +120,17 @@ const styles = StyleSheet.create({
     width: 165,
     height: 165,
     borderRadius: 24,
-    alignItems: 'center',
     backgroundColor: '#F7F7FB',
     padding: 10,
   },
+  selectedButton: {
+    borderColor: 'rgba(163, 15, 250, 0.50)',
+    borderWidth: 1,
+    backgroundColor: 'rgba(163, 15, 250, 0.15)',
+  },
   image: {
-    width: 60,
-    height: 60,
+    width: 56,
+    height: 56,
     marginBottom: 12,
   },
   buttonText: {
