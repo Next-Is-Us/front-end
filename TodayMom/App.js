@@ -6,6 +6,7 @@ import Start from './components/Start.jsx';
 import { Button } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Image } from 'react-native';
+import Invite from './components/Invite.jsx';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,11 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">
+        <Stack.Screen
+          name="Start"
+          component={Start}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Nickname"
           component={Nickname}
@@ -30,15 +36,32 @@ function App() {
               paddingLeft: 20,
             },
             headerStyle: {
-              elevation: 0, // Android에서의 그림자 제거
-              shadowOpacity: 0, // iOS에서의 그림자 제거
+              elevation: 0,
+              shadowOpacity: 0,
             },
           })}
         />
         <Stack.Screen
-          name="Start"
-          component={Start}
-          options={{ headerShown: false }}
+          name="Invite"
+          component={Invite}
+          options={({ navigation }) => ({
+            headerTitle: '',
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Image
+                  source={require('./assets/images/leftallow.png')}
+                  style={{ width: 25, height: 25 }}
+                />
+              </TouchableOpacity>
+            ),
+            headerLeftContainerStyle: {
+              paddingLeft: 20,
+            },
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

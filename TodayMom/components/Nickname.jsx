@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const Nickname = () => {
   const [nickname, setNickname] = useState('');
 
   const isButtonEnabled = nickname.length > 0;
+
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -26,7 +29,12 @@ const Nickname = () => {
 
       <TouchableOpacity
         style={[styles.nextButton, isButtonEnabled && styles.buttonActive]}
-        onPress={() => console.log('다음 단계로!')}
+        onPress={() => {
+          if (isButtonEnabled) {
+            navigation.navigate('Invite');
+          }
+        }}
+        disabled={!isButtonEnabled} // 버튼이 비활성화 상태일 때는 클릭 이벤트를 막음
       >
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>
