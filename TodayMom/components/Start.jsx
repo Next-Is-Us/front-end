@@ -65,8 +65,11 @@ const Start = () => {
       <TouchableOpacity
         style={getNextButtonStyle()}
         onPress={() => {
-          navigation.navigate('Nickname');
+          if (selectedButton) {
+            navigation.navigate('Nickname');
+          }
         }}
+        disabled={!selectedButton} // selectedButton이 null이면 버튼을 비활성화
       >
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>
