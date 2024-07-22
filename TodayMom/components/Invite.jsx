@@ -8,37 +8,30 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { Clipboard } from 'react-native';
+import { useRef } from 'react';
 
 const Invite = () => {
   const [link, setLink] = useState('www.todays.mom');
-  const [toastVisible, setToastVisible] = useState(false);
-  const [fadeAnim] = useState(new Animated.Value(0));
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const copyToClipboard = () => {
-    Clipboard.setString('www.todays.mom');
-    Toast.show({
-      type: 'success',
-      position: 'bottom',
-      text1: '링크가 복사되었습니다!',
-      visibilityTime: 4000,
-      autoHide: true,
-      topOffset: 60,
-      bottomOffset: 40,
-      style: {
-        backgroundColor: 'rgba(0, 0, 0, 0.6)', // 정확한 색상 코드 사용
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        borderRadius: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      text1Style: {
-        color: '#000000',
-        fontFamily: 'Pretendard',
-        fontSize: 12,
-        fontWeight: '400',
-        lineHeight: 18,
-      },
+  const handleCopy = () => {
+    // 클립보드에 링크 복사
+    Clipboard.setString(link);
+
+    // 애니메이션 페이드 인
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      // 2초 후에 페이드 아웃
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }).start();
+      }, 2000);
     });
   };
 
@@ -54,12 +47,22 @@ const Invite = () => {
         <Text style={styles.linkText} numberOfLines={1}>
           {link}
         </Text>
-        <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
+        <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
           <Text style={styles.copyButtonText}>복사</Text>
         </TouchableOpacity>
       </View>
 
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      {/* <Animated.View style={[styles.centeredView, { opacity: fadeAnim }]}>
+        <View style={styles.toast}>
+          <Text style={[styles.link, { opacity: fadeAnim }]}>링크가 복사되었습니다!</Text>
+        </View>
+      </Animated.View> */}
+
+      <View style={styles.centeredView}>
+        <View style={styles.toast}>
+          <Text style={styles.link}>링크가 복사되었습니다!</Text>
+        </View>
+      </View>
 
       <TouchableOpacity style={styles.nextButton}>
         <Text style={styles.nextButtonText}>가입 완료</Text>
@@ -75,6 +78,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     padding: 20,
+  },
+  centeredView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 48,
+    backgroundColor: 'white',
+  },
+  toast: {
+    backgroundColor: 'rgba(0, 0, 0, 0.60)',
+    borderRadius: 4,
+    width: 139,
+    height: 38,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  link: {
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+    letterSpacing: -0.3,
   },
   subText: {
     color: '#111',
@@ -108,7 +136,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     backgroundColor: '#F7F7FB',
-    marginBottom: 402,
+    marginBottom: 316,
   },
   linkText: {
     flex: 1,
@@ -157,24 +185,6 @@ const styles = StyleSheet.create({
   },
   buttonActive: {
     backgroundColor: '#A30FFA',
-  },
-  toast: {
-    position: 'absolute',
-    bottom: 48, // marginTop으로 지정된 48px 위에 위치
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.60)',
-    borderRadius: 4,
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  toastText: {
-    color: '#fff',
-    fontFamily: 'Pretendard',
-    fontSize: 12,
-    lineHeight: 18,
   },
 });
 
