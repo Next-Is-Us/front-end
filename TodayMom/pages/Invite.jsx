@@ -9,11 +9,12 @@ import {
 import Toast from 'react-native-toast-message';
 import { Clipboard } from 'react-native';
 import { useRef } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const Invite = () => {
   const [link, setLink] = useState('www.todays.mom');
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
+  const navigation = useNavigation();
   const handleCopy = () => {
     // 클립보드에 링크 복사
     Clipboard.setString(link);
@@ -64,7 +65,12 @@ const Invite = () => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.nextButton}>
+      <TouchableOpacity
+        style={styles.nextButton}
+        onPress={() => {
+          navigation.navigate('Status');
+        }}
+      >
         <Text style={styles.nextButtonText}>가입 완료</Text>
       </TouchableOpacity>
     </View>

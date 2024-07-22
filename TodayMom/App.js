@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Nickname from './components/Nickname';
-import Start from './components/Start.jsx';
+import Nickname from './pages/Nickname';
+import Start from './pages/Start.jsx';
 import { Button } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Image } from 'react-native';
-import Invite from './components/Invite.jsx';
+import Invite from './pages/Invite.jsx';
+import Status from './pages/Status.jsx';
+import { Text } from 'react-native';
+import { View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +23,61 @@ function App() {
           component={Start}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Status"
+          component={Status}
+          options={({ navigation }) => ({
+            headerShown: true,
+            headerBackground: () => (
+              <Image
+                source={require('./assets/images/StatusBack.png')}
+                style={{ width: '100%', height: '100%' }}
+                resizeMode="cover"
+              />
+            ),
+            headerTitle: '',
+            headerLeft: () => (
+              <View style={styles.leftHeaderContainer}>
+                <TouchableOpacity
+                  onPress={() => console.log('Home Icon tapped')}
+                >
+                  <Image
+                    source={require('./assets/images/tmicon.png')}
+                    style={(resizeMode = 'contain')}
+                  />
+                </TouchableOpacity>
+                <Image
+                  source={require('./assets/images/todaymom.png')}
+                  style={styles.icon2}
+                />
+              </View>
+            ),
+            headerRight: () => (
+              <View style={styles.rightHeaderContainer}>
+                <TouchableOpacity
+                  onPress={() => console.log('Profile Icon tapped')}
+                >
+                  <Image
+                    source={require('./assets/images/profile.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => console.log('Notification Icon tapped')}
+                >
+                  <Image
+                    source={require('./assets/images/noti.png')}
+                    style={[styles.icon, { marginLeft: 16 }]}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+            headerStyle: {
+              height: 100,
+            },
+          })}
+        />
+
         <Stack.Screen
           name="Nickname"
           component={Nickname}
@@ -67,5 +126,32 @@ function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  leftHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 20,
+    paddingBottom: 14,
+    paddingTop: 14,
+  },
+  rightHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+    paddingBottom: 14,
+    paddingTop: 14,
+  },
+  icon: {},
+  icon2: {
+    marginLeft: 8,
+    resizeMode: 'contain',
+  },
+  headerText: {
+    color: '#fff',
+    fontSize: 18,
+    marginLeft: 8,
+  },
+});
 
 export default App;
