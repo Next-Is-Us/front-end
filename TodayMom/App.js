@@ -20,13 +20,13 @@ function App() {
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="MomHome">
+        <Stack.Navigator initialRouteName="Start">
           <Stack.Screen
             name="Start"
             component={Start}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Status"
             component={Status}
             options={({ navigation }) => ({
@@ -79,7 +79,7 @@ function App() {
                 height: 100,
               },
             })}
-          />
+          /> */}
 
           <Stack.Screen name="MomHome" component={MomHomeScreen} options={{ headerShown: false }}/>
 

@@ -68,7 +68,7 @@ const Invite = () => {
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => {
-          navigation.navigate('Status');
+          navigation.navigate('MomHome');
         }}
       >
         <Text style={styles.nextButtonText}>가입 완료</Text>
