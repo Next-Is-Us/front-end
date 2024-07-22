@@ -3,8 +3,9 @@ import LogoImg from "../assets/images/logo.svg";
 import LogoText from "../assets/images/logoText.svg";
 import MyPage from "../assets/images/myPage.svg";
 import Notice from "../assets/images/notice.svg";
+import RelationButton from "./RelationButton";
 
-export default function HeaderNav() {
+export default function HeaderNav({relation}) {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.lgooContainer}>
@@ -14,6 +15,7 @@ export default function HeaderNav() {
         <Pressable>
           <LogoText/>
         </Pressable>
+        <RelationButton relation={relation} />
       </View>
       <View style={styles.myLinkContainer}>
         <Pressable>
