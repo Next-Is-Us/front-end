@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, SafeAreaView } from "react-native";
 import TopBackground from "../components/TopBackground";
 import HeaderNav from "../components/HeaderNav";
 import RelationButton from "../components/RelationButton";
@@ -6,6 +6,7 @@ import WeekCalendar from "../components/WeekCalendar";
 import { useState } from "react";
 import ToRecordContainer from "../components/ToRecordContainer";
 import FlowerGrid from "../assets/images/flowerGrid.svg";
+import BottomNav from "../components/BottomNav";
 
 export default function MomHomeScreen() {
   const [invited, setInvited] = useState(true);
@@ -13,12 +14,15 @@ export default function MomHomeScreen() {
 
   return (
     <View style={styles.screen}>
-      <TopBackground>
+      {/* <TopBackground>
         <HeaderNav />
         <View style={styles.buttonContainer}>
-          <RelationButton title="엄마" />
+          <RelationButton mom />
         </View>
-      </TopBackground>
+      </TopBackground> */}
+      <SafeAreaView>
+        <HeaderNav relation="엄마" />
+      </SafeAreaView>
       <View style={styles.bodyContainer}>
         <WeekCalendar />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
@@ -28,6 +32,7 @@ export default function MomHomeScreen() {
           <FlowerGrid />
         </View>
       </View>
+      <BottomNav home />
     </View>
   );
 }
