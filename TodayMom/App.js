@@ -1,17 +1,18 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import Nickname from "./screens/Nickname";
-import Start from "./screens/Start.jsx";
-import { Button, StatusBar } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { Image } from "react-native";
-import Invite from "./screens/Invite.jsx";
-import Status from "./screens/Status.jsx";
-import { Text } from "react-native";
-import { View } from "react-native";
-import { StyleSheet } from "react-native";
-import MomHomeScreen from "./screens/MomHomeScreen.js";
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Nickname from './screens/Nickname';
+import Start from './screens/Start.jsx';
+import { Button, StatusBar } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { Image } from 'react-native';
+import Invite from './screens/Invite.jsx';
+import Status from './screens/Status.jsx';
+import { Text } from 'react-native';
+import { View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import MomHomeScreen from './screens/MomHomeScreen.js';
+import InfoWrite from './screens/InfoWrite.jsx';
 
 const Stack = createStackNavigator();
 
@@ -20,10 +21,15 @@ function App() {
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Start">
+        <Stack.Navigator initialRouteName="InfoWrite">
           <Stack.Screen
             name="Start"
             component={Start}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="InfoWrite"
+            component={InfoWrite}
             options={{ headerShown: false }}
           />
           {/* <Stack.Screen
@@ -81,17 +87,21 @@ function App() {
             })}
           /> */}
 
-          <Stack.Screen name="MomHome" component={MomHomeScreen} options={{ headerShown: false }}/>
+          <Stack.Screen
+            name="MomHome"
+            component={MomHomeScreen}
+            options={{ headerShown: false }}
+          />
 
           <Stack.Screen
             name="Nickname"
             component={Nickname}
             options={({ navigation }) => ({
-              headerTitle: "",
+              headerTitle: '',
               headerLeft: () => (
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                   <Image
-                    source={require("./assets/images/leftallow.png")}
+                    source={require('./assets/images/leftallow.png')}
                     style={{ width: 25, height: 25 }}
                   />
                 </TouchableOpacity>
@@ -109,11 +119,11 @@ function App() {
             name="Invite"
             component={Invite}
             options={({ navigation }) => ({
-              headerTitle: "",
+              headerTitle: '',
               headerLeft: () => (
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                   <Image
-                    source={require("./assets/images/leftallow.png")}
+                    source={require('./assets/images/leftallow.png')}
                     style={{ width: 25, height: 25 }}
                   />
                 </TouchableOpacity>
@@ -135,15 +145,15 @@ function App() {
 
 const styles = StyleSheet.create({
   leftHeaderContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginLeft: 20,
     paddingBottom: 14,
     paddingTop: 14,
   },
   rightHeaderContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginRight: 20,
     paddingBottom: 14,
     paddingTop: 14,
@@ -151,10 +161,10 @@ const styles = StyleSheet.create({
   icon: {},
   icon2: {
     marginLeft: 8,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   headerText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 18,
     marginLeft: 8,
   },
