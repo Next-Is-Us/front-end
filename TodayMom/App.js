@@ -22,7 +22,7 @@ function App() {
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="InfoWrite">
+        <Stack.Navigator initialRouteName="MomHome">
           <Stack.Screen
             name="Start"
             component={Start}
