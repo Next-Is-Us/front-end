@@ -13,6 +13,7 @@ import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import MomHomeScreen from './screens/MomHomeScreen.js';
 import InfoWrite from './screens/InfoWrite.jsx';
+import NewWrite from './screens/NewWrite.js';
 
 const Stack = createStackNavigator();
 
@@ -21,10 +22,15 @@ function App() {
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="InfoWrite">
+        <Stack.Navigator initialRouteName="NewWrite">
           <Stack.Screen
             name="Start"
             component={Start}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="NewWrite"
+            component={NewWrite}
             options={{ headerShown: false }}
           />
           <Stack.Screen
