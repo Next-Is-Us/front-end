@@ -8,64 +8,47 @@ import {
   FlatList,
 } from 'react-native';
 
+const images = {
+  sampleImage: require('../assets/images/beam.png'),
+};
+
 const posts = [
   {
     id: '1',
     title: '게시글 제목',
     content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
+      '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
+    imageUri: 'sampleImage',
   },
   {
     id: '2',
     title: '게시글 제목',
     content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
-  },
-  {
-    id: '3',
-    title: '게시글 제목',
-    content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
-  },
-  {
-    id: '4',
-    title: '게시글 제목',
-    content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
-  },
-  {
-    id: '5',
-    title: '게시글 제목',
-    content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
-  },
-  {
-    id: '6',
-    title: '게시글 제목',
-    content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
-  },
-  {
-    id: '7',
-    title: '게시글 제목',
-    content:
-      '1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다 고칼슘 식품을 섭취합니다.',
+      '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
+    imageUri: null,
   },
 ];
 
 const InfoWrite = () => {
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemContainer}>
-      <View style={styles.textContent}>
-        <Text style={styles.mainText}>{item.title}</Text>
-        <Text style={styles.subText}>{item.content}</Text>
-      </View>
-      <Image
-        source={require('../assets/images/allowright.png')}
-        style={styles.arrowIcon}
-      />
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity style={styles.itemContainer}>
+        {item.imageUri ? (
+          <Image source={images[item.imageUri]} style={styles.thumbnail} />
+        ) : null}
+        <View style={styles.textContent}>
+          <Text style={styles.mainText}>{item.title}</Text>
+          <Text style={styles.subText} numberOfLines={2} ellipsizeMode="tail">
+            {item.content}
+          </Text>
+        </View>
+        <Image
+          source={require('../assets/images/allowright.png')}
+          style={styles.arrowIcon}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -92,6 +75,12 @@ const InfoWrite = () => {
 };
 
 const styles = StyleSheet.create({
+  thumbnail: {
+    width: 68,
+    height: 68,
+    borderRadius: 12,
+    marginRight: 16,
+  },
   write: {
     color: '#FFF',
     fontFamily: 'Pretendard',
@@ -145,7 +134,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF',
     borderRadius: 12,
-    padding: 20,
+    paddingTop: 19,
+    paddingLeft: 16,
+    paddingBottom: 19,
+    paddingRight: 16,
     marginBottom: 10,
   },
   list: {
@@ -181,12 +173,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     lineHeight: 18,
-    width: 280,
-    height: 36,
   },
   arrowIcon: {
     width: 24,
     height: 24,
+    marginLeft: 12,
   },
 });
 
