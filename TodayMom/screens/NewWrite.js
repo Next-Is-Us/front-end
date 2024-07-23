@@ -43,15 +43,15 @@ const NewWrite = () => {
         quality: 1,
       });
 
-      if (!result.cancelled) {
-        setImages([...images, result.uri]);
+      if (!result.cancelled && result.assets) {
+        console.log('Selected image URI: ', result.assets[0].uri);
+        setImages([...images, result.assets[0].uri]);
       }
     } catch (error) {
       console.error('Image Picker Error: ', error);
     }
   };
 
-  // 키보드 숨기기 함수
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -135,9 +135,9 @@ const NewWrite = () => {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.BlankContainer}
               >
-                {images.map((img, index) => (
+                {images.map((uri, index) => (
                   <View key={index} style={styles.plusButton}>
-                    <Image source={{ uri: img }} style={styles.imagePreview} />
+                    <Image source={{ uri: uri }} style={styles.imagePreview} />
                   </View>
                 ))}
                 <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
