@@ -14,6 +14,7 @@ import { StyleSheet } from 'react-native';
 import MomHomeScreen from './screens/MomHomeScreen.js';
 import MomRecordConditionScreen from "./screens/MomRecordConditionScreen.js";
 import InfoWrite from './screens/InfoWrite.jsx';
+import NewWrite from './screens/NewWrite.js';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,11 @@ function App() {
           <Stack.Screen
             name="Start"
             component={Start}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="NewWrite"
+            component={NewWrite}
             options={{ headerShown: false }}
           />
           <Stack.Screen
