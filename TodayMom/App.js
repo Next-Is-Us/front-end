@@ -23,7 +23,7 @@ function App() {
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="NewWrite">
+        <Stack.Navigator initialRouteName="MomHome">
           <Stack.Screen
             name="Start"
             component={Start}
