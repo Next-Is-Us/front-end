@@ -4,7 +4,7 @@ import MailImg from "../assets/images/mail.svg";
 import RightArrow from "../assets/images/rightArrow.svg";
 import { useState } from "react";
 
-export default function ToRecordContainer({ invited, recorded }) {
+export default function ToRecordContainer({ invited, recorded, selectConditionHandler }) {
   const [date, setDate] = useState("2024.07.09");
 
   const toRecordContainer = invited
@@ -39,7 +39,7 @@ export default function ToRecordContainer({ invited, recorded }) {
             어지러움, 우울 등 사소한 증상이라도 좋아요!
           </Text>
         </View>
-        <Pressable style={[styles.addButton, addButton]}>
+        <Pressable style={[styles.addButton, addButton]} onPress={selectConditionHandler}>
           <PlusImg />
         </Pressable>
       </View>

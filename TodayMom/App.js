@@ -12,6 +12,7 @@ import { Text } from 'react-native';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import MomHomeScreen from './screens/MomHomeScreen.js';
+import MomRecordConditionScreen from "./screens/MomRecordConditionScreen.js";
 import InfoWrite from './screens/InfoWrite.jsx';
 
 const Stack = createStackNavigator();
@@ -87,11 +88,8 @@ function App() {
             })}
           /> */}
 
-          <Stack.Screen
-            name="MomHome"
-            component={MomHomeScreen}
-            options={{ headerShown: false }}
-          />
+          <Stack.Screen name="MomHome" component={MomHomeScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="SelectCondition" component={MomRecordConditionScreen} options={{headerShown: false}} />
 
           <Stack.Screen
             name="Nickname"
