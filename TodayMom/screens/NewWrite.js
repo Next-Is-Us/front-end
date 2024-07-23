@@ -6,15 +6,22 @@ import {
   Text,
   View,
   TextInput,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
 
 const NewWrite = () => {
   const navigation = useNavigation();
 
   const [titleText, setTitleText] = useState('');
   const [contentText, setContentText] = useState('');
+  const [images, setImages] = useState([]);
+  const [isTitleFocused, setIsTitleFocused] = useState(false);
+  const [isContentFocused, setIsContentFocused] = useState(false);
 
   const handleTitleChange = (text) => {
     setTitleText(text);
@@ -27,61 +34,180 @@ const NewWrite = () => {
   const maxLengthTitle = 20;
   const maxLengthContent = 500;
 
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.cancelled) {
+        setImages([...images, result.uri]);
+      }
+    } catch (error) {
+      console.error('Image Picker Error: ', error);
+    }
+  };
+
+  // 키보드 숨기기 함수
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <View style={styles.leftContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.headerLeft}
-          >
-            <Image
-              source={require('../assets/images/leftallow.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <Text style={styles.title}>새 글쓰기</Text>
-        </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>작성하기</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.container2}>
-        <View style={styles.textcontainer}>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleTitleChange}
-            value={titleText}
-            maxLength={maxLengthTitle}
-            placeholder="제목을 입력해주세요"
-          />
-          <Text
-            style={styles.counter}
-          >{`${titleText.length}/${maxLengthTitle}`}</Text>
-        </View>
-
-        <View style={styles.textcontainer2}>
-          <TextInput
-            style={styles.inputContent}
-            onChangeText={handleContentChange}
-            value={contentText}
-            maxLength={maxLengthContent}
-            placeholder="내용을 입력해주세요"
-            multiline // Enable multiline input
-          />
-          <View style={styles.counterWrapper}>
-            <Text
-              style={styles.counterContent}
-            >{`${contentText.length}/${maxLengthContent}`}</Text>
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.container}>
+            <View style={styles.leftContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={styles.headerLeft}
+              >
+                <Image
+                  source={require('../assets/images/leftallow.png')}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+              <Text style={styles.title}>새 글쓰기</Text>
+            </View>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>작성하기</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-      </View>
+
+          <View style={styles.container2}>
+            <View
+              style={[
+                styles.textcontainer,
+                { borderColor: isTitleFocused ? '#A30FFA' : '#e5e5ec' },
+              ]}
+            >
+              <TextInput
+                style={styles.input}
+                onChangeText={handleTitleChange}
+                value={titleText}
+                maxLength={maxLengthTitle}
+                placeholder="제목을 입력해주세요"
+                onFocus={() => setIsTitleFocused(true)}
+                onBlur={() => setIsTitleFocused(false)}
+              />
+              <Text
+                style={styles.counterContent}
+              >{`${titleText.length}/${maxLengthTitle}`}</Text>
+            </View>
+
+            <View
+              style={[
+                styles.textcontainer2,
+                { borderColor: isContentFocused ? '#A30FFA' : '#e5e5ec' },
+              ]}
+            >
+              <TextInput
+                style={styles.inputContent}
+                onChangeText={handleContentChange}
+                value={contentText}
+                maxLength={maxLengthContent}
+                placeholder="내용을 입력해주세요"
+                multiline
+                onFocus={() => setIsContentFocused(true)}
+                onBlur={() => setIsContentFocused(false)}
+              />
+              <View style={styles.counterWrapper}>
+                <Text
+                  style={styles.counterContent}
+                >{`${contentText.length}/${maxLengthContent}`}</Text>
+              </View>
+            </View>
+
+            <View style={styles.ImageContainer}>
+              <View style={styles.TextContainer}>
+                <Text style={styles.ImageP}>이미지 업로드</Text>
+                <Text style={styles.select}>
+                  이미지는 최대 10장까지 업로드 가능합니다
+                </Text>
+              </View>
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.BlankContainer}
+              >
+                {images.map((img, index) => (
+                  <View key={index} style={styles.plusButton}>
+                    <Image source={{ uri: img }} style={styles.imagePreview} />
+                  </View>
+                ))}
+                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+                  <Text style={styles.addImageText}>+</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  imagePreview: {
+    width: '100%', // 너비를 부모 컨테이너에 맞춤
+    height: '100%', // 높이를 부모 컨테이너에 맞춤
+    resizeMode: 'cover', // 이미지가 컨테이너에 꽉 차게 조정
+    borderRadius: 12, // plusButton과 동일한 테두리 반경 적용
+  },
+  addImageText: {
+    fontSize: 24,
+    color: '#ccc',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  plusButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E5EC',
+    backgroundColor: '#F7F7FB',
+    marginRight: 8,
+  },
+  BlankContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  TextContainer: {
+    flexDirection: 'column',
+    gap: 4,
+    marginBottom: 12,
+  },
+  select: {
+    fontFamily: 'Pretendard',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing: -0.35,
+    color: '#767676',
+  },
+  ImageP: {
+    fontFamily: 'Pretendard',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing: -0.35,
+    color: '#111',
+  },
+  ImageContainer: {
+    marginTop: 32,
+  },
   textcontainer2: {
     borderRadius: 12,
     borderWidth: 1,
@@ -92,8 +218,8 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     paddingBottom: 16,
     paddingLeft: 16,
-    flexDirection: 'column', // Allow multiline input to expand
-    justifyContent: 'flex-start', // Align children to the top
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     marginBottom: 24,
   },
   counterWrapper: {
@@ -116,8 +242,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     letterSpacing: -0.35,
-    flex: 1, // Allow input to grow and fill available space
-    textAlignVertical: 'top', // Align text to the top
+    flex: 1,
+    textAlignVertical: 'top',
   },
   inputContent: {
     fontFamily: 'Pretendard',
@@ -126,8 +252,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     letterSpacing: -0.35,
-    flex: 1, // Allow input to grow and fill available space
-    textAlignVertical: 'top', // Align text to the top
+    flex: 1,
+    textAlignVertical: 'top',
+    paddingTop: 0,
   },
   textcontainer: {
     borderRadius: 12,
