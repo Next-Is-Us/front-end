@@ -15,6 +15,7 @@ import MomHomeScreen from './screens/MomHomeScreen.js';
 import MomRecordConditionScreen from "./screens/MomRecordConditionScreen.js";
 import InfoWrite from './screens/InfoWrite.jsx';
 import NewWrite from './screens/NewWrite.js';
+import MomRecordConditionAdditionScreen from './screens/MomRecordConditionAdditionScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -96,6 +97,7 @@ function App() {
 
           <Stack.Screen name="MomHome" component={MomHomeScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="SelectCondition" component={MomRecordConditionScreen} options={{headerShown: false}} />
+          <Stack.Screen name='WriteCondition' component={MomRecordConditionAdditionScreen} options={{ headerShown: false }} />
 
           <Stack.Screen
             name="Nickname"

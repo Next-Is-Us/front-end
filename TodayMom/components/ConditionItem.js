@@ -27,8 +27,9 @@ export default function ConditionItem({selectedCondition, setConditionSelected})
   const cArray = conditionsArray(conditions, 3);
 
   useEffect(() => {
-    selectedConditions.length>=1 && setConditionSelected(true);
-  }, [selectedConditions])
+    // console.log(selectedConditions.length);
+    setConditionSelected(selectedConditions.length > 0);
+  }, [selectedConditions]);
 
   // 이 부분 통신하면서 수정 예정 (선택된 컨디션 불러오는 함수)
   // useEffect(() => {
