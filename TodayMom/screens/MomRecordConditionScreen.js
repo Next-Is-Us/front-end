@@ -6,8 +6,8 @@ import SelectSleepTime from "../components/SelectSleepTime";
 import BottomButton from "../components/BottomButton";
 import ConditionItem from "../components/ConditionItem";
 
-export default function MomRecordConditionScreen() {
-  const [name, setName] = useState("갱년기");
+export default function MomRecordConditionScreen({route, navigation}) {
+  const name = route.params.userName;
   const [conditionSelected, setConditionSelected] = useState(false); // 컨디션이 체크됐는지 확인하는 상태
   const [sleepTimeSelected, setSleepTimeSelected] = useState(false); // 수면 시간이 체크됐는지 확인하는 상태
   const [totalSelected, setTotalSelected] = useState(false); // 전체 항목이 체크됐는지 확인하는 상태
@@ -19,6 +19,10 @@ export default function MomRecordConditionScreen() {
       setTotalSelected(false);
     }
   }, [conditionSelected, sleepTimeSelected])
+
+  const writeConditionScreenHandler = () => {
+    totalSelected && navigation.navigate("WriteCondition", {userName: name});
+  }
 
   return (
     <View style={styles.screen}>
@@ -33,7 +37,7 @@ export default function MomRecordConditionScreen() {
         <Text style={styles.infoText}>수면 시간</Text>
       </View>
       <SelectSleepTime setSleepTimeSelected={setSleepTimeSelected} />
-      <BottomButton text="다음" selected={totalSelected} />
+      <BottomButton text="다음" selected={totalSelected} handler={writeConditionScreenHandler} />
     </View>
   )
 }

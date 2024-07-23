@@ -9,11 +9,12 @@ import FlowerGrid from "../assets/images/flowerGrid.svg";
 import BottomNav from "../components/BottomNav";
 
 export default function MomHomeScreen({navigation}) {
+  const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정
   const [invited, setInvited] = useState(true);
   const [recorded, setRecorded] = useState(false);
 
   const selectConditionHandler = () => {
-    navigation.navigate("SelectCondition");
+    navigation.navigate("SelectCondition", {userName: name});
   }
 
   return (
