@@ -7,34 +7,39 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import { usePosts } from './PostContext';
+import { useNavigation } from '@react-navigation/native';
 
 const images = {
   sampleImage: require('../assets/images/beam.png'),
 };
 
-const posts = [
-  {
-    id: '1',
-    title: '게시글 제목',
-    content:
-      '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
-    imageUri: 'sampleImage',
-  },
-  {
-    id: '2',
-    title: '게시글 제목',
-    content:
-      '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
-    imageUri: null,
-  },
-];
+// const posts = [
+//   {
+//     id: '1',
+//     title: '게시글 제목',
+//     content:
+//       '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
+//     imageUri: 'sampleImage',
+//   },
+//   {
+//     id: '2',
+//     title: '게시글 제목',
+//     content:
+//       '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
+//     imageUri: null,
+//   },
+// ];
 
 const InfoWrite = () => {
+  const { posts } = usePosts();
+  const navigation = useNavigation();
+
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity style={styles.itemContainer}>
         {item.imageUri ? (
-          <Image source={images[item.imageUri]} style={styles.thumbnail} />
+          <Image source={{ uri: item.imageUri }} style={styles.thumbnail} />
         ) : null}
         <View style={styles.textContent}>
           <Text style={styles.mainText}>{item.title}</Text>
@@ -63,7 +68,10 @@ const InfoWrite = () => {
         style={styles.list}
         contentContainerStyle={styles.listContent}
       />
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate('NewWrite')}
+      >
         <Text style={styles.write}>글쓰기</Text>
         <Image
           source={require('../assets/images/pencil.png')}
@@ -139,6 +147,8 @@ const styles = StyleSheet.create({
     paddingBottom: 19,
     paddingRight: 16,
     marginBottom: 10,
+    width: '100%',
+    height: 100,
   },
   list: {
     flex: 1,

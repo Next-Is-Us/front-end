@@ -15,31 +15,33 @@ import MomHomeScreen from './screens/MomHomeScreen.js';
 import MomRecordConditionScreen from './screens/MomRecordConditionScreen.js';
 import InfoWrite from './screens/InfoWrite.jsx';
 import NewWrite from './screens/NewWrite.js';
+import { PostProvider } from './screens/PostContext.js';
 
 const Stack = createStackNavigator();
 
 function App() {
   return (
     <>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="InfoWrite">
-          <Stack.Screen
-            name="Start"
-            component={Start}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="NewWrite"
-            component={NewWrite}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="InfoWrite"
-            component={InfoWrite}
-            options={{ headerShown: false }}
-          />
-          {/* <Stack.Screen
+      <PostProvider>
+        <StatusBar style="auto" />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="InfoWrite">
+            <Stack.Screen
+              name="Start"
+              component={Start}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="NewWrite"
+              component={NewWrite}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="InfoWrite"
+              component={InfoWrite}
+              options={{ headerShown: false }}
+            />
+            {/* <Stack.Screen
             name="Status"
             component={Status}
             options={({ navigation }) => ({
@@ -94,63 +96,64 @@ function App() {
             })}
           /> */}
 
-          <Stack.Screen
-            name="MomHome"
-            component={MomHomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SelectCondition"
-            component={MomRecordConditionScreen}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name="MomHome"
+              component={MomHomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SelectCondition"
+              component={MomRecordConditionScreen}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name="Nickname"
-            component={Nickname}
-            options={({ navigation }) => ({
-              headerTitle: '',
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Image
-                    source={require('./assets/images/leftallow.png')}
-                    style={{ width: 25, height: 25 }}
-                  />
-                </TouchableOpacity>
-              ),
-              headerLeftContainerStyle: {
-                paddingLeft: 20,
-              },
-              headerStyle: {
-                elevation: 0,
-                shadowOpacity: 0,
-              },
-            })}
-          />
-          <Stack.Screen
-            name="Invite"
-            component={Invite}
-            options={({ navigation }) => ({
-              headerTitle: '',
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Image
-                    source={require('./assets/images/leftallow.png')}
-                    style={{ width: 25, height: 25 }}
-                  />
-                </TouchableOpacity>
-              ),
-              headerLeftContainerStyle: {
-                paddingLeft: 20,
-              },
-              headerStyle: {
-                elevation: 0,
-                shadowOpacity: 0,
-              },
-            })}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name="Nickname"
+              component={Nickname}
+              options={({ navigation }) => ({
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image
+                      source={require('./assets/images/leftallow.png')}
+                      style={{ width: 25, height: 25 }}
+                    />
+                  </TouchableOpacity>
+                ),
+                headerLeftContainerStyle: {
+                  paddingLeft: 20,
+                },
+                headerStyle: {
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+              })}
+            />
+            <Stack.Screen
+              name="Invite"
+              component={Invite}
+              options={({ navigation }) => ({
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image
+                      source={require('./assets/images/leftallow.png')}
+                      style={{ width: 25, height: 25 }}
+                    />
+                  </TouchableOpacity>
+                ),
+                headerLeftContainerStyle: {
+                  paddingLeft: 20,
+                },
+                headerStyle: {
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PostProvider>
     </>
   );
 }
