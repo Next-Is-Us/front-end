@@ -4,8 +4,19 @@ import LogoText from "../assets/images/logoText.svg";
 import MyPage from "../assets/images/myPage.svg";
 import Notice from "../assets/images/notice.svg";
 import RelationButton from "./RelationButton";
+import NoticeActive from "../assets/images/notice_active.svg";
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HeaderNav({relation}) {
+  const [isNotice, setIsNotice] = useState(false);
+
+  const navigation = useNavigation();
+
+  const notificationHandler = () => {
+    navigation.navigate("Notification");
+  }
+
   return (
     <View style={styles.headerContainer}>
       <View style={styles.lgooContainer}>
@@ -21,8 +32,8 @@ export default function HeaderNav({relation}) {
         <Pressable>
           <MyPage />
         </Pressable>  
-        <Pressable>
-          <Notice />
+        <Pressable onPress={notificationHandler}>
+          {isNotice ? <NoticeActive /> : <Notice />}
         </Pressable>
       </View>
     </View>

@@ -4,7 +4,7 @@ import InformConditionText from "../components/InformConditionText";
 import { useEffect, useState } from "react";
 import BottomButton from "../components/BottomButton";
 
-export default function MomRecordConditionAdditionScreen({route}) {
+export default function MomRecordConditionAdditionScreen({route, navigation}) {
   const name = route.params.userName;
   const [isFocused, setIsFocused] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -14,6 +14,10 @@ export default function MomRecordConditionAdditionScreen({route}) {
     if (enteredText.length <= maxLength) {
       setUserInput(enteredText);
     }
+  }
+
+  const homeHandler = () => {
+    navigation.navigate("MomHome");
   }
 
   const userInputBackground = isFocused ? {backgroundColor: "white", borderColor: "#A30FFA"} : {backgroundColor: "#F7F7FB", borderColor: "#E5E5EC"};
@@ -48,7 +52,7 @@ export default function MomRecordConditionAdditionScreen({route}) {
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
-      <BottomButton text="기록 완료하기" selected={true} />
+      <BottomButton text="기록 완료하기" selected={true} handler={homeHandler} />
     </>
   )
 }
