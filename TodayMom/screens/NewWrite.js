@@ -13,15 +13,27 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import { usePosts } from './PostContext';
 
 const NewWrite = () => {
   const navigation = useNavigation();
-
+  const { addPost } = usePosts();
   const [titleText, setTitleText] = useState('');
   const [contentText, setContentText] = useState('');
   const [images, setImages] = useState([]);
   const [isTitleFocused, setIsTitleFocused] = useState(false);
   const [isContentFocused, setIsContentFocused] = useState(false);
+
+  const handleSubmit = () => {
+    const newPost = {
+      id: String(new Date().getTime()),
+      title: titleText,
+      content: contentText,
+      imageUri: images[0] || null,
+    };
+    addPost(newPost);
+    navigation.goBack();
+  };
 
   const handleTitleChange = (text) => {
     setTitleText(text);
@@ -43,15 +55,17 @@ const NewWrite = () => {
         quality: 1,
       });
 
-      if (!result.cancelled) {
-        setImages([...images, result.uri]);
+      if (!result.cancelled && result.assets) {
+        // 로그를 통해 URI 확인
+        console.log('Selected image URI: ', result.assets[0].uri);
+        // 이미지 URI를 배열에 저장
+        setImages([...images, result.assets[0].uri]);
       }
     } catch (error) {
       console.error('Image Picker Error: ', error);
     }
   };
 
-  // 키보드 숨기기 함수
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -73,7 +87,7 @@ const NewWrite = () => {
               </TouchableOpacity>
               <Text style={styles.title}>새 글쓰기</Text>
             </View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>작성하기</Text>
             </TouchableOpacity>
           </View>
@@ -135,9 +149,9 @@ const NewWrite = () => {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.BlankContainer}
               >
-                {images.map((img, index) => (
+                {images.map((uri, index) => (
                   <View key={index} style={styles.plusButton}>
-                    <Image source={{ uri: img }} style={styles.imagePreview} />
+                    <Image source={{ uri: uri }} style={styles.imagePreview} />
                   </View>
                 ))}
                 <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
