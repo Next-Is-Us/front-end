@@ -1,12 +1,12 @@
 import { SafeAreaView, TouchableOpacity, View, Text, StyleSheet, Pressable } from "react-native";
 
-export default function BottomButton({text, selected}) {
+export default function BottomButton({text, selected, handler}) {
   const backgroundColor = selected ? "#A30FFA" : "rgba(163, 15, 250, 0.15)";
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.buttonBoxContainer}>
-        <Pressable style={[styles.buttonBox, {backgroundColor}]}>
+        <Pressable style={[styles.buttonBox, {backgroundColor}]} onPress={handler}>
           <Text style={styles.buttonText}>{text}</Text>
         </Pressable>
       </View>
