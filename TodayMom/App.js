@@ -15,6 +15,8 @@ import MomHomeScreen from './screens/MomHomeScreen.js';
 import MomRecordConditionScreen from "./screens/MomRecordConditionScreen.js";
 import InfoWrite from './screens/InfoWrite.jsx';
 import NewWrite from './screens/NewWrite.js';
+import { PostProvider } from './screens/PostContext.js';
+import ViewContent from './screens/ViewContent.js';
 import MomRecordConditionAdditionScreen from './screens/MomRecordConditionAdditionScreen.js';
 import NotificationScreen from './screens/NotificationScreen.js';
 import MyPageScreen from './screens/MyPageScreen.js';
@@ -24,83 +26,51 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="MomHome">
+
+      <PostProvider>
+        <StatusBar style="auto" />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="ViewContent">
+            <Stack.Screen
+              name="Start"
+              component={Start}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="NewWrite"
+              component={NewWrite}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ViewContent"
+              component={ViewContent}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="InfoWrite"
+              component={InfoWrite}
+              options={{ headerShown: false }}
+            />
           <Stack.Screen
             name="Start"
             component={Start}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="NewWrite"
-            component={NewWrite}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="InfoWrite"
-            component={InfoWrite}
-            options={{ headerShown: false }}
-          />
-          {/* <Stack.Screen
-            name="Status"
-            component={Status}
-            options={({ navigation }) => ({
-              headerShown: true,
-              headerBackground: () => (
-                <Image
-                  source={require("./assets/images/StatusBack.png")}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                />
-              ),
-              headerTitle: "",
-              headerLeft: () => (
-                <View style={styles.leftHeaderContainer}>
-                  <TouchableOpacity
-                    onPress={() => console.log("Home Icon tapped")}
-                  >
-                    <Image
-                      source={require("./assets/images/tmicon.png")}
-                      style={(resizeMode = "contain")}
-                    />
-                  </TouchableOpacity>
-                  <Image
-                    source={require("./assets/images/todaymom.png")}
-                    style={styles.icon2}
-                  />
-                </View>
-              ),
-              headerRight: () => (
-                <View style={styles.rightHeaderContainer}>
-                  <TouchableOpacity
-                    onPress={() => console.log("Profile Icon tapped")}
-                  >
-                    <Image
-                      source={require("./assets/images/profile.png")}
-                      style={styles.icon}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => console.log("Notification Icon tapped")}
-                  >
-                    <Image
-                      source={require("./assets/images/noti.png")}
-                      style={[styles.icon, { marginLeft: 16 }]}
-                    />
-                  </TouchableOpacity>
-                </View>
-              ),
-              headerStyle: {
-                height: 100,
-              },
-            })}
-          /> */}
-
-          <Stack.Screen name="MomHome" component={MomHomeScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="SelectCondition" component={MomRecordConditionScreen} options={{headerShown: false}} />
-          <Stack.Screen name='WriteCondition' component={MomRecordConditionAdditionScreen} options={{ headerShown: false }} />
-
+            <Stack.Screen
+              name="MomHome"
+              component={MomHomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SelectCondition"
+              component={MomRecordConditionScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="WriteCondition"
+              component={MomRecordConditionAdditionScreen}
+              options={{ headerShown: false }}
+            />
           <Stack.Screen name="Notification" component={NotificationScreen} options={{ headerShown: false }} />
           <Stack.Screen name='MyPage' component={MyPageScreen} options={{headerShown: false}} />
 

@@ -168,10 +168,10 @@ const NewWrite = () => {
 
 const styles = StyleSheet.create({
   imagePreview: {
-    width: '100%', // 너비를 부모 컨테이너에 맞춤
-    height: '100%', // 높이를 부모 컨테이너에 맞춤
-    resizeMode: 'cover', // 이미지가 컨테이너에 꽉 차게 조정
-    borderRadius: 12, // plusButton과 동일한 테두리 반경 적용
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 12,
   },
   addImageText: {
     fontSize: 24,
