@@ -21,6 +21,9 @@ const BasicHeader = () => {
 const styles = StyleSheet.create({
   headerLeft: {
     paddingLeft: 20,
+    paddingTop: 14,
+    paddingBottom: 14,
+    paddingRight: 20,
   },
   icon: {
     width: 25,
