@@ -16,6 +16,7 @@ import MomRecordConditionScreen from './screens/MomRecordConditionScreen.js';
 import InfoWrite from './screens/InfoWrite.jsx';
 import NewWrite from './screens/NewWrite.js';
 import { PostProvider } from './screens/PostContext.js';
+import ViewContent from './screens/ViewContent.js';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="InfoWrite">
+          <Stack.Navigator initialRouteName="ViewContent">
             <Stack.Screen
               name="Start"
               component={Start}
@@ -34,6 +35,11 @@ function App() {
             <Stack.Screen
               name="NewWrite"
               component={NewWrite}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ViewContent"
+              component={ViewContent}
               options={{ headerShown: false }}
             />
             <Stack.Screen
