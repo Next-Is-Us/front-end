@@ -26,7 +26,7 @@ export default function MomHomeScreen({navigation}) {
         </View>
       </TopBackground> */}
       <SafeAreaView>
-        <HeaderNav relation="엄마" />
+        <HeaderNav relation="엄마" name={name} />
       </SafeAreaView>
       <View style={styles.bodyContainer}>
         <WeekCalendar />
