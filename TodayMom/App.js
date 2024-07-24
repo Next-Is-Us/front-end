@@ -20,6 +20,7 @@ import ViewContent from './screens/ViewContent.js';
 import MomRecordConditionAdditionScreen from './screens/MomRecordConditionAdditionScreen.js';
 import NotificationScreen from './screens/NotificationScreen.js';
 import MyPageScreen from './screens/MyPageScreen.js';
+import ChildrenHomeScreen from './screens/ChildrenHomeScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -29,7 +30,7 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="ViewContent">
+          <Stack.Navigator initialRouteName="InfoWrite">
             <Stack.Screen
               name="Start"
               component={Start}
@@ -55,6 +56,7 @@ function App() {
               component={MomHomeScreen}
               options={{ headerShown: false }}
             />
+<Stack.Screen name="ChildrenHome" component={ChildrenHomeScreen} options={{headerShown: false}} />
             <Stack.Screen
               name="SelectCondition"
               component={MomRecordConditionScreen}

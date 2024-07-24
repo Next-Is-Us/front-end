@@ -13,10 +13,11 @@ import Flower3 from "../assets/images/flower3.svg";
 import Flower4 from "../assets/images/flower4.svg";
 import Flower5 from "../assets/images/flower5.svg";
 import Flower6 from "../assets/images/flower6.svg";
+import RecordedContainer from "../components/RecordedContainer";
 
-export default function MomHomeScreen({navigation}) {
+export default function ChildrenHomeScreen({navigation}) {
   const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정
-  const [invited, setInvited] = useState(true);
+  // const [invited, setInvited] = useState(true);
   const [recorded, setRecorded] = useState(false);
   const [flowerPieces, setFlowerPieces] = useState(0);
 
@@ -81,12 +82,12 @@ export default function MomHomeScreen({navigation}) {
         </View>
       </TopBackground> */}
       <SafeAreaView>
-        <HeaderNav relation="엄마" name={name} />
+        <HeaderNav relation="자녀" name={name} />
       </SafeAreaView>
       <View style={styles.bodyContainer}>
-        <WeekCalendar relation="엄마" />
+        <WeekCalendar relation="자녀" />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} />
+        <RecordedContainer recorded={recorded} />
         <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>

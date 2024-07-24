@@ -26,18 +26,18 @@ const getWeekDays = () => {
 
 const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
-const DayItem = ({ day, date, selected }) => {
+const DayItem = ({ day, date, selected, relation, onPress }) => {
   return (
     <View style={styles.dayContainer}>
-      <Text style={[styles.dateText, selected && styles.selectedDateText]}>{daysOfWeek[date]}</Text>
-      <Pressable style={[styles.dayBox, selected && styles.selectedDayBox]}>
+      <Text style={[styles.dateText, (selected && relation=="자녀" &&  styles.childrenSelectedDateText), (selected && relation=="엄마" &&  styles.momSelectedDateText)]}>{daysOfWeek[date]}</Text>
+      <Pressable onPress={onPress} style={[styles.dayBox, (selected && relation=="자녀" &&  styles.childrenSelectedDayBox), (selected && relation=="엄마" &&  styles.momSelectedDayBox)]}>
         <Text style={[styles.dayText, selected && styles.selectedDayText]}>{day}</Text>
       </Pressable>
     </View>
   );
 };
 
-export default function WeekCalendar() {
+export default function WeekCalendar({relation}) {
   const [week, setWeek] = useState([]);
   const [selectedDay, setSelectedDay] = useState(new Date().getDate());
 
@@ -45,6 +45,10 @@ export default function WeekCalendar() {
     const weekDays = getWeekDays();
     setWeek(weekDays);
   },[]);
+
+  const selectDayHandler = (day) => {
+    setSelectedDay(day);
+  }
 
   return (
     <>
@@ -55,7 +59,7 @@ export default function WeekCalendar() {
         keyExtractor={(item) => item.day.toString()}
         renderItem={(itemData) => {
           return (
-            <DayItem day={itemData.item.day} date={itemData.item.date} selected={itemData.item.day === selectedDay} />
+            <DayItem day={itemData.item.day} date={itemData.item.date} selected={itemData.item.day === selectedDay} relation={relation} onPress={() => {selectDayHandler(itemData.item.day)}} />
           )
         }}
       />
@@ -102,11 +106,17 @@ const styles = StyleSheet.create({
     color: "#767676",
     textAlign: "center"
   },
-  selectedDateText: {
+  momSelectedDateText: {
     color: "#A30FFA"
   },
-  selectedDayBox: {
+  childrenSelectedDateText: {
+    color: "#39C3B6"
+  },
+  momSelectedDayBox: {
     backgroundColor: "#A30FFA"
+  },
+  childrenSelectedDayBox: {
+    backgroundColor: "#39C3B6"
   },
   selectedDayText: {
     color: "white"
