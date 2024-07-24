@@ -12,9 +12,11 @@ import { Text } from 'react-native';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import MomHomeScreen from './screens/MomHomeScreen.js';
-import MomRecordConditionScreen from "./screens/MomRecordConditionScreen.js";
+import MomRecordConditionScreen from './screens/MomRecordConditionScreen.js';
 import InfoWrite from './screens/InfoWrite.jsx';
 import NewWrite from './screens/NewWrite.js';
+import { PostProvider } from './screens/PostContext.js';
+import ViewContent from './screens/ViewContent.js';
 import MomRecordConditionAdditionScreen from './screens/MomRecordConditionAdditionScreen.js';
 import NotificationScreen from './screens/NotificationScreen.js';
 import MyPageScreen from './screens/MyPageScreen.js';
@@ -25,133 +27,104 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="MomHome">
-          <Stack.Screen
-            name="Start"
-            component={Start}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="NewWrite"
-            component={NewWrite}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="InfoWrite"
-            component={InfoWrite}
-            options={{ headerShown: false }}
-          />
-          {/* <Stack.Screen
-            name="Status"
-            component={Status}
-            options={({ navigation }) => ({
-              headerShown: true,
-              headerBackground: () => (
-                <Image
-                  source={require("./assets/images/StatusBack.png")}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                />
-              ),
-              headerTitle: "",
-              headerLeft: () => (
-                <View style={styles.leftHeaderContainer}>
-                  <TouchableOpacity
-                    onPress={() => console.log("Home Icon tapped")}
-                  >
+      <PostProvider>
+        <StatusBar style="auto" />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="InfoWrite">
+            <Stack.Screen
+              name="Start"
+              component={Start}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="NewWrite"
+              component={NewWrite}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ViewContent"
+              component={ViewContent}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="InfoWrite"
+              component={InfoWrite}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MomHome"
+              component={MomHomeScreen}
+              options={{ headerShown: false }}
+            />
+<Stack.Screen name="ChildrenHome" component={ChildrenHomeScreen} options={{headerShown: false}} />
+            <Stack.Screen
+              name="SelectCondition"
+              component={MomRecordConditionScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="WriteCondition"
+              component={MomRecordConditionAdditionScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Notification"
+              component={NotificationScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MyPage"
+              component={MyPageScreen}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="Nickname"
+              component={Nickname}
+              options={({ navigation }) => ({
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
-                      source={require("./assets/images/tmicon.png")}
-                      style={(resizeMode = "contain")}
+                      source={require('./assets/images/leftallow.png')}
+                      style={{ width: 25, height: 25 }}
                     />
                   </TouchableOpacity>
-                  <Image
-                    source={require("./assets/images/todaymom.png")}
-                    style={styles.icon2}
-                  />
-                </View>
-              ),
-              headerRight: () => (
-                <View style={styles.rightHeaderContainer}>
-                  <TouchableOpacity
-                    onPress={() => console.log("Profile Icon tapped")}
-                  >
+                ),
+                headerLeftContainerStyle: {
+                  paddingLeft: 20,
+                },
+                headerStyle: {
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+              })}
+            />
+            <Stack.Screen
+              name="Invite"
+              component={Invite}
+              options={({ navigation }) => ({
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
-                      source={require("./assets/images/profile.png")}
-                      style={styles.icon}
+                      source={require('./assets/images/leftallow.png')}
+                      style={{ width: 25, height: 25 }}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => console.log("Notification Icon tapped")}
-                  >
-                    <Image
-                      source={require("./assets/images/noti.png")}
-                      style={[styles.icon, { marginLeft: 16 }]}
-                    />
-                  </TouchableOpacity>
-                </View>
-              ),
-              headerStyle: {
-                height: 100,
-              },
-            })}
-          /> */}
-
-          <Stack.Screen name="MomHome" component={MomHomeScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="ChildrenHome" component={ChildrenHomeScreen} options={{headerShown: false}} />
-          <Stack.Screen name="SelectCondition" component={MomRecordConditionScreen} options={{headerShown: false}} />
-          <Stack.Screen name='WriteCondition' component={MomRecordConditionAdditionScreen} options={{ headerShown: false }} />
-
-          <Stack.Screen name="Notification" component={NotificationScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='MyPage' component={MyPageScreen} options={{headerShown: false}} />
-
-          <Stack.Screen
-            name="Nickname"
-            component={Nickname}
-            options={({ navigation }) => ({
-              headerTitle: '',
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Image
-                    source={require('./assets/images/leftallow.png')}
-                    style={{ width: 25, height: 25 }}
-                  />
-                </TouchableOpacity>
-              ),
-              headerLeftContainerStyle: {
-                paddingLeft: 20,
-              },
-              headerStyle: {
-                elevation: 0,
-                shadowOpacity: 0,
-              },
-            })}
-          />
-          <Stack.Screen
-            name="Invite"
-            component={Invite}
-            options={({ navigation }) => ({
-              headerTitle: '',
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Image
-                    source={require('./assets/images/leftallow.png')}
-                    style={{ width: 25, height: 25 }}
-                  />
-                </TouchableOpacity>
-              ),
-              headerLeftContainerStyle: {
-                paddingLeft: 20,
-              },
-              headerStyle: {
-                elevation: 0,
-                shadowOpacity: 0,
-              },
-            })}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+                ),
+                headerLeftContainerStyle: {
+                  paddingLeft: 20,
+                },
+                headerStyle: {
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PostProvider>
     </>
   );
 }
