@@ -29,7 +29,7 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="ViewContent">
+          <Stack.Navigator initialRouteName="InfoWrite">
             <Stack.Screen
               name="Start"
               component={Start}

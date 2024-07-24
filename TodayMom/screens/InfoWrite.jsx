@@ -37,7 +37,10 @@ const InfoWrite = () => {
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => navigation.navigate('ViewContent', { post: item })}
+      >
         {item.imageUri ? (
           <Image source={{ uri: item.imageUri }} style={styles.thumbnail} />
         ) : null}
