@@ -1,10 +1,10 @@
 import { Image, SafeAreaView, StyleSheet, View, Text } from "react-native";
 
-export default function HeaderBack() {
+export default function HeaderBack({white}) {
   return (
     <SafeAreaView>
       <View style={styles.headerContainer}>
-        <Image source={require("../assets/images/leftallow.png")} />
+        {white ? <Image source={require("../assets/images/whiteLeftArrow.png")} /> : <Image source={require("../assets/images/leftallow.png")} />}
       </View>
     </SafeAreaView>
   );

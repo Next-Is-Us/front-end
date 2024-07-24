@@ -17,6 +17,7 @@ import InfoWrite from './screens/InfoWrite.jsx';
 import NewWrite from './screens/NewWrite.js';
 import MomRecordConditionAdditionScreen from './screens/MomRecordConditionAdditionScreen.js';
 import NotificationScreen from './screens/NotificationScreen.js';
+import MyPageScreen from './screens/MyPageScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -101,6 +102,7 @@ function App() {
           <Stack.Screen name='WriteCondition' component={MomRecordConditionAdditionScreen} options={{ headerShown: false }} />
 
           <Stack.Screen name="Notification" component={NotificationScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='MyPage' component={MyPageScreen} options={{headerShown: false}} />
 
           <Stack.Screen
             name="Nickname"

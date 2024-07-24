@@ -6,9 +6,9 @@ export default function BottomButton({text, selected, handler}) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.buttonBoxContainer}>
-        <Pressable style={[styles.buttonBox, {backgroundColor}]} onPress={handler}>
+        <TouchableOpacity style={[styles.buttonBox, {backgroundColor}]} onPress={handler}>
           <Text style={styles.buttonText}>{text}</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )

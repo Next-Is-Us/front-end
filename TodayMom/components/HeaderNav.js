@@ -8,13 +8,17 @@ import NoticeActive from "../assets/images/notice_active.svg";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function HeaderNav({relation}) {
+export default function HeaderNav({relation, name}) {
   const [isNotice, setIsNotice] = useState(false);
 
   const navigation = useNavigation();
 
   const notificationHandler = () => {
     navigation.navigate("Notification");
+  }
+
+  const myPageHandler = () => {
+    navigation.navigate("MyPage", {userName: name})
   }
 
   return (
@@ -29,7 +33,7 @@ export default function HeaderNav({relation}) {
         <RelationButton relation={relation} />
       </View>
       <View style={styles.myLinkContainer}>
-        <Pressable>
+        <Pressable onPress={myPageHandler}>
           <MyPage />
         </Pressable>  
         <Pressable onPress={notificationHandler}>
