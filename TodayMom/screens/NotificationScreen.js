@@ -12,7 +12,7 @@ const dummyData = [
 {/*스타일 변경할 수도 있음 (Pressable) */}
 const NotificationItem = ({item, last}) => {
   return (
-    <View style={!last && styles.borderBottom}>
+    <View style={[styles.notificationItemContainer, !last && styles.borderBottom]}>
       <View style={styles.notificationTextContainer}>
         <Text style={styles.notificationMainText}>{item.mainText}</Text>
         <Text style={styles.notificationSubText}>{item.subText}</Text>
@@ -28,7 +28,7 @@ export default function NotificationScreen() {
     return (
       <NotificationItem
         item={item}
-        lastNotification={index === notificationText.length-1}
+        last={index === notificationText.length-1}
       />
     )
   }
@@ -71,7 +71,11 @@ const styles = StyleSheet.create({
     fontWeight: 600
   },
   notificationContentContainer: {
-    marginTop: 33
+    marginTop: 33,
+    flex: 1
+  },
+  notificationItemContainer: {
+    paddingVertical: 8,
   },
   notificationTextContainer: {
     gap: 4
