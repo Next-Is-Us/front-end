@@ -34,7 +34,7 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Comment">
+          <Stack.Navigator initialRouteName="MomHome">
             <Stack.Screen
               name="Commuroom"
               component={Commuroom}
