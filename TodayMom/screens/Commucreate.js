@@ -14,8 +14,13 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { usePosts } from './PostContext';
+import Commuflower from '../assets/images/commuflower.svg';
+import AllowBottom from '../assets/images/big_bottom.svg';
+import { Picker } from '@react-native-picker/picker';
+import Plus from '../assets/images/plus.svg';
 
-const NewWrite = () => {
+const Commucreate = () => {
+  const [imageUri, setImageUri] = useState('');
   const navigation = useNavigation();
   const { addPost } = usePosts();
   const [titleText, setTitleText] = useState('');
@@ -23,6 +28,18 @@ const NewWrite = () => {
   const [images, setImages] = useState([]);
   const [isTitleFocused, setIsTitleFocused] = useState(false);
   const [isContentFocused, setIsContentFocused] = useState(false);
+
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [flowerCount, setFlowerCount] = useState('0개 (무료 입장)');
+
+  const handleSelect = (count) => {
+    setFlowerCount(count);
+    setIsDropdownVisible(false);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
 
   const handleSubmit = () => {
     const newPost = {
@@ -72,7 +89,10 @@ const NewWrite = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.container}>
             <View style={styles.leftContainer}>
               <TouchableOpacity
@@ -84,10 +104,10 @@ const NewWrite = () => {
                   style={styles.icon}
                 />
               </TouchableOpacity>
-              <Text style={styles.title}>새 글쓰기</Text>
+              <Text style={styles.title}>새 소통방 개설</Text>
             </View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>작성하기</Text>
+              <Text style={styles.buttonText}>개설하기</Text>
             </TouchableOpacity>
           </View>
 
@@ -137,26 +157,58 @@ const NewWrite = () => {
 
             <View style={styles.ImageContainer}>
               <View style={styles.TextContainer}>
-                <Text style={styles.ImageP}>이미지 업로드</Text>
-                <Text style={styles.select}>
-                  이미지는 최대 10장까지 업로드 가능합니다
-                </Text>
+                <Text style={styles.ImageP}>대표 이미지 업로드</Text>
               </View>
 
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.BlankContainer}
-              >
-                {images.map((uri, index) => (
-                  <View key={index} style={styles.plusButton}>
-                    <Image source={{ uri: uri }} style={styles.imagePreview} />
+              {images.length > 0 && (
+                <View style={styles.plusButton}>
+                  <Image
+                    source={{ uri: images[0] }}
+                    style={styles.imagePreview}
+                  />
+                </View>
+              )}
+              <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+                <Text style={styles.addImageText}>+</Text>
+              </TouchableOpacity>
+
+              <View style={[styles.TextContainer, { marginTop: 32 }]}>
+                <Text style={styles.ImageP}>소통방 입장 조건</Text>
+                <Text style={styles.select}>
+                  입장할 회원의 꽃피 개수를 설정해주세요
+                </Text>
+                <View style={styles.rowcontainer}>
+                  <Commuflower />
+                  <TouchableOpacity
+                    style={styles.flowercount}
+                    onPress={toggleDropdown}
+                  >
+                    <Text style={styles.countenter}>{flowerCount}</Text>
+                    <AllowBottom />
+                  </TouchableOpacity>
+                </View>
+                {isDropdownVisible && (
+                  <View style={styles.dropdown}>
+                    <TouchableOpacity
+                      onPress={() => handleSelect('0개 (무료 입장)')}
+                    >
+                      <Text style={styles.droptext}>0개 (무료 입장)</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSelect('1개')}>
+                      <Text style={styles.droptext}>1개</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSelect('2개')}>
+                      <Text style={styles.droptext}>2개</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSelect('3개')}>
+                      <Text style={styles.droptext}>3개</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSelect('4개')}>
+                      <Text style={styles.droptext}>4개</Text>
+                    </TouchableOpacity>
                   </View>
-                ))}
-                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
-                  <Text style={styles.addImageText}>+</Text>
-                </TouchableOpacity>
-              </ScrollView>
+                )}
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -166,6 +218,64 @@ const NewWrite = () => {
 };
 
 const styles = StyleSheet.create({
+  droptext: {
+    fontFamily: 'Pretendard',
+    fontSize: 13,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 18,
+    letterSpacing: -0.325,
+    color: '#111',
+    overflow: 'hidden',
+  },
+  row: {
+    flexDirection: 'column',
+  },
+  dropdown: {
+    flexDirection: 'column',
+    gap: 18,
+    marginLeft: 60,
+    height: 180,
+    width: 200,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#A30FFA',
+    backgroundColor: '#FFF',
+    paddingLeft: 16,
+    paddingTop: 9,
+    paddingBottom: 9,
+    paddingRight: 44,
+  },
+  countenter: {
+    fontFamily: 'Pretendard',
+    fontSize: 13,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+    letterSpacing: -0.325,
+    color: '#111',
+  },
+  flowercount: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 200,
+    height: 36,
+    paddingTop: 9,
+    paddingRight: 16,
+    paddingBottom: 9,
+    paddingLeft: 16,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#E5E5EC',
+    backgroundColor: '#FFF',
+  },
+  rowcontainer: {
+    flexDirection: 'row',
+    marginTop: 12,
+    alignItems: 'center',
+    gap: 8,
+  },
   imagePreview: {
     width: '100%',
     height: '100%',
@@ -183,7 +293,7 @@ const styles = StyleSheet.create({
   plusButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
+    width: 200,
     height: 100,
     borderRadius: 12,
     borderWidth: 1,
@@ -191,10 +301,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7FB',
     marginRight: 8,
   },
-  BlankContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  //   BlankContainer: {
+  //     flexDirection: 'row',
+  //     alignItems: 'center',
+  //     marginBottom: 32,
+  //   },
   TextContainer: {
     flexDirection: 'column',
     gap: 4,
@@ -202,11 +313,11 @@ const styles = StyleSheet.create({
   },
   select: {
     fontFamily: 'Pretendard',
-    fontSize: 14,
+    fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 20,
-    letterSpacing: -0.35,
+    lineHeight: 18,
+    letterSpacing: -0.3,
     color: '#767676',
   },
   ImageP: {
@@ -226,7 +337,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e5ec',
     backgroundColor: '#F7F7FB',
-    height: 512,
+    height: 246,
     paddingTop: 16,
     paddingRight: 16,
     paddingBottom: 16,
@@ -340,4 +451,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewWrite;
+export default Commucreate;

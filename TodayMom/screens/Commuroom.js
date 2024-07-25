@@ -8,7 +8,7 @@ import Purple from '../assets/images/purpleprofile.svg';
 import Allow from '../assets/images/allow_bottom.svg';
 import { useState } from 'react';
 import Message from '../assets/images/message.svg';
-
+import Doctor from '../assets/images/doctor.svg';
 const Commuroom = ({ navigation }) => {
   const [profileHeight, setProfileHeight] = useState(256); // 초기 높이 256
 
@@ -22,10 +22,11 @@ const Commuroom = ({ navigation }) => {
           source={require('../assets/images/leftallow.png')}
           style={styles.icon}
         />
+        <Doctor />
       </TouchableOpacity>
 
       <View style={styles.blurContainer}>
-        <BlurView style={styles.price} intensity={10}>
+        <BlurView style={styles.price} intensity={75}>
           <View style={[styles.profile, { height: profileHeight }]}>
             <Text style={styles.communame}>
               산부인과 전문가 의사 김민주님이

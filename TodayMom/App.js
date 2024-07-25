@@ -25,6 +25,7 @@ import Communication from './screens/Communication.js';
 import FlowerRecordScreen from './screens/FlowerRecordScreen.js';
 import Commuroom from './screens/Commuroom.js';
 import Comment from './screens/Comment.js';
+import Commucreate from './screens/Commucreate.js';
 
 const Stack = createStackNavigator();
 
@@ -34,10 +35,15 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Comment">
+          <Stack.Navigator initialRouteName="Commucreate">
             <Stack.Screen
               name="Commuroom"
               component={Commuroom}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Commucreate"
+              component={Commucreate}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -100,7 +106,7 @@ function App() {
               component={MyPageScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="FlowerRecord"
               component={FlowerRecordScreen}
               options={{ headerShown: false }}
