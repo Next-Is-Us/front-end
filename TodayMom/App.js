@@ -26,6 +26,7 @@ import FlowerRecordScreen from './screens/FlowerRecordScreen.js';
 import Commuroom from './screens/Commuroom.js';
 import Comment from './screens/Comment.js';
 import SelectForVisitHospitalScreen from './screens/SelectForVisitHospitalScreen.js';
+import SelectForChangeRecordScreen from './screens/SelectForChangeReordScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -109,6 +110,11 @@ function App() {
             <Stack.Screen
               name="SelectForVisitHospital"
               component={SelectForVisitHospitalScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SelectForChangeRecord"
+              component={SelectForChangeRecordScreen}
               options={{ headerShown: false }}
             />
 

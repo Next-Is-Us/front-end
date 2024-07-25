@@ -3,13 +3,17 @@ import HeaderBack from "../components/HeaderBack"
 import { useState } from "react"
 import BottomButton from "../components/BottomButton";
 
-export default function SelectForVisitHospitalScreen() {
+export default function SelectForVisitHospitalScreen({navigation}) {
   const [selected, setSelcted] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
 
   const selectHandler = (buttonId) => {
     setSelcted(buttonId);
     setIsSelected(true);
+  }
+
+  const nextHandler = () => {
+    isSelected && navigation.navigate("SelectForChangeRecord")
   }
 
   return (
@@ -34,7 +38,7 @@ export default function SelectForVisitHospitalScreen() {
           </Text>
         </View>
       </TouchableOpacity>
-      <BottomButton text="다음" selected={isSelected} />
+      <BottomButton text="다음" selected={isSelected} handler={nextHandler} />
     </View>
   )
 }

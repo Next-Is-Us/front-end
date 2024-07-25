@@ -2,6 +2,8 @@ import { Animated, FlatList, Pressable, SafeAreaView, StyleSheet, Text, Touchabl
 
 import FlowerBadge from "../assets/images/flower6.svg";
 import FlowerGrid from "../assets/images/flowerGrid.svg";
+import CheckedRecord from "../assets/images/checkedRecord.svg";
+import { BlurView } from "expo-blur";
 
 const backgroundColors = ["#F1DBFE", "#FFF0D9", "#E2F6F4"];
 
@@ -25,7 +27,7 @@ const FlowerBadgeGrid = ({recordItem}) => {
   }
 }
 
-export default function ConditionRecordedItem({recordItem}) {
+export default function ConditionRecordedItem({recordItem, selected}) {
   return (
     <View style={recordItem.complete ? [styles.completedConditionRecordedItemContainer, { backgroundColor: backgroundColors[recordItem.recordedNumber % 3] }] : styles.incompletedConditoinRecordedItemContainer}>
       <View style={styles.recordedItemTopContainer}>
@@ -47,6 +49,12 @@ export default function ConditionRecordedItem({recordItem}) {
         })} */}
         <FlowerBadgeGrid recordItem={recordItem} />
       </View>
+      {selected && (
+        <View style={styles.blur}>
+          <BlurView intensity={50} />
+          <CheckedRecord />
+        </View>
+      )}
     </View>
   )
 }
@@ -56,7 +64,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#F1DBFE",
     borderRadius: 12,
-    gap: 24
+    gap: 24,
   },
   incompletedConditoinRecordedItemContainer: {
     padding: 20,
@@ -96,5 +104,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 16
-  }
+  },
+  blur: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(17, 17, 17, 0.50)",
+    borderRadius: 12
+  },
 })
