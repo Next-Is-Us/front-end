@@ -5,8 +5,19 @@ import FlowerActiveImg from "../assets/images/flower_active.svg";
 import FlowerInactiveImg from "../assets/images/flower_inactive.svg";
 import HomeActiveImg from "../assets/images/home_active.svg";
 import HomeInactiveImg from "../assets/images/home_inactive.svg";
+import { useNavigation } from "@react-navigation/native";
 
 export default function BottomNav({ community, home, flower }) {
+  const navigation = useNavigation();
+
+  const homeHandler= () => {
+    navigation.navigate("MomHome");
+  }
+
+  const flowerRecordHandler = () => {
+    navigation.navigate("FlowerRecord");
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.navContainer}>
@@ -27,7 +38,7 @@ export default function BottomNav({ community, home, flower }) {
             <Text style={[styles.itemText, {color: "#A30FFA"}]}>홈</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.itemContainer}>
+          <TouchableOpacity style={styles.itemContainer} onPress={homeHandler}>
             <HomeInactiveImg />
             <Text style={styles.itemText}>홈</Text>
           </TouchableOpacity>
@@ -38,7 +49,7 @@ export default function BottomNav({ community, home, flower }) {
             <Text style={[styles.itemText, {color: "#A30FFA"}]}>꽃피</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.itemContainer}>
+          <TouchableOpacity style={styles.itemContainer} onPress={flowerRecordHandler}>
             <FlowerInactiveImg />
             <Text style={styles.itemText}>꽃피</Text>
           </TouchableOpacity>

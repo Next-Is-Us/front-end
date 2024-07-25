@@ -1,10 +1,19 @@
-import { Image, SafeAreaView, StyleSheet, View, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Image, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 export default function HeaderBack({white}) {
+  const navigation = useNavigation();
+
+  const goBackHandler = () => {
+    navigation.goBack();
+  }
+
   return (
     <SafeAreaView>
       <View style={styles.headerContainer}>
-        {white ? <Image source={require("../assets/images/whiteLeftArrow.png")} /> : <Image source={require("../assets/images/leftallow.png")} />}
+        <TouchableOpacity onPress={goBackHandler}>
+          {white ? <Image source={require("../assets/images/whiteLeftArrow.png")} /> : <Image source={require("../assets/images/leftallow.png")} />}
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
