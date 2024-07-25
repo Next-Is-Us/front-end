@@ -23,6 +23,8 @@ import MyPageScreen from './screens/MyPageScreen.js';
 import ChildrenHomeScreen from './screens/ChildrenHomeScreen.js';
 import Communication from './screens/Communication.js';
 import FlowerRecordScreen from './screens/FlowerRecordScreen.js';
+import Commuroom from './screens/Commuroom.js';
+import Comment from './screens/Comment.js';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +34,17 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="FlowerRecord">
+          <Stack.Navigator initialRouteName="Comment">
+            <Stack.Screen
+              name="Commuroom"
+              component={Commuroom}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Comment"
+              component={Comment}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Start"
               component={Start}
