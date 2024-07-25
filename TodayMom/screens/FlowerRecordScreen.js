@@ -11,8 +11,12 @@ const recordItem = [
   {recordedNumber: 858, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
 ]
 
-export default function FlowerRecordScreen() {
+export default function FlowerRecordScreen({navigation}) {
   const [recordedContent, setRecordedContent] = useState(recordItem); // 추후 백과 통신 예정
+
+  const selectHospitalScreenHandler = () => {
+    navigation.navigate("SelectForVisitHospital");
+  }
 
   const renderItem = ({item}) => {
     return (
@@ -27,7 +31,7 @@ export default function FlowerRecordScreen() {
         <Text style={styles.subText}>계속해서 추가될 예정이에요!</Text>
       </SafeAreaView>
       <View style={styles.changeButtonContainer}>
-        <TouchableOpacity style={styles.changeButton}>
+        <TouchableOpacity style={styles.changeButton} onPress={selectHospitalScreenHandler}>
           <Text style={styles.changeButtonText}>의료 기록 변환하기</Text>
         </TouchableOpacity>
       </View>
