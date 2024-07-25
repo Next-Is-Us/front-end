@@ -22,6 +22,7 @@ import NotificationScreen from './screens/NotificationScreen.js';
 import MyPageScreen from './screens/MyPageScreen.js';
 import ChildrenHomeScreen from './screens/ChildrenHomeScreen.js';
 import Communication from './screens/Communication.js';
+import FlowerRecordScreen from './screens/FlowerRecordScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +32,7 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Communication">
+          <Stack.Navigator initialRouteName="FlowerRecord">
             <Stack.Screen
               name="Start"
               component={Start}
@@ -85,6 +86,11 @@ function App() {
             <Stack.Screen
               name="MyPage"
               component={MyPageScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="FlowerRecord"
+              component={FlowerRecordScreen}
               options={{ headerShown: false }}
             />
 

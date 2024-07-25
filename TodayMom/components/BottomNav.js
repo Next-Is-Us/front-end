@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CommunityActiveImg from "../assets/images/community_active.svg";
 import CommunityInactiveImg from "../assets/images/community_inactive.svg";
 import FlowerActiveImg from "../assets/images/flower_active.svg";
@@ -8,54 +8,53 @@ import HomeInactiveImg from "../assets/images/home_inactive.svg";
 
 export default function BottomNav({ community, home, flower }) {
   return (
-    <View style={styles.navContainer}>
-      {community ? (
-        <View style={styles.itemContainer}>
-          <CommunityActiveImg />
-          <Text style={[styles.itemText, {color: "#A30FFA"}]}>커뮤니티</Text>
-        </View>
-      ) : (
-        <View style={styles.itemContainer}>
-          <CommunityInactiveImg />
-          <Text style={styles.itemText}>커뮤니티</Text>
-        </View>
-      )}
-      {home ? (
-        <View style={styles.itemContainer}>
-          <HomeActiveImg />
-          <Text style={[styles.itemText, {color: "#A30FFA"}]}>홈</Text>
-        </View>
-      ) : (
-        <View style={styles.itemContainer}>
-          <HomeInactiveImg />
-          <Text style={styles.itemText}>홈</Text>
-        </View>
-      )}
-      {flower ? (
-        <View style={styles.itemContainer}>
-          <FlowerActiveImg />
-          <Text style={[styles.itemText, {color: "#A30FFA"}]}>꽃피</Text>
-        </View>
-      ) : (
-        <View style={styles.itemContainer}>
-          <FlowerInactiveImg />
-          <Text style={styles.itemText}>꽃피</Text>
-        </View>
-      )}
-    </View>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.navContainer}>
+        {community ? (
+          <TouchableOpacity style={styles.itemContainer}>
+            <CommunityActiveImg />
+            <Text style={[styles.itemText, {color: "#A30FFA"}]}>커뮤니티</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.itemContainer}>
+            <CommunityInactiveImg />
+            <Text style={styles.itemText}>커뮤니티</Text>
+          </TouchableOpacity>
+        )}
+        {home ? (
+          <TouchableOpacity style={styles.itemContainer}>
+            <HomeActiveImg />
+            <Text style={[styles.itemText, {color: "#A30FFA"}]}>홈</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.itemContainer}>
+            <HomeInactiveImg />
+            <Text style={styles.itemText}>홈</Text>
+          </TouchableOpacity>
+        )}
+        {flower ? (
+          <TouchableOpacity style={styles.itemContainer}>
+            <FlowerActiveImg />
+            <Text style={[styles.itemText, {color: "#A30FFA"}]}>꽃피</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.itemContainer}>
+            <FlowerInactiveImg />
+            <Text style={styles.itemText}>꽃피</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  navContainer: {
-    flex: 1,
-    marginTop: 30,
-    flexDirection: "row",
-    width: "100%",
-    height: 52,
-    backgroundColor: "white",
-    justifyContent: "space-around",
-    alignItems: "center",
+  safe: {
+    // flex: 1,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.2,
@@ -63,6 +62,15 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    backgroundColor: "white",
+  },
+  navContainer: {
+    flexDirection: "row",
+    width: "100%",
+    height: 52,
+    backgroundColor: "white",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   itemContainer: {
     flex: 1,
