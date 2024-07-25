@@ -22,6 +22,7 @@ import NotificationScreen from './screens/NotificationScreen.js';
 import MyPageScreen from './screens/MyPageScreen.js';
 import ChildrenHomeScreen from './screens/ChildrenHomeScreen.js';
 import Communication from './screens/Communication.js';
+import FlowerRecordScreen from './screens/FlowerRecordScreen.js';
 import Commuroom from './screens/Commuroom.js';
 import Comment from './screens/Comment.js';
 
@@ -97,6 +98,11 @@ function App() {
             <Stack.Screen
               name="MyPage"
               component={MyPageScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="FlowerRecord"
+              component={FlowerRecordScreen}
               options={{ headerShown: false }}
             />
 
