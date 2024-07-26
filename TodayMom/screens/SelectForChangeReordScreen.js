@@ -11,7 +11,7 @@ const recordItem = [
   {recordedNumber: 856, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
 ]
 
-export default function SelectForChangeRecordScreen() {
+export default function SelectForChangeRecordScreen({navigation}) {
   const [completedRecord, setCompletedRecord] = useState(recordItem);
   const [selectedRecord, setSelctedRecord] = useState([]);
 
@@ -19,6 +19,11 @@ export default function SelectForChangeRecordScreen() {
     setSelctedRecord((prevRecord) => {
       return prevRecord.includes(record) ? prevRecord.filter((r) => r!==record) : [...prevRecord, record];
     })
+  }
+
+  // 추후 경로 변경 예정
+  const changeHandler = () => {
+    selectedRecord.length>0 && navigation.navigate("RecordChange");
   }
 
   const renderItem = ({item}) => {
@@ -47,7 +52,7 @@ export default function SelectForChangeRecordScreen() {
       </View>
       <SafeAreaView style={styles.safe}>
         <View style={styles.safeView}>
-          <BottomButton text="다음" />
+          <BottomButton text="다음" handler={changeHandler} selected={selectedRecord.length > 0} />
         </View>
       </SafeAreaView>
     </>
