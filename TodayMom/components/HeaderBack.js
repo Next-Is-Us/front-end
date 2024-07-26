@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { Image, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import LeftArrow from "../assets/images/leftArrow.svg";
 
 export default function HeaderBack({white}) {
   const navigation = useNavigation();
@@ -12,7 +13,7 @@ export default function HeaderBack({white}) {
     <SafeAreaView>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={goBackHandler}>
-          {white ? <Image source={require("../assets/images/whiteLeftArrow.png")} /> : <Image source={require("../assets/images/leftallow.png")} />}
+          {white ? <Image source={require("../assets/images/whiteLeftArrow.png")} /> : <LeftArrow />}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

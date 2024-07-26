@@ -16,6 +16,10 @@ export default function SelectForVisitHospitalScreen({navigation}) {
     isSelected && navigation.navigate("SelectForChangeRecord")
   }
 
+  const findHospitalHandler = () => {
+    navigation.navigate("FindHospital");
+  }
+
   return (
     <View style={styles.screen}>
       <HeaderBack />
@@ -32,11 +36,11 @@ export default function SelectForVisitHospitalScreen({navigation}) {
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.informTextButton}>
-        <View style={styles.informTextContainer}>
+        <TouchableOpacity style={styles.informTextContainer} onPress={findHospitalHandler}>
           <Text style={styles.informText}>
             내가 방문하는 병원이 제휴 병원인지 모르겠어요
           </Text>
-        </View>
+        </TouchableOpacity>
       </TouchableOpacity>
       <BottomButton text="다음" selected={isSelected} handler={nextHandler} />
     </View>
