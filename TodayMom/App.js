@@ -30,6 +30,8 @@ import SelectForVisitHospitalScreen from './screens/SelectForVisitHospitalScreen
 import SelectForChangeRecordScreen from './screens/SelectForChangeReordScreen.js';
 import RecordChangeScreen from './screens/RecordChangeScreen.js';
 import FindHospitalScreen from './screens/FindHospitalScreen.js';
+import Splash from './screens/Splash.js';
+import Intro from './screens/Intro.js';
 
 const Stack = createStackNavigator();
 
@@ -39,10 +41,20 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="MomHome">
+          <Stack.Navigator initialRouteName="Intro">
+            <Stack.Screen
+              name="Intro"
+              component={Intro}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Commuroom"
               component={Commuroom}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Splash"
+              component={Splash}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -125,9 +137,9 @@ function App() {
               component={SelectForChangeRecordScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="RecordChange"
-              component={RecordChangeScreen} 
+              component={RecordChangeScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
