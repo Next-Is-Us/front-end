@@ -29,6 +29,7 @@ import Commucreate from './screens/Commucreate.js';
 import SelectForVisitHospitalScreen from './screens/SelectForVisitHospitalScreen.js';
 import SelectForChangeRecordScreen from './screens/SelectForChangeReordScreen.js';
 import RecordChangeScreen from './screens/RecordChangeScreen.js';
+import FindHospitalScreen from './screens/FindHospitalScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -127,6 +128,11 @@ function App() {
             <Stack.Screen 
               name="RecordChange"
               component={RecordChangeScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="FindHospital"
+              component={FindHospitalScreen}
               options={{ headerShown: false }}
             />
 
