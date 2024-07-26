@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#A30FFA',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 33,
   },
   image: {
     marginTop: 12,
