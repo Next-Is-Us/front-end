@@ -14,7 +14,8 @@ const IntroRecord = () => {
           '자녀는 엄마의 상태를 확인해요',
         ]}
         image={RecordPhoneShadow}
-        onPress={() => navigation.navigate('DailyRecord')}
+        onPress={() => navigation.navigate('IntroNFT')}
+        indicatorOrder={['purple', 'one', 'one']}
       />
     </>
   );

@@ -18,7 +18,6 @@ const Intro = () => {
   const [currentShadow, setCurrentShadow] = useState(SeedShadow);
 
   useEffect(() => {
-    // 조건 체크 방법을 개선하여 이미지 교체
     const listenerId = moveAnim.addListener(({ value }) => {
       if (value < -15) {
         setCurrentShadow(SeedShadow2);
