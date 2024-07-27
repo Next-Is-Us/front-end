@@ -12,6 +12,7 @@ const Introcom = () => {
         details={['전문가의 큐레이션이 담긴', '갱년기 시기 영양/건강 정보']}
         image={IntroImage}
         onPress={() => navigation.navigate('DailyRecord')}
+        indicatorOrder={['one', 'one', 'purple']}
       />
     </>
   );

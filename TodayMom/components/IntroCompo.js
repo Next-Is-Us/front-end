@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -6,33 +6,115 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
+import TermsModal from './TermsModal';
 
-const IntroCompo = ({ title, details, image, onPress }) => {
+const IntroCompo = () => {
+  const [step, setStep] = useState(0);
+  const fadeAnim = useState(new Animated.Value(1))[0];
+  const translateXAnim = useState(new Animated.Value(0))[0];
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const steps = [
+    {
+      title: '매일의 기록',
+      details: [
+        '엄마는 매일의 상태를 기록하고,',
+        '자녀는 엄마의 상태를 확인해요',
+      ],
+      image: require('../assets/images/recordphoneshadow.png'),
+      indicatorOrder: ['purple', 'one', 'one'],
+    },
+    {
+      title: '꽃피 NFT',
+      details: ['갱년기 시기 기록을', '디지털 의료 보증서로 변환'],
+      image: require('../assets/images/intronft.png'),
+      indicatorOrder: ['one', 'purple', 'one'],
+    },
+    {
+      title: '커뮤니티',
+      details: ['전문가의 큐레이션이 담긴', '갱년기 시기 영양/건강 정보'],
+      image: require('../assets/images/Introcom.png'),
+      indicatorOrder: ['one', 'one', 'purple'],
+    },
+  ];
+
+  const currentStep = steps[step];
+
+  const handleNext = () => {
+    if (step === steps.length - 1) {
+      setModalVisible(true);
+    } else {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }).start(() => {
+        setStep((prevStep) => prevStep + 1);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: true,
+        }).start();
+      });
+    }
+  };
+
+  const renderIndicator = () => {
+    return currentStep.indicatorOrder.map((indicator, index) => {
+      let animationStyle = {};
+      if (index === 0) {
+        animationStyle = { transform: [{ translateX: translateXAnim }] };
+      } else if (index === 1) {
+        animationStyle = { transform: [{ translateX: translateXAnim }] };
+      }
+
+      if (indicator === 'purple') {
+        return (
+          <Animated.View key={index} style={[styles.purple, animationStyle]} />
+        );
+      } else {
+        return (
+          <Animated.View key={index} style={[styles.one, animationStyle]} />
+        );
+      }
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.indicator}>
-          <View style={styles.purple} />
-          <View style={styles.one} />
-          <View style={styles.one} />
-        </View>
+        <View style={styles.indicator}>{renderIndicator()}</View>
         <View style={styles.center}>
-          <Text style={styles.Title}>{title}</Text>
-          {details.map((detail, index) => (
-            <Text
+          <Animated.Text style={[styles.Title, { opacity: fadeAnim }]}>
+            {currentStep.title}
+          </Animated.Text>
+          {currentStep.details.map((detail, index) => (
+            <Animated.Text
               key={index}
-              style={[styles.detail, index > 0 && styles.indent]}
+              style={[
+                styles.detail,
+                index > 0 && styles.indent,
+                { opacity: fadeAnim },
+              ]}
             >
               {detail}
-            </Text>
+            </Animated.Text>
           ))}
-          <Image source={image} style={styles.record} />
+          <Animated.Image
+            source={currentStep.image}
+            style={[styles.record, { opacity: fadeAnim }]}
+          />
         </View>
         <View style={styles.spacer} />
-        <TouchableOpacity style={styles.button} onPress={onPress}>
+        <TouchableOpacity style={styles.button} onPress={handleNext}>
           <Text style={styles.nextButtonText}>다음</Text>
         </TouchableOpacity>
+        <TermsModal
+          isVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
       </View>
     </SafeAreaView>
   );
@@ -58,7 +140,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 33,
   },
-
   record: {
     marginTop: 19,
     width: 262,
@@ -76,11 +157,11 @@ const styles = StyleSheet.create({
   detail: {
     color: '#767676',
     fontFamily: 'Pretendard',
-    fontSize: 14, // 숫자로 변경
+    fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 20, // 숫자로 변경
-    letterSpacing: -0.35, // 숫자로 변경
+    lineHeight: 20,
+    letterSpacing: -0.35,
   },
   center: {
     marginTop: 16,
@@ -92,11 +173,11 @@ const styles = StyleSheet.create({
     color: '#111',
     textAlign: 'center',
     fontFamily: 'Pretendard',
-    fontSize: 28, // 숫자로 변경
+    fontSize: 28,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 38, // 숫자로 변경
-    letterSpacing: -0.7, // 숫자로 변경
+    lineHeight: 38,
+    letterSpacing: -0.7,
   },
   one: {
     width: 6,
@@ -128,6 +209,9 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 1,
+  },
+  indent: {
+    marginLeft: 20,
   },
 });
 

@@ -35,6 +35,7 @@ import Intro from './screens/Intro.js';
 import IntroNFT from './screens/IntroNFT.js';
 import IntroRecord from './screens/IntroRecord.js';
 import Introcom from './screens/Introcom.js';
+import IntroCompo from './components/IntroCompo.js';
 
 const Stack = createStackNavigator();
 
@@ -44,7 +45,7 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Introcom">
+          <Stack.Navigator initialRouteName="IntroCompo">
             <Stack.Screen
               name="Introcom"
               component={Introcom}
@@ -58,6 +59,11 @@ function App() {
             <Stack.Screen
               name="IntroRecord"
               component={IntroRecord}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="IntroCompo"
+              component={IntroCompo}
               options={{ headerShown: false }}
             />
             <Stack.Screen
