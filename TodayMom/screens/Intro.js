@@ -12,9 +12,13 @@ import Todaymom from '../assets/images/todaymom_black.svg';
 import Rectangle2 from '../assets/images/heartseeds.svg';
 import SeedShadow from '../assets/images/seedshadow.png';
 import SeedShadow2 from '../assets/images/seedshadow2.png';
+import { useNavigation } from '@react-navigation/native';
 
 const Intro = () => {
+  const navigation = useNavigation();
   const moveAnim = useRef(new Animated.Value(0)).current;
+  const shadowOpacity1 = useRef(new Animated.Value(1)).current;
+  const shadowOpacity2 = useRef(new Animated.Value(0)).current;
   const [currentShadow, setCurrentShadow] = useState(SeedShadow);
 
   useEffect(() => {
@@ -26,7 +30,7 @@ const Intro = () => {
       }
     });
 
-    const animation = Animated.loop(
+    const moveAnimation = Animated.loop(
       Animated.sequence([
         Animated.timing(moveAnim, {
           toValue: -20,
@@ -41,25 +45,68 @@ const Intro = () => {
       ])
     );
 
-    animation.start();
+    const shadowAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(shadowOpacity1, {
+          //진한 그림자가 투명해지고
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shadowOpacity2, {
+          //연한 그림자가 뚜렷해지고
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shadowOpacity2, {
+          //연한그림자가 투명해지고
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(shadowOpacity1, {
+          //진한그림자가 뚜렷해진다
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    moveAnimation.start();
+    shadowAnimation.start();
 
     return () => {
       moveAnim.removeListener(listenerId);
-      animation.stop();
+      moveAnimation.stop();
+      shadowAnimation.stop();
     };
   }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.textStyle}>엄마의 사람에 이제 내가 보답할게!</Text>
+        <Text style={styles.textStyle}>엄마의 사랑에 이제 내가 보답할게!</Text>
         <Todaymom style={styles.image} />
         <Animated.View style={{ transform: [{ translateY: moveAnim }] }}>
           <Rectangle2 style={styles.icon} />
         </Animated.View>
-        <Image source={currentShadow} style={styles.shadow} />
+        <View style={styles.shadowWrapper}>
+          <Animated.Image
+            source={SeedShadow}
+            style={[styles.shadow, { opacity: shadowOpacity1 }]}
+          />
+          <Animated.Image
+            source={SeedShadow2}
+            style={[styles.shadow, { opacity: shadowOpacity2 }]}
+          />
+        </View>
         <View style={styles.spacer} />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('IntroCompo')}
+        >
           <Text style={styles.nextButtonText}>다음</Text>
         </TouchableOpacity>
       </View>
@@ -76,6 +123,11 @@ const styles = StyleSheet.create({
     width: 220,
     height: 60,
     paddingTop: 0,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignSelf: 'center',
   },
   nextButtonText: {
     color: '#FFF',
@@ -125,6 +177,14 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 1,
+  },
+  shadowWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 220,
+    height: 60,
+    position: 'relative',
+    marginBottom: 76,
   },
 });
 

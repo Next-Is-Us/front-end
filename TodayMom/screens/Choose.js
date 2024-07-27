@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Baby from '../assets/images/baby.svg';
-import Mom from '../assets/images/moms.svg';
+import Boy from '../assets/images/Boy.svg';
+import Girl from '../assets/images/Girl.svg';
 
-const Start = () => {
+const Choose = () => {
   const [selectedButton, setSelectedButton] = useState(null);
   const navigation = useNavigation();
 
@@ -35,24 +35,25 @@ const Start = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>오늘의 맘에 오신 것을 환영해요!</Text>
-      <Text style={styles.subText}>어떤 사용자로 활동할</Text>
-      <Text style={[styles.subText, { marginBottom: 32 }]}>예정이신가요?</Text>
+      <Text style={styles.subText}>사랑하는 어머님의</Text>
+      <Text style={[styles.subText, { marginBottom: 32 }]}>
+        어떤 자녀 분이실까요?
+      </Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={getButtonStyle('mom')}
           onPress={() => handlePress('mom')}
         >
-          <Mom style={styles.image} resizeMode="contain" />
-          <Text style={getTextStyle('mom')}>엄마</Text>
+          <Girl style={styles.image} resizeMode="contain" />
+          <Text style={getTextStyle('mom')}>딸</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={getButtonStyle('daughter')}
           onPress={() => handlePress('daughter')}
         >
-          <Baby style={styles.image} resizeMode="contain" />
-          <Text style={getTextStyle('daughter')}>자녀</Text>
+          <Boy style={styles.image} resizeMode="contain" />
+          <Text style={getTextStyle('daughter')}>아들</Text>
         </TouchableOpacity>
       </View>
 
@@ -60,7 +61,7 @@ const Start = () => {
         style={getNextButtonStyle()}
         onPress={() => {
           if (selectedButton) {
-            navigation.navigate('Choose');
+            navigation.navigate('Nickname');
           }
         }}
         disabled={!selectedButton}
@@ -163,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Start;
+export default Choose;
