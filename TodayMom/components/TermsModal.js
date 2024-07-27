@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Modal,
   View,
   StyleSheet,
-  TouchableOpacity,
   Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
 
 import Checkbox from '../assets/images/checkbox.svg';
 import PurpleCheckbox from '../assets/images/purple_check.svg';
 import Allow from '../assets/images/rightallow.svg';
+import { useNavigation } from '@react-navigation/native';
 
 const screenHeight = Dimensions.get('window').height;
 
 const TermsModal = ({ isVisible, onClose }) => {
-  const [checkboxStates, setCheckboxStates] = useState({
+  const navigation = useNavigation(); // useNavigation 훅을 컴포넌트 내부에서 호출
+
+  const [checkboxStates, setCheckboxStates] = React.useState({
     all: false,
     age: false,
     serviceTerms: false,
@@ -24,9 +28,6 @@ const TermsModal = ({ isVisible, onClose }) => {
     marketing: false,
   });
 
-  const [buttonColor, setButtonColor] = useState('rgba(163, 15, 250, 0.15)'); // Default color
-
-  // Toggle individual checkbox
   const toggleCheckbox = (key) => {
     setCheckboxStates((prevStates) => ({
       ...prevStates,
@@ -34,7 +35,6 @@ const TermsModal = ({ isVisible, onClose }) => {
     }));
   };
 
-  // Toggle all checkboxes between checked and unchecked
   const handleAgreeAll = () => {
     const allChecked = Object.values(checkboxStates).every(Boolean);
     setCheckboxStates({
@@ -47,27 +47,23 @@ const TermsModal = ({ isVisible, onClose }) => {
     });
   };
 
-  // Check if all required checkboxes are checked
-  const areRequiredCheckboxesChecked = () => {
-    return (
-      checkboxStates.age &&
-      checkboxStates.serviceTerms &&
-      checkboxStates.privacyPolicy &&
-      checkboxStates.sensitiveInfo
-    );
-  };
-
-  useEffect(() => {
-    if (areRequiredCheckboxesChecked()) {
-      setButtonColor('#a30ffa'); // Set color to purple when all required checkboxes are checked
-    } else {
-      setButtonColor('rgba(163, 15, 250, 0.15)'); // Default color
-    }
-  }, [checkboxStates]);
-
   const renderCheckbox = (key) => {
     const isChecked = checkboxStates[key];
     return isChecked ? <PurpleCheckbox /> : <Checkbox />;
+  };
+
+  const allRequiredChecked = [
+    'age',
+    'serviceTerms',
+    'privacyPolicy',
+    'sensitiveInfo',
+  ].every((key) => checkboxStates[key]);
+
+  const handleComplete = () => {
+    if (allRequiredChecked) {
+      onClose(); // 모달을 닫기 위해 onClose 호출
+      navigation.navigate('Start');
+    }
   };
 
   return (
@@ -77,102 +73,79 @@ const TermsModal = ({ isVisible, onClose }) => {
       visible={isVisible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <View style={styles.notice}>
-            <Text style={styles.modalTitle}>약관에 동의해주세요</Text>
-            <Text style={styles.protect}>
-              여러분의 소중한 개인정보는 안전하게 지켜드립니다
-            </Text>
-          </View>
-
-          <View style={styles.agree}>
-            <View style={styles.row}>
-              <TouchableOpacity onPress={handleAgreeAll}>
-                {renderCheckbox('all')}
-              </TouchableOpacity>
-              <View style={styles.agreementTexts}>
-                <Text style={styles.agreetext}>모두 동의</Text>
-                <Text style={styles.agreedetail}>
-                  서비스 이용을 위해 아래의 약관을 모두 동의합니다
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.modalOverlay}>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalContent}>
+              <View style={styles.notice}>
+                <Text style={styles.modalTitle}>약관에 동의해주세요</Text>
+                <Text style={styles.protect}>
+                  여러분의 소중한 개인정보는 안전하게 지켜드립니다
                 </Text>
               </View>
-            </View>
-          </View>
 
-          <View style={styles.line} />
-
-          <View style={styles.agrees}>
-            <View style={styles.row}>
-              <TouchableOpacity onPress={() => toggleCheckbox('age')}>
-                {renderCheckbox('age')}
-              </TouchableOpacity>
-              <Text style={styles.agreetexts}>(필수) 만 14세 이상입니다.</Text>
-              <View style={styles.iconContainer}>
-                <Allow />
+              <View style={styles.agree}>
+                <View style={styles.row}>
+                  <TouchableOpacity onPress={handleAgreeAll}>
+                    {renderCheckbox('all')}
+                  </TouchableOpacity>
+                  <View style={styles.agreementTexts}>
+                    <Text style={styles.agreetext}>모두 동의</Text>
+                    <Text style={styles.agreedetail}>
+                      서비스 이용을 위해 아래의 약관을 모두 동의합니다
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
 
-          <View style={styles.agrees}>
-            <View style={styles.row}>
-              <TouchableOpacity onPress={() => toggleCheckbox('serviceTerms')}>
-                {renderCheckbox('serviceTerms')}
+              <View style={styles.line} />
+
+              {[
+                'age',
+                'serviceTerms',
+                'privacyPolicy',
+                'sensitiveInfo',
+                'marketing',
+              ].map((key) => (
+                <View style={styles.agrees} key={key}>
+                  <View style={styles.row}>
+                    <TouchableOpacity onPress={() => toggleCheckbox(key)}>
+                      {renderCheckbox(key)}
+                    </TouchableOpacity>
+                    <Text style={styles.agreetexts}>
+                      {key === 'age' && '(필수) 만 14세 이상입니다.'}
+                      {key === 'serviceTerms' && '(필수) 서비스 이용약관 동의'}
+                      {key === 'privacyPolicy' &&
+                        '(필수) 개인정보 처리방침 동의'}
+                      {key === 'sensitiveInfo' &&
+                        '(필수) 민감정보이용 및 약관 동의'}
+                      {key === 'marketing' && '(선택) 마케팅 수신 동의'}
+                    </Text>
+                    <View style={styles.iconContainer}>
+                      <Allow />
+                    </View>
+                  </View>
+                </View>
+              ))}
+
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: allRequiredChecked
+                      ? '#A30FFA'
+                      : 'rgba(163, 15, 250, 0.15)',
+                  },
+                ]}
+                disabled={!allRequiredChecked}
+                onPress={handleComplete} // onPress 핸들러 추가
+              >
+                <Text style={styles.buttontext}>가입 완료</Text>
               </TouchableOpacity>
-              <Text style={styles.agreetexts}>(필수) 서비스 이용약관 동의</Text>
-              <View style={styles.iconContainer}>
-                <Allow />
-              </View>
             </View>
-          </View>
-
-          <View style={styles.agrees}>
-            <View style={styles.row}>
-              <TouchableOpacity onPress={() => toggleCheckbox('privacyPolicy')}>
-                {renderCheckbox('privacyPolicy')}
-              </TouchableOpacity>
-              <Text style={styles.agreetexts}>
-                (필수) 개인정보 처리방침 동의
-              </Text>
-              <View style={styles.iconContainer}>
-                <Allow />
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.agrees}>
-            <View style={styles.row}>
-              <TouchableOpacity onPress={() => toggleCheckbox('sensitiveInfo')}>
-                {renderCheckbox('sensitiveInfo')}
-              </TouchableOpacity>
-              <Text style={styles.agreetexts}>
-                (필수) 민감정보이용 및 약관 동의
-              </Text>
-              <View style={styles.iconContainer}>
-                <Allow />
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.agrees}>
-            <View style={styles.row}>
-              <TouchableOpacity onPress={() => toggleCheckbox('marketing')}>
-                {renderCheckbox('marketing')}
-              </TouchableOpacity>
-              <Text style={styles.agreetexts}>(선택) 마케팅 수신 동의</Text>
-              <View style={styles.iconContainer}>
-                <Allow />
-              </View>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: buttonColor }]}
-          >
-            <Text style={styles.buttontext}>가입 완료</Text>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
@@ -199,7 +172,6 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
     paddingLeft: 16,
     borderRadius: 12,
-    backgroundColor: 'rgba(163, 15, 250, 0.15)',
     height: 52,
     marginTop: 29,
   },
@@ -302,11 +274,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     letterSpacing: -0.35,
     color: '#767676',
-  },
-  closeButton: {
-    padding: 10,
-    backgroundColor: '#ccc',
-    borderRadius: 5,
   },
 });
 

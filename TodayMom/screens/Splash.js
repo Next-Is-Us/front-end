@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from '../assets/images/splash_icon.svg';
 import SecondIcon from '../assets/images/todaymom.svg';
 
@@ -7,6 +8,7 @@ const Splash = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   const secondTranslateY = useRef(new Animated.Value(-18)).current;
   const opacity = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
 
   useEffect(() => {
     Animated.sequence([
@@ -27,8 +29,12 @@ const Splash = () => {
           useNativeDriver: true,
         }),
       ]),
-    ]).start();
-  }, []);
+    ]).start(() => {
+      setTimeout(() => {
+        navigation.navigate('Intro');
+      }, 1000);
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

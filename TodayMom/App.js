@@ -32,10 +32,8 @@ import RecordChangeScreen from './screens/RecordChangeScreen.js';
 import FindHospitalScreen from './screens/FindHospitalScreen.js';
 import Splash from './screens/Splash.js';
 import Intro from './screens/Intro.js';
-import IntroNFT from './screens/IntroNFT.js';
-import IntroRecord from './screens/IntroRecord.js';
-import Introcom from './screens/Introcom.js';
 import IntroCompo from './components/IntroCompo.js';
+import Choose from './screens/Choose.js';
 
 const Stack = createStackNavigator();
 
@@ -45,21 +43,28 @@ function App() {
       <PostProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="IntroCompo">
+          <Stack.Navigator initialRouteName="Splash">
             <Stack.Screen
-              name="Introcom"
-              component={Introcom}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="IntroNFT"
-              component={IntroNFT}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="IntroRecord"
-              component={IntroRecord}
-              options={{ headerShown: false }}
+              name="Choose"
+              component={Choose}
+              options={({ navigation }) => ({
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image
+                      source={require('./assets/images/leftallow.png')}
+                      style={{ width: 25, height: 25 }}
+                    />
+                  </TouchableOpacity>
+                ),
+                headerLeftContainerStyle: {
+                  paddingLeft: 20,
+                },
+                headerStyle: {
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+              })}
             />
             <Stack.Screen
               name="IntroCompo"

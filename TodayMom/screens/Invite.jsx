@@ -1,34 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   Animated,
+  Clipboard,
 } from 'react-native';
-import Toast from 'react-native-toast-message';
-import { Clipboard } from 'react-native';
-import { useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 const Invite = () => {
   const [link, setLink] = useState('www.todays.mom');
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current; // opacity의 초기값을 0으로 설정
   const navigation = useNavigation();
+
   const handleCopy = () => {
-    // 클립보드에 링크 복사
     Clipboard.setString(link);
 
-    // 애니메이션 페이드 인
+    // 애니메이션 시작
     Animated.timing(fadeAnim, {
-      toValue: 1,
+      toValue: 1, // opacity를 1로 변경하여 보이게 함
       duration: 500,
       useNativeDriver: true,
     }).start(() => {
-      // 2초 후에 페이드 아웃
+      // 2초 후에 애니메이션을 다시 실행하여 숨김
       setTimeout(() => {
         Animated.timing(fadeAnim, {
-          toValue: 0,
+          toValue: 0, // opacity를 0으로 변경하여 숨김
           duration: 500,
           useNativeDriver: true,
         }).start();
@@ -53,17 +51,9 @@ const Invite = () => {
         </TouchableOpacity>
       </View>
 
-      {/* <Animated.View style={[styles.centeredView, { opacity: fadeAnim }]}>
-        <View style={styles.toast}>
-          <Text style={[styles.link, { opacity: fadeAnim }]}>링크가 복사되었습니다!</Text>
-        </View>
-      </Animated.View> */}
-
-      <View style={styles.centeredView}>
-        <View style={styles.toast}>
-          <Text style={styles.link}>링크가 복사되었습니다!</Text>
-        </View>
-      </View>
+      <Animated.View style={[styles.toast, { opacity: fadeAnim }]}>
+        <Text style={styles.toastText}>링크가 복사되었습니다!</Text>
+      </Animated.View>
 
       <TouchableOpacity
         style={styles.nextButton}
@@ -78,6 +68,15 @@ const Invite = () => {
 };
 
 const styles = StyleSheet.create({
+  toastText: {
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+    letterSpacing: -0.3,
+  },
   container: {
     flex: 1,
     alignItems: 'flex-start',
@@ -100,6 +99,11 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    bottom: 150,
+    left: '50%',
+    transform: [{ translateX: -50 }],
+    zIndex: 1000,
   },
   link: {
     color: '#FFF',
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     backgroundColor: '#F7F7FB',
-    marginBottom: 316,
+    marginBottom: 402,
   },
   linkText: {
     flex: 1,
