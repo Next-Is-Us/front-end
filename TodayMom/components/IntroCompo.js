@@ -210,9 +210,6 @@ const styles = StyleSheet.create({
   spacer: {
     flex: 1,
   },
-  indent: {
-    marginLeft: 20,
-  },
 });
 
 export default IntroCompo;
