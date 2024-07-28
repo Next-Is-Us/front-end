@@ -5,10 +5,13 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import HeaderBack from '../components/HeaderBack';
 import { useState } from 'react';
 import FamilyMember from '../components/FamilyMember';
+// import Footer from '../assets/images/footers.svg';
+import Footers from '../assets/images/footerpng.png';
 
 const familyMemberDummyData = [{ name: '김지은' }, { name: '박제준' }];
 
@@ -54,6 +57,11 @@ export default function MyPageScreen({ route }) {
               </TouchableOpacity>
             </View>
           </View>
+
+          <Image
+            source={require('../assets/images/footerpng.png')}
+            style={styles.footers}
+          />
         </View>
       </SafeAreaView>
     </View>
@@ -61,6 +69,11 @@ export default function MyPageScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
+  footers: {
+    marginTop: 216,
+    width: 360,
+    height: 330,
+  },
   rootScreen: {
     flex: 1,
   },
