@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   imgContainer: {
-    flex: 1
+    width: 28,
+    height: 28
   },
 });
