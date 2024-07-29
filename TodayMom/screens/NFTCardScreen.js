@@ -151,10 +151,13 @@ export default function NFTCardScreen({route}) {
             </>
           )}
         </Pressable>
-        {isFlipped && (
+        {/* {isFlipped && (
+            <Text style={styles.touchText}>꽃피 NFT 카드<Text style={styles.touchText2}>를 터치해보세요</Text></Text>
+        )} */}
+      </View>
+      {isFlipped && (
             <Text style={styles.touchText}>꽃피 NFT 카드<Text style={styles.touchText2}>를 터치해보세요</Text></Text>
         )}
-      </View>
     </ImageBackground>
   )
 }
@@ -183,16 +186,16 @@ const styles = StyleSheet.create({
     backfaceVisibility: "hidden",
   },
   touchText: {
-    // marginTop: 150,
+    marginTop: 120,
     color: "#FFFFFF",
     fontSize: 15,
     fontWeight: "600",
     lineHeight: 22,
     letterSpacing: -0.375,
     textAlign: "center",
-    position: "absolute",
-    alignSelf: "center",
-    bottom: -150,
+    // position: "absolute",
+    // alignSelf: "center",
+    // bottom: -150,
   },
   touchText2: {
     color: "#FFFFFF",

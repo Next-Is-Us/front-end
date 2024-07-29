@@ -12,6 +12,8 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
   const topRotationAnimation = useRef(new Animated.Value(0)).current;
   const leftShineAnimation = useRef(new Animated.Value(0)).current;
   const leftRotationAnimation = useRef(new Animated.Value(0)).current;
+  const rightShineAnimation = useRef(new Animated.Value(0)).current;
+  const rightRotationAnimation = useRef(new Animated.Value(0)).current;
   const shadowAnimation = useRef(new Animated.Value(0)).current;
   const borderAnimation = useRef(new Animated.Value(0)).current;
 
@@ -81,6 +83,15 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
     transform: [{rotate: leftRotationInterpolate}]
   };
 
+  const rightRotationInterpolate = rightRotationAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "-90deg"],
+  });
+
+  const rightRotationStyle = {
+    transform: [{rotate: rightRotationInterpolate}]
+  };
+
   const topShining = () => {
     return Animated.parallel([
       Animated.sequence([
@@ -116,7 +127,7 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
     return Animated.parallel([
       Animated.sequence([
         Animated.timing(leftShineAnimation, {
-          toValue: -15,
+          toValue: -20,
           duration: 300,
           useNativeDriver: true,
         }),
@@ -144,24 +155,24 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
   const rightShining = () => {
     return Animated.parallel([
       Animated.sequence([
-        Animated.timing(leftShineAnimation, {
+        Animated.timing(rightShineAnimation, {
           toValue: 5,
           duration: 300,
           useNativeDriver: true,
         }),
-        Animated.timing(leftShineAnimation, {
+        Animated.timing(rightShineAnimation, {
           toValue: 0,
           duration: 200,
           useNativeDriver: true,
         })
       ]),
       Animated.sequence([
-        Animated.timing(leftRotationAnimation, {
+        Animated.timing(rightRotationAnimation, {
           toValue: 1,
           duration: 400,
           useNativeDriver: true
         }),
-        Animated.timing(leftRotationAnimation, {
+        Animated.timing(rightRotationAnimation, {
           toValue: 0,
           duration: 400,
           useNativeDriver: true
@@ -203,8 +214,8 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
 
   const rightCombinedTransformStyle = {
     transform: [
-      { translateY: leftShineAnimation },
-      ...leftRotationStyle.transform
+      { translateY: rightShineAnimation },
+      ...rightRotationStyle.transform
     ]
   };
 
