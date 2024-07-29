@@ -35,6 +35,7 @@ import Splash from './screens/Splash.js';
 import Intro from './screens/Intro.js';
 import IntroCompo from './components/IntroCompo.js';
 import Choose from './screens/Choose.js';
+import { UserProvider } from './context/UserContext.js';
 
 const Stack = createStackNavigator();
 
@@ -42,193 +43,195 @@ function App() {
   return (
     <>
       <PostProvider>
-        <StatusBar style="auto" />
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="MomHome">
-            <Stack.Screen
-              name="Choose"
-              component={Choose}
-              options={({ navigation }) => ({
-                headerTitle: '',
-                headerLeft: () => (
-                  <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image
-                      source={require('./assets/images/leftallow.png')}
-                      style={{ width: 25, height: 25 }}
-                    />
-                  </TouchableOpacity>
-                ),
-                headerLeftContainerStyle: {
-                  paddingLeft: 20,
-                },
-                headerStyle: {
-                  elevation: 0,
-                  shadowOpacity: 0,
-                },
-              })}
-            />
-            <Stack.Screen
-              name="IntroCompo"
-              component={IntroCompo}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Intro"
-              component={Intro}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Commuroom"
-              component={Commuroom}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Splash"
-              component={Splash}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Commucreate"
-              component={Commucreate}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Comment"
-              component={Comment}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Start"
-              component={Start}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Communication"
-              component={Communication}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="NewWrite"
-              component={NewWrite}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ViewContent"
-              component={ViewContent}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="InfoWrite"
-              component={InfoWrite}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MomHome"
-              component={MomHomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ChildrenHome"
-              component={ChildrenHomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SelectCondition"
-              component={MomRecordConditionScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="WriteCondition"
-              component={MomRecordConditionAdditionScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Notification"
-              component={NotificationScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MyPage"
-              component={MyPageScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="FlowerRecord"
-              component={FlowerRecordScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SelectForVisitHospital"
-              component={SelectForVisitHospitalScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SelectForChangeRecord"
-              component={SelectForChangeRecordScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RecordChange"
-              component={RecordChangeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="FindHospital"
-              component={FindHospitalScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen 
-              name="NFTCard"
-              component={NFTCardScreen}
-              options={{ headerShown: false }}
-            />
+        <UserProvider>
+          <StatusBar style="auto" />
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Flash">
+              <Stack.Screen
+                name="Choose"
+                component={Choose}
+                options={({ navigation }) => ({
+                  headerTitle: '',
+                  headerLeft: () => (
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                      <Image
+                        source={require('./assets/images/leftallow.png')}
+                        style={{ width: 25, height: 25 }}
+                      />
+                    </TouchableOpacity>
+                  ),
+                  headerLeftContainerStyle: {
+                    paddingLeft: 20,
+                  },
+                  headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                  },
+                })}
+              />
+              <Stack.Screen
+                name="IntroCompo"
+                component={IntroCompo}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Intro"
+                component={Intro}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Commuroom"
+                component={Commuroom}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Splash"
+                component={Splash}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Commucreate"
+                component={Commucreate}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Comment"
+                component={Comment}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Start"
+                component={Start}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Communication"
+                component={Communication}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="NewWrite"
+                component={NewWrite}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="ViewContent"
+                component={ViewContent}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="InfoWrite"
+                component={InfoWrite}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MomHome"
+                component={MomHomeScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="ChildrenHome"
+                component={ChildrenHomeScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="SelectCondition"
+                component={MomRecordConditionScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="WriteCondition"
+                component={MomRecordConditionAdditionScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Notification"
+                component={NotificationScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MyPage"
+                component={MyPageScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="FlowerRecord"
+                component={FlowerRecordScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="SelectForVisitHospital"
+                component={SelectForVisitHospitalScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="SelectForChangeRecord"
+                component={SelectForChangeRecordScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="RecordChange"
+                component={RecordChangeScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="FindHospital"
+                component={FindHospitalScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="NFTCard"
+                component={NFTCardScreen}
+                options={{ headerShown: false }}
+              />
 
-            <Stack.Screen
-              name="Nickname"
-              component={Nickname}
-              options={({ navigation }) => ({
-                headerTitle: '',
-                headerLeft: () => (
-                  <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image
-                      source={require('./assets/images/leftallow.png')}
-                      style={{ width: 25, height: 25 }}
-                    />
-                  </TouchableOpacity>
-                ),
-                headerLeftContainerStyle: {
-                  paddingLeft: 20,
-                },
-                headerStyle: {
-                  elevation: 0,
-                  shadowOpacity: 0,
-                },
-              })}
-            />
-            <Stack.Screen
-              name="Invite"
-              component={Invite}
-              options={({ navigation }) => ({
-                headerTitle: '',
-                headerLeft: () => (
-                  <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image
-                      source={require('./assets/images/leftallow.png')}
-                      style={{ width: 25, height: 25 }}
-                    />
-                  </TouchableOpacity>
-                ),
-                headerLeftContainerStyle: {
-                  paddingLeft: 20,
-                },
-                headerStyle: {
-                  elevation: 0,
-                  shadowOpacity: 0,
-                },
-              })}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+              <Stack.Screen
+                name="Nickname"
+                component={Nickname}
+                options={({ navigation }) => ({
+                  headerTitle: '',
+                  headerLeft: () => (
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                      <Image
+                        source={require('./assets/images/leftallow.png')}
+                        style={{ width: 25, height: 25 }}
+                      />
+                    </TouchableOpacity>
+                  ),
+                  headerLeftContainerStyle: {
+                    paddingLeft: 20,
+                  },
+                  headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                  },
+                })}
+              />
+              <Stack.Screen
+                name="Invite"
+                component={Invite}
+                options={({ navigation }) => ({
+                  headerTitle: '',
+                  headerLeft: () => (
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                      <Image
+                        source={require('./assets/images/leftallow.png')}
+                        style={{ width: 25, height: 25 }}
+                      />
+                    </TouchableOpacity>
+                  ),
+                  headerLeftContainerStyle: {
+                    paddingLeft: 20,
+                  },
+                  headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                  },
+                })}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </UserProvider>
       </PostProvider>
     </>
   );

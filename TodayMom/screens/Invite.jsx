@@ -8,25 +8,74 @@ import {
   Clipboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
+import { useUser } from '../context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Invite = () => {
-  const [link, setLink] = useState('www.todays.mom');
+  const [link, setLink] = useState('');
   const fadeAnim = useRef(new Animated.Value(0)).current; // opacity의 초기값을 0으로 설정
   const navigation = useNavigation();
+  const { userDetails, setUserDetails } = useUser();
+
+  useEffect(() => {
+    fetch('https://15.164.134.131/api/link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data.link);
+        setUserDetails((prevDetails) => ({
+          ...prevDetails,
+          link: data.data.link,
+        }));
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleCompleteSignup = () => {
+    fetch('https://15.164.134.131/api/user/signUp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userDetails),
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            console.log('Response Data:', data);
+            const accessToken = data.data.accessToken;
+            if (accessToken) {
+              AsyncStorage.setItem('accessToken', accessToken)
+                .then(() => {
+                  console.log('AccessToken 저장됨:', accessToken);
+                  navigation.navigate('MomHome');
+                })
+                .catch((error) => console.error('AsyncStorage Error:', error));
+            }
+          });
+        } else {
+          throw new Error('Signup failed');
+        }
+      })
+      .catch(console.error);
+  };
 
   const handleCopy = () => {
     Clipboard.setString(link);
 
-    // 애니메이션 시작
     Animated.timing(fadeAnim, {
-      toValue: 1, // opacity를 1로 변경하여 보이게 함
+      toValue: 1,
       duration: 500,
       useNativeDriver: true,
     }).start(() => {
-      // 2초 후에 애니메이션을 다시 실행하여 숨김
       setTimeout(() => {
         Animated.timing(fadeAnim, {
-          toValue: 0, // opacity를 0으로 변경하여 숨김
+          toValue: 0,
           duration: 500,
           useNativeDriver: true,
         }).start();
@@ -44,7 +93,7 @@ const Invite = () => {
 
       <View style={styles.linkContainer}>
         <Text style={styles.linkText} numberOfLines={1}>
-          {link}
+          {userDetails.link}
         </Text>
         <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
           <Text style={styles.copyButtonText}>복사</Text>
@@ -57,9 +106,7 @@ const Invite = () => {
 
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => {
-          navigation.navigate('MomHome');
-        }}
+        onPress={() => handleCompleteSignup()}
       >
         <Text style={styles.nextButtonText}>가입 완료</Text>
       </TouchableOpacity>

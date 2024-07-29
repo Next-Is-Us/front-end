@@ -7,13 +7,22 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../context/UserContext';
 
 const Nickname = () => {
   const [nickname, setNickname] = useState('');
-
+  const { userDetails, setUserDetails } = useUser();
   const isButtonEnabled = nickname.length > 0;
 
   const navigation = useNavigation();
+
+  const handleNicknameChange = (nickname) => {
+    setNickname(nickname);
+    setUserDetails((prevDetails) => ({
+      ...prevDetails,
+      nickname,
+    }));
+  };
 
   return (
     <View style={styles.container}>
@@ -22,7 +31,7 @@ const Nickname = () => {
 
       <TextInput
         style={styles.input}
-        onChangeText={setNickname}
+        onChangeText={handleNicknameChange}
         value={nickname}
         placeholder="이렇게 불러주세요!!"
       />
