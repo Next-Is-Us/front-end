@@ -3,13 +3,23 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Boy from '../assets/images/Boy.svg';
 import Girl from '../assets/images/Girl.svg';
+import { useUser } from '../context/UserContext';
 
 const Choose = () => {
   const [selectedButton, setSelectedButton] = useState(null);
   const navigation = useNavigation();
+  const { userDetails, setUserDetails } = useUser();
+
+  // const handlePress = (buttonId) => {
+  //   setSelectedButton(buttonId);
+  // };
 
   const handlePress = (buttonId) => {
     setSelectedButton(buttonId);
+    setUserDetails((prevDetails) => ({
+      ...prevDetails,
+      userRoles: buttonId === 'mom' ? ['ROLE_DAUGHTER'] : ['ROLE_SON'],
+    }));
   };
 
   const getButtonStyle = (buttonId) => {
