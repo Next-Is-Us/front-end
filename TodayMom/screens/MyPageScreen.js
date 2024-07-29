@@ -58,10 +58,12 @@ export default function MyPageScreen({ route }) {
             </View>
           </View>
 
-          <Image
-            source={require('../assets/images/footerpng.png')}
-            style={styles.footers}
-          />
+          <View style={styles.imagecon}>
+            <Image
+              source={require('../assets/images/footerpng.png')}
+              style={styles.footers}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </View>
@@ -69,8 +71,10 @@ export default function MyPageScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  footers: {
+  imagecon: {
     marginTop: 216,
+  },
+  footers: {
     width: 360,
     height: 330,
   },
