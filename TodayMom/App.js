@@ -31,6 +31,10 @@ import SelectForChangeRecordScreen from './screens/SelectForChangeReordScreen.js
 import RecordChangeScreen from './screens/RecordChangeScreen.js';
 import FindHospitalScreen from './screens/FindHospitalScreen.js';
 import NFTCardScreen from './screens/NFTCardScreen.js';
+import Splash from './screens/Splash.js';
+import Intro from './screens/Intro.js';
+import IntroCompo from './components/IntroCompo.js';
+import Choose from './screens/Choose.js';
 
 const Stack = createStackNavigator();
 
@@ -42,8 +46,45 @@ function App() {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="MomHome">
             <Stack.Screen
+              name="Choose"
+              component={Choose}
+              options={({ navigation }) => ({
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image
+                      source={require('./assets/images/leftallow.png')}
+                      style={{ width: 25, height: 25 }}
+                    />
+                  </TouchableOpacity>
+                ),
+                headerLeftContainerStyle: {
+                  paddingLeft: 20,
+                },
+                headerStyle: {
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+              })}
+            />
+            <Stack.Screen
+              name="IntroCompo"
+              component={IntroCompo}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Intro"
+              component={Intro}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="Commuroom"
               component={Commuroom}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Splash"
+              component={Splash}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -126,9 +167,9 @@ function App() {
               component={SelectForChangeRecordScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="RecordChange"
-              component={RecordChangeScreen} 
+              component={RecordChangeScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

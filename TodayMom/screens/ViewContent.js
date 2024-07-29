@@ -7,7 +7,6 @@ import { Image } from 'react-native';
 const ViewContent = ({ route }) => {
   const post = route?.params?.post;
 
-  // post 데이터와 이미지 URI 확인
   console.log('Post data:', post);
   if (post?.imageUri) {
     console.log('Image URI:', post.imageUri);
@@ -27,6 +26,7 @@ const ViewContent = ({ route }) => {
         <Header />
         <View style={styles.content}>
           <Text style={styles.title}>{post.title}</Text>
+          <Text style={styles.date}>2024.07.28</Text>
           <View style={styles.horizontalLine}></View>
           <Text style={styles.contenttext}>{post.content}</Text>
           <ScrollView
@@ -51,9 +51,17 @@ const ViewContent = ({ route }) => {
 };
 
 const screenWidth = Dimensions.get('window').width;
-const imageWidth = (screenWidth - 50) / 2; // 3개에 맞추어 조정
+const imageWidth = (screenWidth - 50) / 2;
 
 const styles = StyleSheet.create({
+  date: {
+    fontFamily: 'Pretendard',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+    color: '#767676',
+  },
   scrollViewStyle: {
     flexDirection: 'row',
     marginTop: 32,

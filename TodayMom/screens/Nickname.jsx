@@ -34,7 +34,7 @@ const Nickname = () => {
             navigation.navigate('Invite');
           }
         }}
-        disabled={!isButtonEnabled} // 버튼이 비활성화 상태일 때는 클릭 이벤트를 막음
+        disabled={!isButtonEnabled}
       >
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>

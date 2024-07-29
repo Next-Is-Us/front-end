@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,31 +9,14 @@ import {
 } from 'react-native';
 import { usePosts } from './PostContext';
 import { useNavigation } from '@react-navigation/native';
-
-const images = {
-  sampleImage: require('../assets/images/beam.png'),
-};
-
-// const posts = [
-//   {
-//     id: '1',
-//     title: '게시글 제목',
-//     content:
-//       '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
-//     imageUri: 'sampleImage',
-//   },
-//   {
-//     id: '2',
-//     title: '게시글 제목',
-//     content:
-//       '필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록 조절해야합니다.',
-//     imageUri: null,
-//   },
-// ];
+import BottomNav from '../components/BottomNav';
+import PurpleNav from '../components/PurpleNav.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const InfoWrite = () => {
   const { posts } = usePosts();
   const navigation = useNavigation();
+  const [activeTab, setActiveTab] = useState('InfoWrite');
 
   const renderItem = ({ item }) => {
     return (
@@ -59,29 +42,32 @@ const InfoWrite = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.textStyle}>소통방</Text>
-        <Text style={styles.textStyle2}>갱년기 건강 정보</Text>
-      </View>
-      <FlatList
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.list}
-        contentContainerStyle={styles.listContent}
-      />
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => navigation.navigate('NewWrite')}
-      >
-        <Text style={styles.write}>글쓰기</Text>
-        <Image
-          source={require('../assets/images/pencil.png')}
-          style={styles.fabIcon}
-        />
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <PurpleNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      {activeTab === 'InfoWrite' && (
+        <>
+          <FlatList
+            data={posts}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            style={styles.list}
+            contentContainerStyle={styles.listContent}
+          />
+          <TouchableOpacity
+            style={styles.fab}
+            onPress={() => navigation.navigate('NewWrite')}
+          >
+            <Text style={styles.write}>글쓰기</Text>
+            <Image
+              source={require('../assets/images/pencil.png')}
+              style={styles.fabIcon}
+            />
+          </TouchableOpacity>
+        </>
+      )}
+
+      <BottomNav community />
+    </SafeAreaView>
   );
 };
 
@@ -101,9 +87,10 @@ const styles = StyleSheet.create({
     letterSpacing: -0.325,
   },
   container: {
-    marginTop: 36,
     flex: 1,
-    padding: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
     backgroundColor: '#F1F1F5',
   },
   headerContainer: {

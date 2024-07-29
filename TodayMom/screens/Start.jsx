@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Baby from '../assets/images/baby.svg';
+import Mom from '../assets/images/moms.svg';
 
 const Start = () => {
   const [selectedButton, setSelectedButton] = useState(null);
@@ -41,11 +43,7 @@ const Start = () => {
           style={getButtonStyle('mom')}
           onPress={() => handlePress('mom')}
         >
-          <Image
-            source={require('../assets/images/Woman.png')}
-            style={styles.image}
-            resizeMode="contain"
-          />
+          <Mom style={styles.image} resizeMode="contain" />
           <Text style={getTextStyle('mom')}>엄마</Text>
         </TouchableOpacity>
 
@@ -53,11 +51,7 @@ const Start = () => {
           style={getButtonStyle('daughter')}
           onPress={() => handlePress('daughter')}
         >
-          <Image
-            source={require('../assets/images/Daughter.png')}
-            style={styles.image}
-            resizeMode="contain"
-          />
+          <Baby style={styles.image} resizeMode="contain" />
           <Text style={getTextStyle('daughter')}>자녀</Text>
         </TouchableOpacity>
       </View>
@@ -66,10 +60,10 @@ const Start = () => {
         style={getNextButtonStyle()}
         onPress={() => {
           if (selectedButton) {
-            navigation.navigate('Nickname');
+            navigation.navigate('Choose');
           }
         }}
-        disabled={!selectedButton} // selectedButton이 null이면 버튼을 비활성화
+        disabled={!selectedButton}
       >
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>
