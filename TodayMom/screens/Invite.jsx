@@ -47,13 +47,21 @@ const Invite = () => {
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
+            console.log('User Details:', userDetails);
             console.log('Response Data:', data);
             const accessToken = data.data.accessToken;
             if (accessToken) {
               AsyncStorage.setItem('accessToken', accessToken)
                 .then(() => {
                   console.log('AccessToken 저장됨:', accessToken);
-                  navigation.navigate('MomHome');
+                  if (userDetails.userRoles.includes('ROLE_MOM')) {
+                    navigation.navigate('MomHome');
+                  } else if (
+                    userDetails.userRoles.includes('ROLE_SON') ||
+                    userDetails.userRoles.includes('ROLE_DAUGHTER')
+                  ) {
+                    navigation.navigate('ChildrenHome');
+                  }
                 })
                 .catch((error) => console.error('AsyncStorage Error:', error));
             }
