@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const InfoWrite = () => {
   const { posts } = usePosts();
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState('InfoWrite');
+  // const [activeTab, setActiveTab] = useState('InfoWrite');
 
   const renderItem = ({ item }) => {
     return (
@@ -43,30 +43,24 @@ const InfoWrite = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <PurpleNav activeTab={activeTab} setActiveTab={setActiveTab} />
-      {activeTab === 'InfoWrite' && (
-        <>
-          <FlatList
-            data={posts}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.list}
-            contentContainerStyle={styles.listContent}
-          />
-          <TouchableOpacity
-            style={styles.fab}
-            onPress={() => navigation.navigate('NewWrite')}
-          >
-            <Text style={styles.write}>글쓰기</Text>
-            <Image
-              source={require('../assets/images/pencil.png')}
-              style={styles.fabIcon}
-            />
-          </TouchableOpacity>
-        </>
-      )}
-
-      <BottomNav community />
+      <FlatList
+        data={posts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        style={styles.list}
+        contentContainerStyle={styles.listContent}
+      />
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate('NewWrite')}
+      >
+        <Text style={styles.write}>글쓰기</Text>
+        <Image
+          source={require('../assets/images/pencil.png')}
+          style={styles.fabIcon}
+        />
+      </TouchableOpacity>
+      {/* <BottomNav community /> */}
     </SafeAreaView>
   );
 };

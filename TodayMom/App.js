@@ -36,6 +36,7 @@ import Intro from './screens/Intro.js';
 import IntroCompo from './components/IntroCompo.js';
 import Choose from './screens/Choose.js';
 import { UserProvider } from './context/UserContext.js';
+import CommunityPage from './components/CommunityPage.js';
 
 const Stack = createStackNavigator();
 
@@ -46,7 +47,7 @@ function App() {
         <UserProvider>
           <StatusBar style="auto" />
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Splash">
+            <Stack.Navigator initialRouteName="MomHome">
               <Stack.Screen
                 name="Choose"
                 component={Choose}
@@ -68,6 +69,11 @@ function App() {
                     shadowOpacity: 0,
                   },
                 })}
+              />
+              <Stack.Screen
+                name="CommunityPage"
+                component={CommunityPage}
+                options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="IntroCompo"
