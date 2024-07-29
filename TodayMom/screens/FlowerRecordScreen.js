@@ -18,9 +18,15 @@ export default function FlowerRecordScreen({navigation}) {
     navigation.navigate("SelectForVisitHospital");
   }
 
+  const recordNFTHandler = (item) => {
+    item.complete && navigation.navigate("NFTCard", {info: item});
+  }
+
   const renderItem = ({item}) => {
     return (
-      <ConditionRecordedItem recordItem={item} />
+      <TouchableOpacity onPress={() => recordNFTHandler(item)}>
+        <ConditionRecordedItem recordItem={item} />
+      </TouchableOpacity>
     )
   }
 

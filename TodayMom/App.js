@@ -30,6 +30,7 @@ import SelectForVisitHospitalScreen from './screens/SelectForVisitHospitalScreen
 import SelectForChangeRecordScreen from './screens/SelectForChangeReordScreen.js';
 import RecordChangeScreen from './screens/RecordChangeScreen.js';
 import FindHospitalScreen from './screens/FindHospitalScreen.js';
+import NFTCardScreen from './screens/NFTCardScreen.js';
 import Splash from './screens/Splash.js';
 import Intro from './screens/Intro.js';
 import IntroCompo from './components/IntroCompo.js';
@@ -174,6 +175,11 @@ function App() {
             <Stack.Screen
               name="FindHospital"
               component={FindHospitalScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="NFTCard"
+              component={NFTCardScreen}
               options={{ headerShown: false }}
             />
 

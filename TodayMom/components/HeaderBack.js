@@ -12,10 +12,10 @@ export default function HeaderBack({white}) {
   return (
     <SafeAreaView>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={goBackHandler}>
+        <TouchableOpacity onPress={goBackHandler} style={styles.imgContainer}>
           {white ? <Image source={require("../assets/images/whiteLeftArrow.png")} /> : <LeftArrow />}
         </TouchableOpacity>
-      </View>
+        </View>
     </SafeAreaView>
   );
 }
@@ -24,5 +24,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     // marginTop: 12,
     paddingVertical: 14,
+  },
+  imgContainer: {
+    flex: 1
   },
 });
