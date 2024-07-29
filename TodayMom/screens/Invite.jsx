@@ -51,8 +51,10 @@ const Invite = () => {
             console.log('Response Data:', data);
             const accessToken = data.data.accessToken;
             if (accessToken) {
+              AsyncStorage.setItem('nickname', userDetails.nickname);
               AsyncStorage.setItem('accessToken', accessToken)
                 .then(() => {
+                  console.log('nickname', userDetails.nickname);
                   console.log('AccessToken 저장됨:', accessToken);
                   if (userDetails.userRoles.includes('ROLE_MOM')) {
                     navigation.navigate('MomHome');
