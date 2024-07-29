@@ -8,7 +8,7 @@ const getWeekDays = () => {
   const month = date.getMonth(); // 현재 월 (+1 해야 함)
   const dayOfWeek = date.getDay(); // 현재 요일 (0~6, 일~토)
   const day = date.getDate(); // 현재 날짜
-  const monday = new Date(year, month, day - dayOfWeek + 1); // 월요일 구하는 법
+  const monday = new Date(year, month, day - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // 월요일 구하는 법
 
   for (let i = 0; i < 7; i++) {
     const weeks = new Date(monday);
@@ -55,6 +55,7 @@ export default function WeekCalendar({relation}) {
       <FlatList
         horizontal
         style={styles.calendarContainer}
+        contentContainerStyle={styles.calenderInnerStyle}
         data={week}
         keyExtractor={(item) => item.day.toString()}
         renderItem={(itemData) => {
@@ -70,18 +71,25 @@ export default function WeekCalendar({relation}) {
 const styles = StyleSheet.create({
   calendarContainer: {
     // flex: 1,
+    // width: "100%",
+    // flexDirection: "row",
+    // gap: 2,
+    marginTop: 20,
+    // backgroundColor: "blue",
+  },
+  calenderInnerStyle: {
+    justifyContent: "space-between",
     width: "100%",
-    flexDirection: "row",
-    gap: 2,
-    marginTop: 20
+    gap: 2
   },
   dayContainer: {
-    width: 50,
     gap: 8,
-    paddingHorizontal: 10,
+    // width: 50,
+    paddingHorizontal: 5,
     paddingVertical: 12,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    // backgroundColor: "yellow"
   },
   dateText: {
     textAlign: "center",
@@ -97,7 +105,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10.5,
     height: 30,
-    width: 40,
+    // width: 60,
   },
   dayText: {
     fontFamily: "Pretendard",

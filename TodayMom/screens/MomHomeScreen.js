@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable, SafeAreaView, Animated } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, SafeAreaView, Animated, Dimensions } from "react-native";
 import TopBackground from "../components/TopBackground";
 import HeaderNav from "../components/HeaderNav";
 import RelationButton from "../components/RelationButton";
@@ -99,6 +99,8 @@ export default function MomHomeScreen({navigation}) {
   );
 }
 
+const deviceHeight = Dimensions.get("window").height;
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
   },
   flowerGridContainer: {
     width: "100%",
-    marginTop: 24,
+    marginTop: deviceHeight < 900 ? 40: 80,
     justifyContent: "center",
     alignItems: "center"
   }
