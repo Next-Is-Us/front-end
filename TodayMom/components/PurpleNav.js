@@ -37,9 +37,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     alignItems: 'center',
-    paddingTop: 20,
+    // paddingTop: 20,
     paddingBottom: 20,
     marginLeft: 6,
+    // paddingLeft: 20,
   },
   textStyle: {
     color: '#767676',

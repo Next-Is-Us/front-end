@@ -25,7 +25,7 @@ export default function BottomNav({ community, home, flower }) {
   };
 
   const CommunityHandler = () => {
-    navigation.navigate('InfoWrite');
+    navigation.navigate('CommunityPage');
   };
 
   return (

@@ -152,14 +152,15 @@ const NewWrite = () => {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.BlankContainer}
               >
+                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+                  <Text style={styles.addImageText}>+</Text>
+                </TouchableOpacity>
+
                 {images.map((uri, index) => (
                   <View key={index} style={styles.plusButton}>
                     <Image source={{ uri: uri }} style={styles.imagePreview} />
                   </View>
                 ))}
-                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
-                  <Text style={styles.addImageText}>+</Text>
-                </TouchableOpacity>
               </ScrollView>
             </View>
           </View>
