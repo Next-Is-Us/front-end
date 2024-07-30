@@ -102,7 +102,7 @@ const Commucreate = () => {
           headers: {
             Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4`, // 하드코딩된 토큰 사용
             'Content-Type': 'multipart/form-data',
-          },
+          }, //관리자 토큰임 나중에 바꿔야함. 테스트용
           body: formData,
         }
       );
@@ -135,7 +135,7 @@ const Commucreate = () => {
       if (!result.cancelled && result.assets) {
         const firstAsset = result.assets[0];
         console.log('Selected image URI:', firstAsset.uri);
-        setImageUri(firstAsset.uri); // 상태 업데이트 확인
+        setImageUri(firstAsset.uri);
         setImages([...images, firstAsset.uri]);
       }
     } catch (error) {
@@ -143,7 +143,6 @@ const Commucreate = () => {
     }
   };
 
-  // 이미지 URI 상태 로그 출력
   console.log('Current imageUri:', imageUri);
 
   const dismissKeyboard = () => {

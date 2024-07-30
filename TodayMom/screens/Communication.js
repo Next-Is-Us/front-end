@@ -9,31 +9,55 @@ import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const Communication = () => {
+  const [rooms, setRooms] = useState([]);
   const [userRoles, setUserRoles] = useState([]);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const setupRoles = async () => {
-      // await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_DOCTOR']));
-
-      const roles = await AsyncStorage.getItem('userRoles');
-      if (roles) {
-        const parsedRoles = JSON.parse(roles);
-        setUserRoles(parsedRoles);
-        if (
-          parsedRoles.includes('ROLE_ADMIN') ||
-          parsedRoles.includes('ROLE_DOCTOR')
-        ) {
-          setShowCreateRoom(true);
-        }
+  const fetchRooms = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const response = await fetch('https://15.164.134.131/api/room/list', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setRooms(result.data.data);
+        console.log(result.data.data);
+      } else {
+        throw new Error('Failed to fetch rooms');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
 
-    setupRoles().catch(console.error);
-  }, []);
+  const setupRoles = async () => {
+    const roles = await AsyncStorage.getItem('userRoles');
+    if (roles) {
+      const parsedRoles = JSON.parse(roles);
+      setUserRoles(parsedRoles);
+      if (
+        parsedRoles.includes('ROLE_ADMIN') ||
+        parsedRoles.includes('ROLE_DOCTOR')
+      ) {
+        setShowCreateRoom(true);
+      }
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setupRoles().catch(console.error);
+      fetchRooms();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,7 +72,7 @@ const Communication = () => {
       )}
       <View style={styles.Wholecontainer}>
         <View style={styles.profile} />
-        <Text style={styles.communame}>산부인과 전문가 의사 김민주님이</Text>
+        <Text style={styles.communame}>{rooms.name}</Text>
         <View style={styles.row}>
           <Text style={styles.communame}>함께 하는 커뮤니티</Text>
           <View style={styles.count}>
