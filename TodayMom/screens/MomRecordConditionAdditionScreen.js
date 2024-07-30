@@ -3,12 +3,61 @@ import HeaderBack from "../components/HeaderBack"
 import InformConditionText from "../components/InformConditionText";
 import { useEffect, useState } from "react";
 import BottomButton from "../components/BottomButton";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MomRecordConditionAdditionScreen({route, navigation}) {
   const name = route.params.userName;
+  const [token, setToken] = useState();
+  const sleepTime = route.params.sleepTime;
+  const conditionStates = route.params.conditionStates;
   const [isFocused, setIsFocused] = useState(false);
   const [userInput, setUserInput] = useState("");
   const maxLength = 300;
+
+  const getToken = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if(accessToken) {
+        console.log(accessToken);
+        setToken(accessToken);
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const completeHandler = async () => {
+    console.log(token);
+    console.log(conditionStates, sleepTime, userInput);
+    console.log(typeof conditionStates);
+    console.log(typeof sleepTime);
+    console.log(typeof userInput);
+    try {
+      const response = await axios.post("https://15.164.134.131/api/condition",
+        {
+          sleepTime: sleepTime.toString(),
+          ...conditionStates,
+          record: userInput
+        },
+        {
+          headers: {
+            "Content-Type": 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      console.log("기록 완료", response.data);
+      navigation.navigate("MomHome");
+    } catch(e) {
+      console.error(e);
+    }
+  };
 
   const userInputHandler = (enteredText) => {
     if (enteredText.length <= maxLength) {
@@ -16,9 +65,9 @@ export default function MomRecordConditionAdditionScreen({route, navigation}) {
     }
   }
 
-  const homeHandler = () => {
-    navigation.navigate("MomHome");
-  }
+  // const homeHandler = () => {
+  //   navigation.navigate("MomHome");
+  // }
 
   const userInputBackground = isFocused ? {backgroundColor: "white", borderColor: "#A30FFA"} : {backgroundColor: "#F7F7FB", borderColor: "#E5E5EC"};
   const userTextBackground = userInput && {backgroundColor : "white"};
@@ -52,7 +101,7 @@ export default function MomRecordConditionAdditionScreen({route, navigation}) {
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
-      <BottomButton text="기록 완료하기" selected={true} handler={homeHandler} />
+      <BottomButton text="기록 완료하기" selected={true} handler={completeHandler} />
     </>
   )
 }

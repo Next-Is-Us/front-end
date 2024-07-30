@@ -1,12 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native"
 import { useEffect, useState } from "react";
 
-const conditions = [
-  "안면 홍조", "두통", "복통",
-  "변비", "근육통", "피부 트러블",
-  "손발 저림", "오한", "우울"
-];
-
 const conditionsArray = (array, size) => {
   const conditionArray = [];
   for(let i=0;i<array.length;i+=size) {
@@ -15,21 +9,27 @@ const conditionsArray = (array, size) => {
   return conditionArray;
 }
 
-export default function ConditionItem({selectedCondition, setConditionSelected}) {
-  const [selectedConditions, setSelectedConditions] = useState([]);
+export default function ConditionItem({selectedCondition, setConditionSelected, conditions, conditionStates, setConditionStates}) {
+  // const [selectedConditions, setSelectedConditions] = useState([]);
 
   const selectConditionHandler = (condition) => {
-    setSelectedConditions((prevCondition) => {
-      return prevCondition.includes(condition) ? prevCondition.filter((c) => c!==condition) : [...prevCondition, condition]
+    // setSelectedConditions((prevCondition) => {
+    //   return prevCondition.includes(condition) ? prevCondition.filter((c) => c!==condition) : [...prevCondition, condition]
+    // });
+
+    setConditionStates((prevStates) => {
+      const newState = !prevStates[condition.state];
+      return { ...prevStates, [condition.state]: newState };
     });
   };
 
   const cArray = conditionsArray(conditions, 3);
 
   useEffect(() => {
-    // console.log(selectedConditions.length);
-    setConditionSelected(selectedConditions.length > 0);
-  }, [selectedConditions]);
+    const selectedConditions = Object.values(conditionStates).filter((state) => state);
+    setConditionSelected(selectedConditions.length>0);
+    
+  }, [conditionStates]);
 
   // 이 부분 통신하면서 수정 예정 (선택된 컨디션 불러오는 함수)
   // useEffect(() => {
@@ -43,8 +43,8 @@ export default function ConditionItem({selectedCondition, setConditionSelected})
             <View key={index} style={styles.selectConditionArrayContainer}>
               {conditionArray.map((condition) => {
                 return (
-                  <TouchableOpacity key={condition} style={[styles.conditionContainer, selectedConditions.includes(condition) && styles.selectedButton]} onPress={() => selectConditionHandler(condition)}>
-                    <Text style={[styles.conditionText, selectedConditions.includes(condition) && styles.selectedText]}>{condition}</Text>
+                  <TouchableOpacity key={condition.state} style={[styles.conditionContainer, conditionStates[condition.state] && styles.selectedButton]} onPress={() => selectConditionHandler(condition)}>
+                    <Text style={[styles.conditionText, conditionStates[condition.state] && styles.selectedText]}>{condition.symptom}</Text>
                   </TouchableOpacity>
                 )
               })}

@@ -3,24 +3,24 @@ import { useEffect, useState } from "react";
 
 const hours = Array.from({ length: 24 }, (_, i) => i + 1);
 
-export default function SelectSleepTime({setSleepTimeSelected}) {
-  const [selectedHour, setSelectedHour] = useState();
+export default function SelectSleepTime({setSleepTimeSelected, setSleepTime, sleepTime}) {
 
   const selectSleepHourHandler = (hour) => {
-    setSelectedHour(hour);
+    console.log(hour);
+    setSleepTime(hour);
   }
 
   const renderItem = (itemData) => {
     return (
-      <TouchableOpacity style={[styles.hourContainer, selectedHour === itemData.item && styles.selectedHourContainer]} onPress={() => selectSleepHourHandler(itemData.item)}>
-        <Text style={[styles.hourText, selectedHour === itemData.item && styles.selctedHourText]}>{itemData.item}시간</Text>
+      <TouchableOpacity style={[styles.hourContainer, sleepTime === itemData.item && styles.selectedHourContainer]} onPress={() => selectSleepHourHandler(itemData.item)}>
+        <Text style={[styles.hourText, sleepTime === itemData.item && styles.selctedHourText]}>{itemData.item}시간</Text>
       </TouchableOpacity>
     )
   }
 
   useEffect(() => {
-    selectedHour && setSleepTimeSelected(true);
-  }, [selectedHour])
+    sleepTime && setSleepTimeSelected(true);
+  }, [sleepTime])
 
   return (
     <View>

@@ -37,7 +37,7 @@ const DayItem = ({ day, date, selected, relation, onPress }) => {
   );
 };
 
-export default function WeekCalendar({relation}) {
+export default function WeekCalendar({relation, selectDay, selectMonth, selectYear}) {
   const [week, setWeek] = useState([]);
   const [selectedDay, setSelectedDay] = useState(new Date().getDate());
 
@@ -46,8 +46,12 @@ export default function WeekCalendar({relation}) {
     setWeek(weekDays);
   },[]);
 
-  const selectDayHandler = (day) => {
-    setSelectedDay(day);
+  const selectDayHandler = (item) => {
+    setSelectedDay(item.day);
+    selectDay(item.day);
+    selectMonth(item.month);
+    selectYear(item.year);
+    console.log("변경");
   }
 
   return (
@@ -60,7 +64,7 @@ export default function WeekCalendar({relation}) {
         keyExtractor={(item) => item.day.toString()}
         renderItem={(itemData) => {
           return (
-            <DayItem day={itemData.item.day} date={itemData.item.date} selected={itemData.item.day === selectedDay} relation={relation} onPress={() => {selectDayHandler(itemData.item.day)}} />
+            <DayItem day={itemData.item.day} date={itemData.item.date} selected={itemData.item.day === selectedDay} relation={relation} onPress={() => {selectDayHandler(itemData.item)}} />
           )
         }}
       />
