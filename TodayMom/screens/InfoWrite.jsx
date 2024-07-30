@@ -15,72 +15,91 @@ import Beam from '../assets/images/beam.png';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native';
 
 const InfoWrite = () => {
   const navigation = useNavigation();
   const [showButton, setShowButton] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const checkAdmin = async () => {
+    // 관리자 액세스토큰 발급 및 글 목록 불러오기
+    const fetchPosts = async () => {
       try {
         const nickname = await AsyncStorage.getItem('nickname');
-        const response = await fetch(
+        const accessToken = await AsyncStorage.getItem('accessToken'); // 토큰 가져오기
+
+        // 관리자 확인
+        const adminResponse = await fetch(
           'https://15.164.134.131/api/admin/accessToken',
           {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nickname }),
+          }
+        );
+
+        if (adminResponse.ok) {
+          const result = await adminResponse.json();
+          console.log('Parsed response body:', result);
+          if (result.code === '200') {
+            setShowButton(true);
+          }
+        }
+
+        // 글 목록 불러오기
+        const response = await fetch(
+          'https://15.164.134.131/api/infoPost/list',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
         );
 
         if (response.ok) {
           const result = await response.json();
           console.log(result);
-          if (result.status === 200 && nickname === '관리자') {
-            setShowButton(true);
-          }
+          setPosts(result.data.data);
+        } else {
+          console.error('Failed to fetch posts');
         }
       } catch (error) {
-        console.error('Error fetching admin status', error);
+        console.error('Error fetching data', error);
       }
     };
 
-    checkAdmin();
+    fetchPosts();
   }, []);
+
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity style={styles.list}>
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.thumbnail} />
+        ) : null}
+        <View style={styles.textContent}>
+          <Text style={styles.mainText}>{item.title || '제목 없음'}</Text>
+          <Text style={styles.subText} numberOfLines={2}>
+            {item.content || '내용 없음'}
+          </Text>
+        </View>
+        <Image
+          source={require('../assets/images/allowright.png')}
+          style={styles.arrowIcon}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.list}>
-        <View style={styles.textContent}>
-          <Text style={styles.mainText}>게시글 제목</Text>
-          <Text style={styles.subText} numberOfLines={2} ellipsizeMode="tail">
-            1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록
-            조절해야합니다 고칼슘 식품을 섭취합니다.
-          </Text>
-        </View>
-        <Image
-          source={require('../assets/images/allowright.png')}
-          style={styles.arrowIcon}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.list}>
-        <Image source={Beam} style={styles.thumbnail} />
-        <View style={styles.textContent}>
-          <Text style={styles.mainText}>게시글 제목</Text>
-          <Text style={styles.subText} numberOfLines={2} ellipsizeMode="tail">
-            1. 필수 영양소를 충분히 섭취하되 적정 체중을 유지하도록
-            조절해야합니다 고칼슘 식품을 섭취합니다.
-          </Text>
-        </View>
-        <Image
-          source={require('../assets/images/allowright.png')}
-          style={styles.arrowIcon}
-        />
-      </TouchableOpacity>
-
+      <FlatList
+        data={posts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.infoPostId.toString()}
+      />
       {showButton && (
         <TouchableOpacity
           style={styles.fab}
@@ -114,7 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     right: 0,
-    bottom: -400,
+    bottom: 30,
     width: 90,
     height: 40,
     backgroundColor: '#A30FFA',
