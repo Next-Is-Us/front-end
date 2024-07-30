@@ -13,14 +13,81 @@ import Flower3 from "../assets/images/flower3.svg";
 import Flower4 from "../assets/images/flower4.svg";
 import Flower5 from "../assets/images/flower5.svg";
 import Flower6 from "../assets/images/flower6.svg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export default function MomHomeScreen({navigation}) {
-  const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정
+  const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정 (complete)
   const [invited, setInvited] = useState(true);
   const [recorded, setRecorded] = useState(false);
   const [flowerPieces, setFlowerPieces] = useState(0);
+  const today = new Date();
+  const [date, setDate] = useState("");
+  const [token, setToken] = useState("");
+  const [year, setYear] = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth()+1);
+  const [day, setDay] = useState(today.getDate());
 
   const rotateAnimation = useRef(new Animated.Value(0)).current;
+
+  // 콜백 기반 get
+  // useEffect(() => {
+  //   AsyncStorage.getItem("accessToken", (error, token) => {
+  //     const accessToken = token;
+  //     if(accessToken) {
+  //       console.log("token:" + accessToken);
+  //     } else {
+  //       console.error(error);
+  //     }
+  //   })
+  // }, [])
+
+  // promise 기반 get
+  const getToken = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if(accessToken) {
+        console.log("token: " + accessToken);
+        setToken(accessToken);
+      } else {
+        console.log("not found");
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  const getDayRecord = async () => {
+    try {
+      console.log("Sending request with token:", token);
+      const response = await axios.get(`https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}`, {
+        headers: {
+          "Content-Type": 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log(response.status);
+      console.log(response.data.data);
+      setName(response.data.data.nickname);
+      setRecorded(response.data.data.isRecording)
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  useEffect(() => {
+    if(token) {
+      console.log(year);
+      console.log(month);
+      console.log(day);
+      console.log("통신 실행");
+      getDayRecord();
+    }
+  }, [token, year, month, day]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -69,7 +136,22 @@ export default function MomHomeScreen({navigation}) {
   };
 
   const selectConditionHandler = () => {
-    navigation.navigate("SelectCondition", {userName: name});
+    console.log(token);
+    if(today.getFullYear() === year && today.getMonth()+1 === month && today.getDate() === day) {
+      navigation.navigate("SelectCondition", {userName: name});
+    }
+  }
+
+  const selectDay = (day) => {
+    setDay(day);
+  }
+
+  const selectMonth = (month) => {
+    setMonth(month);
+  }
+
+  const selectYear = (year) => {
+    setYear(year);
   }
 
   return (
@@ -84,7 +166,7 @@ export default function MomHomeScreen({navigation}) {
         <HeaderNav relation="엄마" name={name} />
       </SafeAreaView>
       <View style={styles.bodyContainer}>
-        <WeekCalendar relation="엄마" />
+        <WeekCalendar relation="엄마" selectDay={selectDay} selectMonth={selectMonth} selectYear={selectYear} />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
         <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} />
         <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>

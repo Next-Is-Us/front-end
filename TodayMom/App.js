@@ -46,7 +46,7 @@ function App() {
         <UserProvider>
           <StatusBar style="auto" />
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Flash">
+            <Stack.Navigator initialRouteName="Start">
               <Stack.Screen
                 name="Choose"
                 component={Choose}
