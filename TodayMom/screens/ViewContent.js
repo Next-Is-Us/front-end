@@ -3,14 +3,47 @@ import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/BasicHeader';
 import { Image } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
+import { useCallback } from 'react';
 
-const ViewContent = ({ route }) => {
-  const post = route?.params?.post;
+const ViewContent = ({ route, navigation }) => {
+  const [post, setPost] = useState(null);
+  const infoPostId = route.params.infoPostId;
 
-  console.log('Post data:', post);
-  if (post?.imageUri) {
-    console.log('Image URI:', post.imageUri);
-  }
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchPost = async () => {
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        try {
+          const response = await fetch(
+            `https://15.164.134.131/api/infoPost/detail/${infoPostId}`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log(result);
+            setPost(result.data);
+          } else {
+            console.error('Failed to fetch post details');
+            setPost(null);
+          }
+        } catch (error) {
+          console.error('Error fetching post details:', error);
+          setPost(null);
+        }
+      };
+
+      fetchPost();
+    }, [])
+  );
 
   if (!post) {
     return (
@@ -26,7 +59,7 @@ const ViewContent = ({ route }) => {
         <Header />
         <View style={styles.content}>
           <Text style={styles.title}>{post.title}</Text>
-          <Text style={styles.date}>2024.07.28</Text>
+          <Text style={styles.date}>{post.whenCreated}</Text>
           <View style={styles.horizontalLine}></View>
           <Text style={styles.contenttext}>{post.content}</Text>
           <ScrollView
@@ -34,15 +67,17 @@ const ViewContent = ({ route }) => {
             showsHorizontalScrollIndicator={false}
             style={styles.scrollViewStyle}
           >
-            {post.imageUri && (
-              <Image
-                source={{ uri: post.imageUri }}
-                style={styles.Imagecon}
-                onError={(e) =>
-                  console.log('Image load error:', e.nativeEvent.error)
-                }
-              />
-            )}
+            {post.imageUrl &&
+              post.imageUrl.map((uri, index) => (
+                <Image
+                  key={index}
+                  source={{ uri }}
+                  style={styles.image}
+                  onError={(e) =>
+                    console.log('Image load error:', e.nativeEvent.error)
+                  }
+                />
+              ))}
           </ScrollView>
         </View>
       </SafeAreaView>

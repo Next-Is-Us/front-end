@@ -18,6 +18,7 @@ import Commuflower from '../assets/images/commuflower.svg';
 import AllowBottom from '../assets/images/big_bottom.svg';
 import { Picker } from '@react-native-picker/picker';
 import Plus from '../assets/images/plus.svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Commucreate = () => {
   const [imageUri, setImageUri] = useState('');
@@ -41,16 +42,16 @@ const Commucreate = () => {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
-  const handleSubmit = () => {
-    const newPost = {
-      id: String(new Date().getTime()),
-      title: titleText,
-      content: contentText,
-      imageUri: images[0] || null,
-    };
-    addPost(newPost);
-    navigation.goBack();
-  };
+  // const handleSubmit = () => {
+  //   const newPost = {
+  //     id: String(new Date().getTime()),
+  //     title: titleText,
+  //     content: contentText,
+  //     imageUri: images[0] || null,
+  //   };
+  //   addPost(newPost);
+  //   navigation.goBack();
+  // };
 
   const handleTitleChange = (text) => {
     setTitleText(text);
@@ -63,8 +64,67 @@ const Commucreate = () => {
   const maxLengthTitle = 20;
   const maxLengthContent = 500;
 
+  const printFormData = (formData) => {
+    for (let [key, value] of formData.entries()) {
+      console.log(
+        `${key}: ${value instanceof Blob ? `File: ${value.name}` : value}`
+      );
+    }
+  };
+
+  const handleSubmit = async () => {
+    // const accessToken = await AsyncStorage.getItem('accessToken');
+
+    const formData = new FormData();
+    console.log('Current image URI:', imageUri);
+
+    formData.append('name', titleText);
+    formData.append('introduction', contentText);
+    const flowerCountNumber = flowerCount.replace(/[^0-9]/g, '');
+    formData.append('necessaryNftCount', flowerCountNumber);
+
+    if (imageUri) {
+      let uriParts = imageUri.split('.');
+      let fileType = uriParts[uriParts.length - 1];
+
+      formData.append('thumbnail', {
+        uri: imageUri,
+        name: `thumbnail.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    }
+
+    try {
+      const response = await fetch(
+        'https://15.164.134.131/api/doctor/createRoom',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4`, // 하드코딩된 토큰 사용
+            'Content-Type': 'multipart/form-data',
+          }, //관리자 토큰임 나중에 바꿔야함. 테스트용
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log('Room created successfully', result);
+        navigation.goBack();
+      } else {
+        console.error('Failed to create room', result);
+      }
+    } catch (error) {
+      console.error('Error creating room', error);
+    }
+  };
+
   const pickImage = async () => {
     try {
+      if (images.length >= 1) {
+        alert('대표 이미지는 한 개만 업로드할 수 있습니다.');
+        return;
+      }
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -73,14 +133,17 @@ const Commucreate = () => {
       });
 
       if (!result.cancelled && result.assets) {
-        console.log('Selected image URI: ', result.assets[0].uri);
-
-        setImages([...images, result.assets[0].uri]);
+        const firstAsset = result.assets[0];
+        console.log('Selected image URI:', firstAsset.uri);
+        setImageUri(firstAsset.uri);
+        setImages([...images, firstAsset.uri]);
       }
     } catch (error) {
-      console.error('Image Picker Error: ', error);
+      console.error('Image Picker Error:', error);
     }
   };
+
+  console.log('Current imageUri:', imageUri);
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -160,17 +223,18 @@ const Commucreate = () => {
                 <Text style={styles.ImageP}>대표 이미지 업로드</Text>
               </View>
 
-              {images.length > 0 && (
+              {images.length > 0 ? (
                 <View style={styles.plusButton}>
                   <Image
                     source={{ uri: images[0] }}
                     style={styles.imagePreview}
                   />
                 </View>
+              ) : (
+                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+                  <Text style={styles.addImageText}>+</Text>
+                </TouchableOpacity>
               )}
-              <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
-                <Text style={styles.addImageText}>+</Text>
-              </TouchableOpacity>
 
               <View style={[styles.TextContainer, { marginTop: 32 }]}>
                 <Text style={styles.ImageP}>소통방 입장 조건</Text>

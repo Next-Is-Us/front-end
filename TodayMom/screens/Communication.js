@@ -4,15 +4,75 @@ import Flower from '../assets/images/flower.svg';
 import MiniProfile from '../assets/images/miniprofile.svg';
 import PurpleNav from '../components/PurpleNav';
 import BottomNav from '../components/BottomNav';
+import Create from '../assets/images/commuplus.svg';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
-const Communication = ({ navigation }) => {
-  // const [activeTab, setActiveTab] = useState('Communication');
+const Communication = () => {
+  const [rooms, setRooms] = useState([]);
+  const [userRoles, setUserRoles] = useState([]);
+  const [showCreateRoom, setShowCreateRoom] = useState(false);
+  const navigation = useNavigation();
+
+  const fetchRooms = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const response = await fetch('https://15.164.134.131/api/room/list', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setRooms(result.data.data);
+        console.log(result.data.data);
+      } else {
+        throw new Error('Failed to fetch rooms');
+      }
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
+
+  const setupRoles = async () => {
+    const roles = await AsyncStorage.getItem('userRoles');
+    if (roles) {
+      const parsedRoles = JSON.parse(roles);
+      setUserRoles(parsedRoles);
+      if (
+        parsedRoles.includes('ROLE_ADMIN') ||
+        parsedRoles.includes('ROLE_DOCTOR')
+      ) {
+        setShowCreateRoom(true);
+      }
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setupRoles().catch(console.error);
+      fetchRooms();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
+      {showCreateRoom && (
+        <TouchableOpacity
+          style={styles.createRoom}
+          onPress={() => navigation.navigate('Commucreate')}
+        >
+          <Text style={styles.create}>새로운 소통방 개설하기</Text>
+          <Create />
+        </TouchableOpacity>
+      )}
       <View style={styles.Wholecontainer}>
         <View style={styles.profile} />
-        <Text style={styles.communame}>산부인과 전문가 의사 김민주님이</Text>
+        <Text style={styles.communame}>{rooms.name}</Text>
         <View style={styles.row}>
           <Text style={styles.communame}>함께 하는 커뮤니티</Text>
           <View style={styles.count}>
@@ -49,6 +109,30 @@ const Communication = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  create: {
+    fontFamily: 'Pretendard',
+    fontSize: 15,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: -0.375,
+    color: '#FFF',
+  },
+  createRoom: {
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 24,
+    width: '100%',
+    height: 58,
+    borderRadius: 12,
+    backgroundColor: '#488CF3',
+    paddingTop: 14,
+    paddingLeft: 18,
+    paddingRight: 18,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   container: {
     // flex: 1,
     backgroundColor: '#F1F1F5',
