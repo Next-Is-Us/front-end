@@ -3,13 +3,26 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Baby from '../assets/images/baby.svg';
 import Mom from '../assets/images/moms.svg';
+import { useUser } from '../context/UserContext';
 
 const Start = () => {
   const [selectedButton, setSelectedButton] = useState(null);
   const navigation = useNavigation();
+  const { setUserDetails } = useUser();
 
   const handlePress = (buttonId) => {
     setSelectedButton(buttonId);
+    if (buttonId === 'mom') {
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        userRoles: ['ROLE_MOM'],
+      }));
+    } else {
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        userRoles: [],
+      }));
+    }
   };
 
   const getButtonStyle = (buttonId) => {
@@ -33,6 +46,14 @@ const Start = () => {
     return styles.nextButton;
   };
 
+  const navigateNext = () => {
+    if (selectedButton === 'mom') {
+      navigation.navigate('Nickname');
+    } else if (selectedButton === 'child') {
+      navigation.navigate('Choose');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>오늘의 맘에 오신 것을 환영해요!</Text>
@@ -48,21 +69,17 @@ const Start = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={getButtonStyle('daughter')}
-          onPress={() => handlePress('daughter')}
+          style={getButtonStyle('child')}
+          onPress={() => handlePress('child')}
         >
           <Baby style={styles.image} resizeMode="contain" />
-          <Text style={getTextStyle('daughter')}>자녀</Text>
+          <Text style={getTextStyle('child')}>자녀</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
         style={getNextButtonStyle()}
-        onPress={() => {
-          if (selectedButton) {
-            navigation.navigate('Choose');
-          }
-        }}
+        onPress={navigateNext}
         disabled={!selectedButton}
       >
         <Text style={styles.nextButtonText}>다음</Text>

@@ -1,36 +1,88 @@
 import React, { useState } from 'react';
 import {
+  SafeAreaView,
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
-  Image,
-  FlatList,
+  TouchableOpacity,
 } from 'react-native';
-import { usePosts } from './PostContext';
-import { useNavigation } from '@react-navigation/native';
+import Flower from '../assets/images/flower.svg';
+import MiniProfile from '../assets/images/miniprofile.svg';
+import PurpleNav from '../components/PurpleNav';
 import BottomNav from '../components/BottomNav';
-import PurpleNav from '../components/PurpleNav.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'react-native';
+import Beam from '../assets/images/beam.png';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native';
 
 const InfoWrite = () => {
-  const { posts } = usePosts();
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState('InfoWrite');
+  const [showButton, setShowButton] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    // 관리자 액세스토큰 발급 및 글 목록 불러오기
+    const fetchPosts = async () => {
+      try {
+        const nickname = await AsyncStorage.getItem('nickname');
+        const accessToken = await AsyncStorage.getItem('accessToken'); // 토큰 가져오기
+
+        // 관리자 확인
+        const adminResponse = await fetch(
+          'https://15.164.134.131/api/admin/accessToken',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nickname }),
+          }
+        );
+
+        if (adminResponse.ok) {
+          const result = await adminResponse.json();
+          console.log('Parsed response body:', result);
+          if (result.code === '200') {
+            setShowButton(true);
+          }
+        }
+
+        // 글 목록 불러오기
+        const response = await fetch(
+          'https://15.164.134.131/api/infoPost/list',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result);
+          setPosts(result.data.data);
+        } else {
+          console.error('Failed to fetch posts');
+        }
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity
-        style={styles.itemContainer}
-        onPress={() => navigation.navigate('ViewContent', { post: item })}
-      >
-        {item.imageUri ? (
-          <Image source={{ uri: item.imageUri }} style={styles.thumbnail} />
+      <TouchableOpacity style={styles.list}>
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.thumbnail} />
         ) : null}
         <View style={styles.textContent}>
-          <Text style={styles.mainText}>{item.title}</Text>
-          <Text style={styles.subText} numberOfLines={2} ellipsizeMode="tail">
-            {item.content}
+          <Text style={styles.mainText}>{item.title || '제목 없음'}</Text>
+          <Text style={styles.subText} numberOfLines={2}>
+            {item.content || '내용 없음'}
           </Text>
         </View>
         <Image
@@ -43,41 +95,28 @@ const InfoWrite = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <PurpleNav activeTab={activeTab} setActiveTab={setActiveTab} />
-      {activeTab === 'InfoWrite' && (
-        <>
-          <FlatList
-            data={posts}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.list}
-            contentContainerStyle={styles.listContent}
+      <FlatList
+        data={posts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.infoPostId.toString()}
+      />
+      {showButton && (
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => navigation.navigate('NewWrite')}
+        >
+          <Text style={styles.write}>글쓰기</Text>
+          <Image
+            source={require('../assets/images/pencil.png')}
+            style={styles.fabIcon}
           />
-          <TouchableOpacity
-            style={styles.fab}
-            onPress={() => navigation.navigate('NewWrite')}
-          >
-            <Text style={styles.write}>글쓰기</Text>
-            <Image
-              source={require('../assets/images/pencil.png')}
-              style={styles.fabIcon}
-            />
-          </TouchableOpacity>
-        </>
+        </TouchableOpacity>
       )}
-
-      <BottomNav community />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  thumbnail: {
-    width: 68,
-    height: 68,
-    borderRadius: 12,
-    marginRight: 16,
-  },
   write: {
     color: '#FFF',
     fontFamily: 'Pretendard',
@@ -86,30 +125,15 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     letterSpacing: -0.325,
   },
-  container: {
-    flex: 1,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 20,
-    backgroundColor: '#F1F1F5',
-  },
-  headerContainer: {
-    paddingTop: 14,
-    paddingBottom: 14,
-    flexDirection: 'row',
-    gap: 16,
-    alignItems: 'center',
-    marginBottom: 8,
-    marginLeft: 6,
-  },
-  textContent: {
-    flex: 1,
+  fabIcon: {
+    width: 16,
+    height: 16,
   },
   fab: {
     flexDirection: 'row',
     position: 'absolute',
-    right: 30,
-    bottom: 100,
+    right: 0,
+    bottom: 30,
     width: 90,
     height: 40,
     backgroundColor: '#A30FFA',
@@ -122,11 +146,43 @@ const styles = StyleSheet.create({
     paddingBottom: 9,
     paddingLeft: 16,
   },
-  fabIcon: {
-    width: 16,
-    height: 16,
+  thumbnail: {
+    width: 68,
+    height: 68,
+    borderRadius: 12,
+    marginRight: 16,
   },
-  itemContainer: {
+  arrowIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 12,
+  },
+  textContent: {
+    flex: 1,
+    gap: 1,
+  },
+  subText: {
+    color: '#767676',
+    fontFamily: 'Pretendard',
+    fontSize: 12,
+    fontWeight: '400',
+    lineHeight: 18,
+    // width: 290,
+    // height: 36,
+  },
+  mainText: {
+    color: '#111',
+    fontFamily: 'Pretendard',
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 24,
+  },
+  container: {
+    // flex: 1,
+    backgroundColor: '#F1F1F5',
+  },
+
+  list: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -139,45 +195,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '100%',
     height: 100,
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    paddingBottom: 10,
-  },
-  textStyle: {
-    color: '#767676',
-    fontFamily: 'Pretendard',
-    fontSize: 20,
-    fontWeight: '400',
-    lineHeight: 28,
-  },
-  textStyle2: {
-    color: '#A30FFA',
-    fontFamily: 'Pretendard',
-    fontSize: 20,
-    fontWeight: '600',
-    lineHeight: 28,
-  },
-  mainText: {
-    color: '#111',
-    fontFamily: 'Pretendard',
-    fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 24,
-  },
-  subText: {
-    color: '#767676',
-    fontFamily: 'Pretendard',
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 18,
-  },
-  arrowIcon: {
-    width: 24,
-    height: 24,
-    marginLeft: 12,
   },
 });
 

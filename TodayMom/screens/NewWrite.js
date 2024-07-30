@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { usePosts } from './PostContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NewWrite = () => {
   const navigation = useNavigation();
@@ -24,15 +25,42 @@ const NewWrite = () => {
   const [isTitleFocused, setIsTitleFocused] = useState(false);
   const [isContentFocused, setIsContentFocused] = useState(false);
 
-  const handleSubmit = () => {
-    const newPost = {
-      id: String(new Date().getTime()),
-      title: titleText,
-      content: contentText,
-      imageUri: images[0] || null,
-    };
-    addPost(newPost);
-    navigation.goBack();
+  const handleSubmit = async () => {
+    console.log('Current images:', images); // 현재 images 배열 출력
+
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const formData = new FormData();
+    formData.append('title', titleText);
+    formData.append('content', contentText);
+
+    images.forEach((image, index) => {
+      console.log(`Uploading image ${index}:`, image); // 각 이미지 정보 출력
+      formData.append('imageUrl', {
+        uri: image,
+        type: 'image/jpeg',
+        name: `imageFile${index}.jpg`,
+      });
+    });
+
+    fetch('https://15.164.134.131/api/admin/createPost', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    })
+      .then((response) => {
+        console.log('HTTP Status:', response.status); // 응답 상태 코드 출력
+        return response.text();
+      })
+      .then((data) => {
+        console.log('Success:', data);
+        navigation.goBack();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   const handleTitleChange = (text) => {
@@ -56,7 +84,7 @@ const NewWrite = () => {
       });
 
       if (!result.cancelled && result.assets) {
-        console.log('Selected image URI: ', result.assets[0].uri);
+        // console.log('Selected image URI: ', result.assets[0].uri);
 
         setImages([...images, result.assets[0].uri]);
       }
@@ -152,14 +180,15 @@ const NewWrite = () => {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.BlankContainer}
               >
+                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+                  <Text style={styles.addImageText}>+</Text>
+                </TouchableOpacity>
+
                 {images.map((uri, index) => (
                   <View key={index} style={styles.plusButton}>
                     <Image source={{ uri: uri }} style={styles.imagePreview} />
                   </View>
                 ))}
-                <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
-                  <Text style={styles.addImageText}>+</Text>
-                </TouchableOpacity>
               </ScrollView>
             </View>
           </View>

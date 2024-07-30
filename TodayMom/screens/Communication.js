@@ -3,71 +3,54 @@ import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import Flower from '../assets/images/flower.svg';
 import MiniProfile from '../assets/images/miniprofile.svg';
 import PurpleNav from '../components/PurpleNav';
+import BottomNav from '../components/BottomNav';
 
 const Communication = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState('Communication');
+  // const [activeTab, setActiveTab] = useState('Communication');
 
   return (
     <SafeAreaView style={styles.container}>
-      <PurpleNav
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        navigation={navigation}
-      />
-      {activeTab === 'Communication' && (
-        <>
-          <View style={styles.Wholecontainer}>
-            <View style={styles.profile} />
-            <Text style={styles.communame}>
-              산부인과 전문가 의사 김민주님이
-            </Text>
-            <View style={styles.row}>
-              <Text style={styles.communame}>함께 하는 커뮤니티</Text>
-              <View style={styles.count}>
-                <MiniProfile />
-                <Text style={styles.people}>00명</Text>
-              </View>
-            </View>
-            <View style={styles.enter}>
-              <Text style={styles.entertext}>입장 하기</Text>
-            </View>
+      <View style={styles.Wholecontainer}>
+        <View style={styles.profile} />
+        <Text style={styles.communame}>산부인과 전문가 의사 김민주님이</Text>
+        <View style={styles.row}>
+          <Text style={styles.communame}>함께 하는 커뮤니티</Text>
+          <View style={styles.count}>
+            <MiniProfile />
+            <Text style={styles.people}>00명</Text>
           </View>
-
-          <View style={styles.Wholecontainer}>
-            <View style={styles.profile} />
-            <Text style={styles.communame}>
-              산부인과 전문가 의사 김민주님이
-            </Text>
-            <View style={styles.row}>
-              <Text style={styles.communame}>함께 하는 커뮤니티</Text>
-              <View style={styles.count}>
-                <MiniProfile />
-                <Text style={styles.people}>00명</Text>
-              </View>
-            </View>
-            <View style={styles.enter2}>
-              <View style={styles.iconContainer}>
-                <Flower width={24} height={24} />
-                <Flower width={24} height={24} />
-                <Flower width={24} height={24} />
-              </View>
-              <Text style={styles.plusText}>가 필요해요</Text>
-            </View>
-          </View>
-        </>
-      )}
-      {activeTab === 'InfoWrite' && (
-        <View>
-          <Text>갱년기 건강 정보 컨텐츠</Text>
         </View>
-      )}
+        <View style={styles.enter}>
+          <Text style={styles.entertext}>입장 하기</Text>
+        </View>
+      </View>
+
+      <View style={styles.Wholecontainer}>
+        <View style={styles.profile} />
+        <Text style={styles.communame}>산부인과 전문가 의사 김민주님이</Text>
+        <View style={styles.row}>
+          <Text style={styles.communame}>함께 하는 커뮤니티</Text>
+          <View style={styles.count}>
+            <MiniProfile />
+            <Text style={styles.people}>00명</Text>
+          </View>
+        </View>
+        <View style={styles.enter2}>
+          <View style={styles.iconContainer}>
+            <Flower width={24} height={24} />
+            <Flower width={24} height={24} />
+            <Flower width={24} height={24} />
+          </View>
+          <Text style={styles.plusText}>가 필요해요</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: '#F1F1F5',
   },
   Wholecontainer: {
