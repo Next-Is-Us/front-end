@@ -59,6 +59,7 @@ export default function MomHomeScreen({navigation}) {
   };
 
   const getDayRecord = async () => {
+    if(!token) return;
     console.log(token);
     try {
       console.log('Sending request with token:', token);
@@ -81,6 +82,7 @@ export default function MomHomeScreen({navigation}) {
   };
 
   const getFlowerRecord = async () => {
+    if(!token) return;
     try {
       const response = await axios.get("https://15.164.134.131/api/nft", {
         headers: {
@@ -118,6 +120,7 @@ export default function MomHomeScreen({navigation}) {
       selectDay(today.getDate());
       selectMonth(today.getMonth() + 1);
       selectYear(today.getFullYear());
+      getDayRecord();
       getFlowerRecord();
     }, [token])
   );
