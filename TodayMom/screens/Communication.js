@@ -38,6 +38,7 @@ const Communication = () => {
   // }, []);
 
   const enterRoom = async (roomId) => {
+    //소통방 입장(엄마,관리자만 가능)
     const accessToken = await AsyncStorage.getItem('accessToken');
     const roles = await AsyncStorage.getItem('userRoles');
     if (!roles) return alert('권한이 없습니다.');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -54,31 +54,32 @@ const Commuroom = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.headerLeft}>
-        {roomDetails && (
-          <Image
-            source={
-              roomDetails.thumbnail
-                ? { uri: roomDetails.thumbnail }
-                : require('../assets/images/doctor.svg')
-            }
-            style={styles.largeImage}
-            resizeMode="cover"
-          />
-        )}
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.goBackButton}
-        >
-          <Image
-            source={require('../assets/images/leftallow.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
+      <ScrollView>
+        <View style={styles.headerLeft}>
+          {roomDetails && (
+            <Image
+              source={
+                roomDetails.thumbnail
+                  ? { uri: roomDetails.thumbnail }
+                  : require('../assets/images/doctor.svg')
+              }
+              style={styles.largeImage}
+              resizeMode="cover"
+            />
+          )}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.goBackButton}
+          >
+            <Image
+              source={require('../assets/images/leftallow.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
 
-      {/* 아래 부분 이미지 추가 */}
-      {/* <Image
+        {/* 아래 부분 이미지 추가 */}
+        {/* <Image
         source={
           roomDetails.thumbnail
             ? { uri: roomDetails.thumbnail }
@@ -88,75 +89,120 @@ const Commuroom = ({ navigation }) => {
         resizeMode="cover"
       /> */}
 
-      <View style={styles.blurContainer}>
-        <BlurView style={styles.price} intensity={75}>
-          <View style={[styles.profile, { height: profileHeight }]}>
-            <Text style={styles.communame}>{roomDetails?.name}</Text>
-            <View style={styles.row}>
-              <Purple />
-              <Text style={styles.people}>
-                {roomDetails?.peopleCount}명 참여중
-              </Text>
+        <View style={styles.blurContainer}>
+          <BlurView style={styles.price} intensity={75}>
+            <View style={[styles.profile, { height: profileHeight }]}>
+              <Text style={styles.communame}>{roomDetails?.name}</Text>
+              <View style={styles.row}>
+                <Purple />
+                <Text style={styles.people}>
+                  {roomDetails?.peopleCount}명 참여중
+                </Text>
+              </View>
+              <View style={styles.introcon}>
+                <Text style={styles.intro}>{roomDetails?.introduction}</Text>
+                {showMore && (
+                  <TouchableOpacity
+                    style={styles.more}
+                    onPress={() => setProfileHeight(400)}
+                  >
+                    <Text style={styles.moretext}>자세히 보기</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-            <View style={styles.introcon}>
-              <Text style={styles.intro}>{roomDetails?.introduction}</Text>
-              {showMore && (
-                <TouchableOpacity
-                  style={styles.more}
-                  onPress={() => setProfileHeight(400)}
-                >
-                  <Text style={styles.moretext}>자세히 보기</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </BlurView>
-      </View>
+          </BlurView>
+        </View>
 
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>게시글 제목</Text>
-          <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
-            동해물과 백두산이 동해물과 백두산이동해물과 백두산이동해물과
-            백두산이동해물과 백두산이동해물과 백두산이동해물과 백두산이동해물과
-          </Text>
+        <View style={styles.container}>
+          <View style={styles.content}>
+            <Text style={styles.title}>게시글 제목</Text>
+            <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
+              동해물과 백두산이 동해물과 백두산이동해물과 백두산이동해물과
+              백두산이동해물과 백두산이동해물과 백두산이동해물과
+              백두산이동해물과
+            </Text>
 
-          <View style={styles.row2}>
-            <View style={styles.row3}>
-              <Message />
-              <Text style={styles.count}>00</Text>
+            <View style={styles.row2}>
+              <View style={styles.row3}>
+                <Message />
+                <Text style={styles.count}>00</Text>
+              </View>
+              <Text style={styles.minute}>3분전</Text>
             </View>
-            <Text style={styles.minute}>3분전</Text>
           </View>
         </View>
-      </View>
+
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => {
+            console.log('Navigating with Room ID:', roomId);
+            navigation.navigate('Commuwrite', { roomId: roomId });
+          }}
+        >
+          <Text style={styles.write}>글쓰기</Text>
+          <Image
+            source={require('../assets/images/pencil.png')}
+            style={styles.fabIcon}
+          />
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  fabIcon: {
+    width: 16,
+    height: 16,
+  },
+  write: {
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    fontSize: 13,
+    fontWeight: '400',
+    lineHeight: 18,
+    letterSpacing: -0.325,
+  },
+  fab: {
+    flexDirection: 'row',
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    width: 90,
+    height: 40,
+    backgroundColor: '#A30FFA',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
+    paddingTop: 9,
+    paddingRight: 16,
+    paddingBottom: 9,
+    paddingLeft: 16,
+  },
   headerContainer: {
-    height: 260, // 헤더 높이 설정
+    height: 260,
     backgroundColor: 'transparent',
-    position: 'relative', // 상대적 위치
+    position: 'relative',
   },
   headerImage: {
     width: '100%',
-    height: '100%', // 헤더 높이와 일치
+    height: '100%',
   },
   goBackButton: {
-    position: 'absolute', // 절대 위치
-    top: 10, // 상단 여백
-    left: 10, // 좌측 여백
-    zIndex: 1, // 스택 순서
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1,
   },
   icon: {
-    width: 24, // 아이콘 크기
-    height: 24, // 아이콘 크기
+    width: 24,
+    height: 24,
   },
   largeImage: {
     width: '100%',
-    height: 200, // 메인 이미지 높이
+    height: 200,
   },
   doctorImage: {
     width: '100%',
