@@ -5,14 +5,14 @@ import HospitalCallIcon from "../assets/images/call.svg";
 export default function HospitalInfoItem({info}) {
   return (
     <View style={styles.hospitalInfoContainer}>
-      <Text style={styles.hospitalName}>{info.name}</Text>
+      <Text style={styles.hospitalName}>{info.hospitalName}</Text>
       <View style={styles.locationContainer}>
         <HospitalLocationIcon />
-        <Text style={styles.locationText}>{info.location}</Text>
+        <Text style={styles.locationText}>{info.hospitalAddress}</Text>
       </View>
       <View style={styles.numberContainer}>
         <HospitalCallIcon />
-        <Text style={styles.numberText}>{info.number}</Text>
+        <Text style={styles.numberText}>{info.hospitalTel}</Text>
       </View>
     </View>
   )
