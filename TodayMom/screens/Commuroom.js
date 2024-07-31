@@ -9,48 +9,105 @@ import Allow from '../assets/images/allow_bottom.svg';
 import { useState } from 'react';
 import Message from '../assets/images/message.svg';
 import Doctor from '../assets/images/doctor.svg';
+import { useRoute } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Commuroom = ({ navigation }) => {
   const [profileHeight, setProfileHeight] = useState(256); // 초기 높이 256
+  const [showMore, setShowMore] = useState(false);
+  const route = useRoute();
+  const roomId = route.params.roomId;
+  const [roomDetails, setRoomDetails] = useState(null);
+
+  const fetchRoomDetails = async () => {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await fetch(
+        `https://15.164.134.131/api/room/detail/${roomId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const result = await response.json();
+      if (response.ok) {
+        setRoomDetails(result.data);
+        console.log(result);
+        setShowMore(result.data.introduction.length > 180);
+      } else {
+        throw new Error('Failed to fetch room details');
+      }
+    } catch (error) {
+      console.error('Error fetching room details:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRoomDetails();
+    }, [roomId])
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.headerLeft}
-      >
-        <Image
-          source={require('../assets/images/leftallow.png')}
-          style={styles.icon}
-        />
-        <Doctor />
-      </TouchableOpacity>
+      <View style={styles.headerLeft}>
+        {roomDetails && (
+          <Image
+            source={
+              roomDetails.thumbnail
+                ? { uri: roomDetails.thumbnail }
+                : require('../assets/images/doctor.svg')
+            }
+            style={styles.largeImage}
+            resizeMode="cover"
+          />
+        )}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.goBackButton}
+        >
+          <Image
+            source={require('../assets/images/leftallow.png')}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* 아래 부분 이미지 추가 */}
+      {/* <Image
+        source={
+          roomDetails.thumbnail
+            ? { uri: roomDetails.thumbnail }
+            : require('../assets/images/doctor.svg')
+        }
+        style={styles.largeImage}
+        resizeMode="cover"
+      /> */}
 
       <View style={styles.blurContainer}>
         <BlurView style={styles.price} intensity={75}>
           <View style={[styles.profile, { height: profileHeight }]}>
-            <Text style={styles.communame}>
-              산부인과 전문가 의사 김민주님이
-            </Text>
-            <Text style={styles.communame}>함께하는 커뮤니티</Text>
+            <Text style={styles.communame}>{roomDetails?.name}</Text>
             <View style={styles.row}>
               <Purple />
-              <Text style={styles.people}>90명 참여중</Text>
+              <Text style={styles.people}>
+                {roomDetails?.peopleCount}명 참여중
+              </Text>
             </View>
             <View style={styles.introcon}>
-              <Text style={styles.intro}>
-                안녕하세요, 산부인과 전문가 김민주 의사입니다. 저희 소통방에서는
-                여성 삶의 모든 단계에서 여성을 포괄적으로 돌보고 지원하는 데
-                전념하고 있습니다. 임신, 생식 건강, 전반적인 웰빙에 관해 궁금한
-                점이 있으시면 수년간의 경험과 여성 건강에 대한 깊은 헌신을
-                바탕으로 성실히 답변드리겠습니다!
-              </Text>
-              <TouchableOpacity
-                style={styles.more}
-                onPress={() => setProfileHeight(286)}
-              >
-                <Text style={styles.moretext}>자세히 보기</Text>
-                <Allow />
-              </TouchableOpacity>
+              <Text style={styles.intro}>{roomDetails?.introduction}</Text>
+              {showMore && (
+                <TouchableOpacity
+                  style={styles.more}
+                  onPress={() => setProfileHeight(400)}
+                >
+                  <Text style={styles.moretext}>자세히 보기</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </BlurView>
@@ -78,6 +135,35 @@ const Commuroom = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    height: 260, // 헤더 높이 설정
+    backgroundColor: 'transparent',
+    position: 'relative', // 상대적 위치
+  },
+  headerImage: {
+    width: '100%',
+    height: '100%', // 헤더 높이와 일치
+  },
+  goBackButton: {
+    position: 'absolute', // 절대 위치
+    top: 10, // 상단 여백
+    left: 10, // 좌측 여백
+    zIndex: 1, // 스택 순서
+  },
+  icon: {
+    width: 24, // 아이콘 크기
+    height: 24, // 아이콘 크기
+  },
+  largeImage: {
+    width: '100%',
+    height: 200, // 메인 이미지 높이
+  },
+  doctorImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 25,
+  },
+
   minute: {
     color: '#505050',
     fontFamily: 'Pretendard',
@@ -179,7 +265,7 @@ const styles = StyleSheet.create({
   introcon: {
     width: '100%',
     height: 54,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   people: {
     color: '#A30FFA',
@@ -238,7 +324,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f1f5',
   },
   headerLeft: {
-    paddingTop: 14,
+    // paddingTop: 14,
     paddingBottom: 14,
     width: '100%',
     height: 170,

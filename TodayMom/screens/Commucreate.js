@@ -143,8 +143,6 @@ const Commucreate = () => {
     }
   };
 
-  console.log('Current imageUri:', imageUri);
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };

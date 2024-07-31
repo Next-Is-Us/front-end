@@ -151,7 +151,7 @@ function App() {
                 component={MomRecordConditionAdditionScreen}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen 
+              <Stack.Screen
                 name="ConfirmRecord"
                 component={ConfirmRecordScreen}
                 options={{ headerShown: false }}
