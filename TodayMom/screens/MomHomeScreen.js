@@ -59,6 +59,7 @@ export default function MomHomeScreen({navigation}) {
   };
 
   const getDayRecord = async () => {
+    console.log(token);
     try {
       console.log('Sending request with token:', token);
       const response = await axios.get(
@@ -70,7 +71,6 @@ export default function MomHomeScreen({navigation}) {
           },
         }
       );
-      console.log(response.status);
       console.log(response.data.data);
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
@@ -79,6 +79,21 @@ export default function MomHomeScreen({navigation}) {
       console.error(e);
     }
   };
+
+  const getFlowerRecord = async () => {
+    try {
+      const response = await axios.get("https://15.164.134.131/api/nft", {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      console.log(response.data);
+      setFlowerPieces(response.data.data);
+    } catch(e) {
+      console.error(e);
+    }
+  }
 
   useEffect(() => {
     console.log("토큰 받아오기");
@@ -93,7 +108,8 @@ export default function MomHomeScreen({navigation}) {
       console.log(day);
       console.log('통신 실행');
       getDayRecord();
-    }
+      getFlowerRecord();
+    } 
   }, [token, year, month, day]);
   
   useFocusEffect(
@@ -102,7 +118,8 @@ export default function MomHomeScreen({navigation}) {
       selectDay(today.getDate());
       selectMonth(today.getMonth() + 1);
       selectYear(today.getFullYear());
-    }, [])
+      getFlowerRecord();
+    }, [token])
   );
 
   useEffect(() => {

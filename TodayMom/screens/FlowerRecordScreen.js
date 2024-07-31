@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Animated, FlatList, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FlowerBadge from "../assets/images/flower6.svg";
 import FlowerGrid from "../assets/images/flowerGrid.svg";
 import BottomNav from "../components/BottomNav";
 import ConditionRecordedItem from "../components/ConditionRecordItem";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const recordItem = [
   {recordedNumber: 860, complete: true, startedDate: "2024.7.9", endedDate: "2024.9.29", recordCount: 6},
@@ -13,6 +16,51 @@ const recordItem = [
 
 export default function FlowerRecordScreen({navigation}) {
   const [recordedContent, setRecordedContent] = useState(recordItem); // 추후 백과 통신 예정
+  const [token, setToken] = useState("");
+
+  const getToken = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if(accessToken) {
+        setToken(accessToken);
+      } else {
+        console.log("Not Found");
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  const getNFTRecord = async () => {
+    try {
+      const response = await axios.get("https://15.164.134.131/api/healthRecord", {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      console.log(response.data);
+      setRecordedContent(response.data.data);
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    console.log("get Token");
+    getToken();
+    if(token) {
+      getNFTRecord();
+    }
+  }, [token])
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if(token) {
+  //       getNFTRecord();
+  //     }
+  //   },[token])
+  // )
 
   const selectHospitalScreenHandler = () => {
     navigation.navigate("SelectForVisitHospital");

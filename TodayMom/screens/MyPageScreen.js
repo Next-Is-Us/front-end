@@ -8,10 +8,13 @@ import {
   ScrollView,
 } from 'react-native';
 import HeaderBack from '../components/HeaderBack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FamilyMember from '../components/FamilyMember';
 // import Footer from '../assets/images/footers.svg';
 import Footers from '../assets/images/footerpng.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { Clipboard } from 'react-native';
 
 const familyMemberDummyData = [{ name: '김지은' }, { name: '박제준' }];
 
@@ -19,7 +22,52 @@ export default function MyPageScreen({ route }) {
   const name = route.params.userName;
   const [familyCount, setFamilyCount] = useState(2);
   const [familyList, setFamilyList] = useState([]);
+  const [token, setToken] = useState("");
   const [link, setLink] = useState('www.todays.mom');
+
+  const getToken = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if(accessToken) {
+        setToken(accessToken);
+      } else {
+        console.log("Not found");
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  const getLink = async () => {
+    try {
+      const response = await axios.get("https://15.164.134.131/api/myPage/link", {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      console.log(response.data);
+      setLink(response.data.data.link);
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    getToken();
+    if(token) {
+      getLink();
+    }
+    console.log(link);
+  }, [token]);
+
+  // const copyHandler = async () => {
+  //   try {
+  //     await Clipboard.writeText(link);
+  //   } catch(e) {
+  //     console.error(e);
+  //   }
+  // }
 
   return (
     <View style={styles.rootScreen}>
@@ -51,7 +99,7 @@ export default function MyPageScreen({ route }) {
           </View>
           <View style={styles.inviteLinkContainer}>
             <View style={styles.inviteLinkTextContainer}>
-              <Text style={styles.inviteLink}>{link}</Text>
+              <Text style={styles.inviteLink} numberOfLines={1}>{link}</Text>
               <TouchableOpacity style={styles.copyButton}>
                 <Text style={styles.copyButtonText}>복사</Text>
               </TouchableOpacity>
@@ -164,6 +212,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    // width: "100%"
   },
   inviteLink: {
     color: 'black',
@@ -171,6 +220,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+    // backgroundColor: "blue",
+    overflow: "scroll",
+    flex: 1
   },
   copyButton: {
     backgroundColor: '#A30FFA',
