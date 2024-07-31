@@ -37,6 +37,7 @@ import IntroCompo from './components/IntroCompo.js';
 import Choose from './screens/Choose.js';
 import { UserProvider } from './context/UserContext.js';
 import CommunityPage from './components/CommunityPage.js';
+import ConfirmRecordScreen from './screens/ConfirmRecordScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -148,6 +149,11 @@ function App() {
               <Stack.Screen
                 name="WriteCondition"
                 component={MomRecordConditionAdditionScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name="ConfirmRecord"
+                component={ConfirmRecordScreen}
                 options={{ headerShown: false }}
               />
               <Stack.Screen

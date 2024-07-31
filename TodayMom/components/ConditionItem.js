@@ -9,7 +9,7 @@ const conditionsArray = (array, size) => {
   return conditionArray;
 }
 
-export default function ConditionItem({selectedCondition, setConditionSelected, conditions, conditionStates, setConditionStates}) {
+export default function ConditionItem({selectedCondition, setConditionSelected = () => {}, conditions, conditionStates, setConditionStates = () => {}, confirm}) {
   // const [selectedConditions, setSelectedConditions] = useState([]);
 
   const selectConditionHandler = (condition) => {
@@ -26,10 +26,12 @@ export default function ConditionItem({selectedCondition, setConditionSelected, 
   const cArray = conditionsArray(conditions, 3);
 
   useEffect(() => {
-    const selectedConditions = Object.values(conditionStates).filter((state) => state);
-    setConditionSelected(selectedConditions.length>0);
+    if(!confirm) {
+      const selectedConditions = Object.values(conditionStates).filter((state) => state);
+      setConditionSelected(selectedConditions.length>0);
+    }
     
-  }, [conditionStates]);
+  }, [conditionStates, confirm]);
 
   // 이 부분 통신하면서 수정 예정 (선택된 컨디션 불러오는 함수)
   // useEffect(() => {
@@ -43,9 +45,15 @@ export default function ConditionItem({selectedCondition, setConditionSelected, 
             <View key={index} style={styles.selectConditionArrayContainer}>
               {conditionArray.map((condition) => {
                 return (
-                  <TouchableOpacity key={condition.state} style={[styles.conditionContainer, conditionStates[condition.state] && styles.selectedButton]} onPress={() => selectConditionHandler(condition)}>
-                    <Text style={[styles.conditionText, conditionStates[condition.state] && styles.selectedText]}>{condition.symptom}</Text>
-                  </TouchableOpacity>
+                  confirm ? (
+                    <View key={condition.state} style={[styles.conditionContainer, conditionStates[condition.state] && styles.selectedButton]}>
+                      <Text style={[styles.conditionText, conditionStates[condition.state] && styles.selectedText]}>{condition.symptom}</Text>
+                    </View>
+                  ) : (
+                    <TouchableOpacity key={condition.state} style={[styles.conditionContainer, conditionStates[condition.state] && styles.selectedButton]} onPress={() => selectConditionHandler(condition)}>
+                      <Text style={[styles.conditionText, conditionStates[condition.state] && styles.selectedText]}>{condition.symptom}</Text>
+                    </TouchableOpacity>
+                  )
                 )
               })}
             </View>

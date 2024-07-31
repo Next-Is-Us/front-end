@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, View, Text, Pressable } from "react-native";
 
 const getWeekDays = () => {
@@ -45,6 +46,16 @@ export default function WeekCalendar({relation, selectDay, selectMonth, selectYe
     const weekDays = getWeekDays();
     setWeek(weekDays);
   },[]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const today = new Date();
+      setSelectedDay(today.getDate());
+      selectDay(today.getDate());
+      selectMonth(today.getMonth() + 1);
+      selectYear(today.getFullYear());
+    }, [])
+  )
 
   const selectDayHandler = (item) => {
     setSelectedDay(item.day);

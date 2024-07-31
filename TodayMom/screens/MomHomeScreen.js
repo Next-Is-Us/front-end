@@ -1,32 +1,24 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  SafeAreaView,
-  Animated,
-  Dimensions,
-} from 'react-native';
-import TopBackground from '../components/TopBackground';
-import HeaderNav from '../components/HeaderNav';
-import RelationButton from '../components/RelationButton';
-import WeekCalendar from '../components/WeekCalendar';
-import { useState, useRef, useEffect } from 'react';
-import ToRecordContainer from '../components/ToRecordContainer';
-import FlowerGrid from '../assets/images/flowerGrid.svg';
-import BottomNav from '../components/BottomNav';
-import Flower1 from '../assets/images/flower1.svg';
-import Flower2 from '../assets/images/flower2.svg';
-import Flower3 from '../assets/images/flower3.svg';
-import Flower4 from '../assets/images/flower4.svg';
-import Flower5 from '../assets/images/flower5.svg';
-import Flower6 from '../assets/images/flower6.svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import { View, Text, StyleSheet, Image, Pressable, SafeAreaView, Animated, Dimensions } from "react-native";
+import TopBackground from "../components/TopBackground";
+import HeaderNav from "../components/HeaderNav";
+import RelationButton from "../components/RelationButton";
+import WeekCalendar from "../components/WeekCalendar";
+import { useState, useRef, useEffect, useCallback } from "react";
+import ToRecordContainer from "../components/ToRecordContainer";
+import FlowerGrid from "../assets/images/flowerGrid.svg";
+import BottomNav from "../components/BottomNav";
+import Flower1 from "../assets/images/flower1.svg";
+import Flower2 from "../assets/images/flower2.svg";
+import Flower3 from "../assets/images/flower3.svg";
+import Flower4 from "../assets/images/flower4.svg";
+import Flower5 from "../assets/images/flower5.svg";
+import Flower6 from "../assets/images/flower6.svg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function MomHomeScreen({ navigation }) {
-  const [name, setName] = useState('갱년기'); // userName 추후에 백과 통신 예정 (complete)
+export default function MomHomeScreen({navigation}) {
+  const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정 (complete)
   const [invited, setInvited] = useState(true);
   const [recorded, setRecorded] = useState(false);
   const [flowerPieces, setFlowerPieces] = useState(0);
@@ -82,17 +74,20 @@ export default function MomHomeScreen({ navigation }) {
       console.log(response.data.data);
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
-    } catch (e) {
+      setDate(response.data.data.date);
+    } catch(e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
+    console.log("토큰 받아오기");
     getToken();
   }, []);
 
   useEffect(() => {
     if (token) {
+      console.log("토큰이 설정되었습니다:", token);
       console.log(year);
       console.log(month);
       console.log(day);
@@ -100,6 +95,15 @@ export default function MomHomeScreen({ navigation }) {
       getDayRecord();
     }
   }, [token, year, month, day]);
+  
+  useFocusEffect(
+    useCallback(() => {
+      const today = new Date();
+      selectDay(today.getDate());
+      selectMonth(today.getMonth() + 1);
+      selectYear(today.getFullYear());
+    }, [])
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -194,14 +198,8 @@ export default function MomHomeScreen({ navigation }) {
           selectYear={selectYear}
         />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <ToRecordContainer
-          invited={invited}
-          recorded={recorded}
-          selectConditionHandler={selectConditionHandler}
-        />
-        <Text style={[styles.momHomeTitleText, { marginTop: 40 }]}>
-          우리의 꽃을 피워보아요
-        </Text>
+        <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} date={date} name={name} year={year} month={month} day={day} />
+        <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>
             {renderFlower()}
@@ -237,9 +235,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   flowerGridContainer: {
-    width: '100%',
-    marginTop: deviceHeight < 900 ? 40 : 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    width: "100%",
+    marginTop: deviceHeight < 900 ? 40: 80,
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });

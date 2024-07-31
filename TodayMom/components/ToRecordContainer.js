@@ -3,9 +3,17 @@ import PlusImg from "../assets/images/plusImg.svg";
 import MailImg from "../assets/images/mail.svg";
 import RightArrow from "../assets/images/rightArrow.svg";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
-export default function ToRecordContainer({ invited, recorded, selectConditionHandler }) {
-  const [date, setDate] = useState("2024.07.09");
+export default function ToRecordContainer({ invited, recorded, selectConditionHandler, date, name, year, month, day }) {
+  // const [selectedDate, setSelectedDate] = useState("2024.07.09");
+  const navigation = useNavigation();
+  const selectedDate = [year, month, day]
+
+  const confirmRecordHandler = () => {
+    console.log(selectedDate);
+    navigation.navigate("ConfirmRecord", {userName: name, selectedDate: selectedDate});
+  }
 
   const toRecordContainer = invited
     ? { backgroundColor: "#8E48F3" }
@@ -25,7 +33,7 @@ export default function ToRecordContainer({ invited, recorded, selectConditionHa
           <Text style={styles.completeDate}>{date}</Text>
           <Text style={styles.completeText}>기록이 완료되었습니다.</Text>
         </View>
-        <Pressable>
+        <Pressable onPress={confirmRecordHandler}>
           <RightArrow />
         </Pressable>
       </View>

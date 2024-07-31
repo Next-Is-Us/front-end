@@ -130,7 +130,7 @@ export default function NFTCardScreen({route}) {
   };
   
   return (
-    <ImageBackground source={require("../assets/images/NFTBackground.png")} style={styles.screen}>
+    <ImageBackground source={require("../assets/images/NFTBackground.png")} style={styles.screen} deferRender={true}>
       <HeaderBack />
       <View style={styles.cardContainer}>
         <Pressable onPress={isFlipped ? shakeCard : flipCard}>
