@@ -1,24 +1,66 @@
 import { StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard, FlatList } from "react-native";
 import HeaderBack from "../components/HeaderBack";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "../assets/images/searchImg.svg";
 import HeartSeedIcon from "../assets/images/seed.svg";
 import HospitalInfoItem from "../components/HospitalInfoItem";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { debounce } from "lodash";
 
-const dummyInfo = [
-  {name: "종로지은병원", location: "지은특별시 지은구 지은동", number: "010-2825-7723"},
-  {name: "한성지은병원", location: "지은특별시 지은구 지은동", number: "010-2825-7723"},
-  {name: "경희지은병원", location: "지은특별시 지은구 지은동", number: "010-2825-7723"},
-];
+// const dummyInfo = [
+//   {name: "종로지은병원", location: "지은특별시 지은구 지은동", number: "010-2825-7723"},
+//   {name: "한성지은병원", location: "지은특별시 지은구 지은동", number: "010-2825-7723"},
+//   {name: "경희지은병원", location: "지은특별시 지은구 지은동", number: "010-2825-7723"},
+// ];
 
 export default function FindHospitalScreen() {
   const [searchHospitalInput, setSearchHospitalInput] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [founded, setFounded] = useState(true);
-  const [hospitalInfo, setHospitalInfo] = useState(dummyInfo);
+  const [founded, setFounded] = useState(false);
+  const [hospitalInfo, setHospitalInfo] = useState([]);
+  const [token, setToken] = useState("");
 
+  const getToken = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      setToken(accessToken);
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  const getHospital = async (keyword) => {
+    if (!token || !keyword) return;
+    try {
+      const response = await axios.get(`https://15.164.134.131/api/hospital/search?keyword=${keyword}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.log(response.data);
+      setFounded(true);
+      setHospitalInfo(response.data.data);
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const debouncedGetHospital = useCallback(debounce(getHospital, 300), [token]);
+  
   const userInputHandler = (enteredText) => {
     setSearchHospitalInput(enteredText);
+    if (enteredText === "") {
+      setFounded(false);
+      setHospitalInfo([]);
+    } else {
+      debouncedGetHospital(enteredText);
+    }
   }
 
   const renderItem = ({item}) => {
@@ -46,17 +88,24 @@ export default function FindHospitalScreen() {
         />
       </View>
       {founded ? (
-        <FlatList
+        hospitalInfo.length > 0 ? (
+          <FlatList
           style={styles.listContainer}
           contentContainerStyle={styles.listInnerStyle}
           data={hospitalInfo}
           renderItem={renderItem}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item, index) => `${item.hospitalName}_${index}`}
         />
+        ) : (
+          <View style={styles.searchTextContainer}>
+            <HeartSeedIcon />
+            <Text style={styles.searchText}>일치하는 병원이 없습니다 :(</Text>
+          </View>
+        )
       ) : (
         <View style={styles.searchTextContainer}>
           <HeartSeedIcon />
-          {searchHospitalInput.length>0 ? <Text style={styles.searchText}>일치하는 병원이 없습니다 :(</Text> : <Text style={styles.searchText}>병원 이름을 검색해보세요!</Text>}
+          <Text style={styles.searchText}>병원 이름을 검색해보세요!</Text>
         </View>
       )}
     </View>

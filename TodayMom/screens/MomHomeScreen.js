@@ -52,6 +52,7 @@ export default function MomHomeScreen({navigation}) {
         setToken(accessToken);
       } else {
         console.log('not found');
+        navigation.navigate("Splash");
       }
     } catch (e) {
       console.log(e);
@@ -111,7 +112,7 @@ export default function MomHomeScreen({navigation}) {
       console.log('통신 실행');
       getDayRecord();
       getFlowerRecord();
-    } 
+    }
   }, [token, year, month, day]);
   
   useFocusEffect(
