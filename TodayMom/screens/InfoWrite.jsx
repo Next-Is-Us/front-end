@@ -16,66 +16,75 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const InfoWrite = () => {
   const navigation = useNavigation();
-  const [showButton, setShowButton] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [showButton, setShowButton] = useState(false);
 
-  useEffect(() => {
-    // 관리자 액세스토큰 발급 및 글 목록 불러오기
-    const fetchPosts = async () => {
-      try {
-        const nickname = await AsyncStorage.getItem('nickname');
-        const accessToken = await AsyncStorage.getItem('accessToken'); // 토큰 가져오기
+  const fetchPosts = async () => {
+    try {
+      const nickname = await AsyncStorage.getItem('nickname');
+      const accessToken = await AsyncStorage.getItem('accessToken');
 
-        // 관리자 확인
-        const adminResponse = await fetch(
-          'https://15.164.134.131/api/admin/accessToken',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nickname }),
-          }
-        );
-
-        if (adminResponse.ok) {
-          const result = await adminResponse.json();
-          console.log('Parsed response body:', result);
-          if (result.code === '200') {
-            setShowButton(true);
-          }
+      // 관리자 확인
+      const adminResponse = await fetch(
+        'https://15.164.134.131/api/admin/accessToken',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nickname }),
         }
+      );
 
-        // 글 목록 불러오기
-        const response = await fetch(
-          'https://15.164.134.131/api/infoPost/list',
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const result = await response.json();
-          console.log(result);
-          setPosts(result.data.data);
-        } else {
-          console.error('Failed to fetch posts');
+      if (adminResponse.ok) {
+        const result = await adminResponse.json();
+        if (result.code === '200') {
+          setShowButton(true);
         }
-      } catch (error) {
-        console.error('Error fetching data', error);
       }
-    };
 
-    fetchPosts();
-  }, []);
+      // 글 목록 불러오기
+      const response = await fetch('https://15.164.134.131/api/infoPost/list', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setPosts(result.data.data);
+      } else {
+        console.error('Failed to fetch posts');
+      }
+    } catch (error) {
+      console.error('Error fetching data', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPosts();
+    }, [])
+  );
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.list}>
+      <TouchableOpacity
+        style={styles.list}
+        onPress={() => {
+          console.log(
+            'Navigating to ViewContent with infoPostId:',
+            item.infoPostId
+          );
+          navigation.navigate('ViewContent', { infoPostId: item.infoPostId });
+        }}
+      >
         {item.imageUrl ? (
           <Image source={{ uri: item.imageUrl }} style={styles.thumbnail} />
         ) : null}
