@@ -234,7 +234,7 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
               <Animated.View style={[styles.cardContainer, isClicked && styles.clickedCardContainer, shadowStyle, borderStyle]}>
                 <ImageBackground source={require("../assets/images/NFTContainer.png")} style={styles.card}>
                   <Text style={styles.titleText}>꽃피 NFT</Text>
-                  <Text style={styles.recordedNumberText}>#{info.recordedNumber}</Text>
+                  <Text style={styles.recordedNumberText}>#{info.healthRecordId}</Text>
                   <View style={styles.badgeContainer}>
                     <FlowerBadge width={146} height={146} />
                   </View>
