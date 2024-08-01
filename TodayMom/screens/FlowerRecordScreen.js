@@ -8,15 +8,15 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
-const recordItem = [
-  {recordedNumber: 860, complete: true, startedDate: "2024.7.9", endedDate: "2024.9.29", recordCount: 6},
-  {recordedNumber: 859, complete: false, completedCount: 4, recordCount: 4},
-  {recordedNumber: 858, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
-]
+// const recordItem = [
+//   {recordedNumber: 860, complete: true, startedDate: "2024.7.9", endedDate: "2024.9.29", recordCount: 6},
+//   {recordedNumber: 859, complete: false, completedCount: 4, recordCount: 4},
+//   {recordedNumber: 858, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
+// ]
 
 export default function FlowerRecordScreen({navigation}) {
-  const [recordedContent, setRecordedContent] = useState(recordItem); // 추후 백과 통신 예정
-  const [token, setToken] = useState("");
+  const [recordedContent, setRecordedContent] = useState([]); // 추후 백과 통신 예정
+  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 더미데이터임
 
   const getToken = async () => {
     try {
@@ -48,7 +48,7 @@ export default function FlowerRecordScreen({navigation}) {
 
   useEffect(() => {
     console.log("get Token");
-    getToken();
+    // getToken();
     if(token) {
       getNFTRecord();
     }
@@ -67,7 +67,7 @@ export default function FlowerRecordScreen({navigation}) {
   }
 
   const recordNFTHandler = (item) => {
-    item.complete && navigation.navigate("NFTCard", {info: item});
+    item.isComplete && navigation.navigate("NFTCard", {info: item});
   }
 
   const renderItem = ({item}) => {
@@ -93,7 +93,7 @@ export default function FlowerRecordScreen({navigation}) {
         style={styles.listContainer}
         contentContainerStyle={styles.listItem}
         data={recordedContent}
-        keyExtractor={(item) => item.recordedNumber.toString()}
+        keyExtractor={(item, index) => `${item.nftCount}_${item.healthRecordId}`}
         renderItem={renderItem}
       />
       <BottomNav flower />
@@ -149,6 +149,8 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   listItem: {
-    gap: 24
+    // flex: 1,
+    gap: 24,
+    paddingBottom: 100
   },
 })

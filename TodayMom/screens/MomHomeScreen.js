@@ -24,7 +24,7 @@ export default function MomHomeScreen({navigation}) {
   const [flowerPieces, setFlowerPieces] = useState(0);
   const today = new Date();
   const [date, setDate] = useState('');
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE'); // 더미데이터임 
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
@@ -98,10 +98,10 @@ export default function MomHomeScreen({navigation}) {
     }
   }
 
-  useEffect(() => {
-    console.log("토큰 받아오기");
-    getToken();
-  }, []);
+  // useEffect(() => {
+  //   console.log("토큰 받아오기");
+  //   getToken();
+  // }, []);
 
   useEffect(() => {
     if (token) {
@@ -178,7 +178,6 @@ export default function MomHomeScreen({navigation}) {
   };
 
   const selectConditionHandler = () => {
-    console.log(token);
     if (
       today.getFullYear() === year &&
       today.getMonth() + 1 === month &&
