@@ -27,7 +27,7 @@ const Commuwrite = ({ route, navigation }) => {
     const formData = new FormData();
     const append = formData.append.bind(formData);
     formData.append = (key, value) => {
-      console.log(key, value); // Log the key and the value being appended
+      console.log(key, value);
       append(key, value);
     };
     return formData;
@@ -36,7 +36,6 @@ const Commuwrite = ({ route, navigation }) => {
   const handleSubmit = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
 
-    // Create a JSON object with the required fields
     const postData = {
       title: titleText,
       content: contentText,
@@ -50,7 +49,7 @@ const Commuwrite = ({ route, navigation }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(postData), // Convert the JSON object to a string
+        body: JSON.stringify(postData),
       });
 
       const result = await response.json();

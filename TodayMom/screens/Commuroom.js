@@ -13,6 +13,7 @@ import { useRoute } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native';
 
 const Commuroom = ({ navigation }) => {
   const [profileHeight, setProfileHeight] = useState(256); // 초기 높이 256
@@ -20,6 +21,7 @@ const Commuroom = ({ navigation }) => {
   const route = useRoute();
   const roomId = route.params.roomId;
   const [roomDetails, setRoomDetails] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   const fetchRoomDetails = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -46,10 +48,52 @@ const Commuroom = ({ navigation }) => {
     }
   };
 
+  const fetchRoomPosts = async () => {
+    //소통방 게시글 리스트 조회(관리자,의사,엄마)
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await fetch(
+        `https://15.164.134.131/api/roomPost/list?roomId=${roomId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const result = await response.json();
+      if (response.ok) {
+        setPosts(result.data.data);
+        console.log(result.data.data);
+      } else {
+        throw new Error('Failed to fetch room posts');
+      }
+    } catch (error) {
+      console.error('Error fetching room posts:', error);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchRoomDetails();
+      fetchRoomPosts();
     }, [roomId])
+  );
+
+  const renderItem = ({ item }) => (
+    <View style={styles.content}>
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
+        {item.content}
+      </Text>
+      <View style={styles.row2}>
+        <View style={styles.row3}>
+          <Message />
+          <Text style={styles.count}>00</Text>
+        </View>
+        <Text style={styles.minute}>{item.whenCreated}</Text>
+      </View>
+    </View>
   );
 
   return (
@@ -114,24 +158,16 @@ const Commuroom = ({ navigation }) => {
           </BlurView>
         </View>
 
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <Text style={styles.title}>게시글 제목</Text>
-            <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
-              동해물과 백두산이 동해물과 백두산이동해물과 백두산이동해물과
-              백두산이동해물과 백두산이동해물과 백두산이동해물과
-              백두산이동해물과
-            </Text>
-
-            <View style={styles.row2}>
-              <View style={styles.row3}>
-                <Message />
-                <Text style={styles.count}>00</Text>
-              </View>
-              <Text style={styles.minute}>3분전</Text>
-            </View>
-          </View>
-        </View>
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.roomPostId.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={{
+            paddingRight: 20,
+            paddingLeft: 20,
+            paddingBottom: 100,
+          }}
+        />
 
         <TouchableOpacity
           style={styles.fab}
