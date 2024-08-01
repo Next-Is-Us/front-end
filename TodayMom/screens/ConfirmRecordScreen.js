@@ -128,12 +128,12 @@ export default function ConfirmRecordScreen({navigation, route }) {
               </View>
             </View>
           </View>
-          <View style={styles.safeView}>
-            <TouchableOpacity style={styles.button} onPress={homeHandler}>
-              <Text style={styles.buttonText}>확인 완료</Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
+        <View style={styles.safeView}>
+          <TouchableOpacity style={styles.button} onPress={homeHandler}>
+            <Text style={styles.buttonText}>확인 완료</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </>
   );

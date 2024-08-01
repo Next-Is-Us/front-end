@@ -239,11 +239,11 @@ export default function NFTCard({back, front, info, isClicked, setIsClicked}) {
                     <FlowerBadge width={146} height={146} />
                   </View>
                   <View style={styles.certifyTextContainer}>
-                    <Text style={styles.certifyText}>본 NFT의 소유자는 총 9주 동안</Text>
+                    <Text style={styles.certifyText}>본 NFT의 소유자는 총 {info.week} 동안</Text>
                     <Text style={styles.certifyText}>자신의 건강을 기록하였음을 인증합니다</Text>
                   </View>
                   <Text style={styles.recordPeriodText}>기록 기간</Text>
-                  <Text style={styles.recordedPeriod}>{info.startedDate} - {info.endedDate}</Text>
+                  <Text style={styles.recordedPeriod}>{info.recordPeriod}</Text>
                 </ImageBackground>
                 {isClicked && (
                   <>

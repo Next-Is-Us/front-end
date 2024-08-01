@@ -93,7 +93,7 @@ export default function FlowerRecordScreen({navigation}) {
         style={styles.listContainer}
         contentContainerStyle={styles.listItem}
         data={recordedContent}
-        keyExtractor={(item, index) => `${item.nftCount}_${item.healthRecordId}`}
+        keyExtractor={(item, index) => index}
         renderItem={renderItem}
       />
       <BottomNav flower />
