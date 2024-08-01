@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -9,75 +9,243 @@ import Allow from '../assets/images/allow_bottom.svg';
 import { useState } from 'react';
 import Message from '../assets/images/message.svg';
 import Doctor from '../assets/images/doctor.svg';
+import { useRoute } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native';
+
 const Commuroom = ({ navigation }) => {
   const [profileHeight, setProfileHeight] = useState(256); // 초기 높이 256
+  const [showMore, setShowMore] = useState(false);
+  const route = useRoute();
+  const roomId = route.params.roomId;
+  const [roomDetails, setRoomDetails] = useState(null);
+  const [posts, setPosts] = useState([]);
+
+  const fetchRoomDetails = async () => {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await fetch(
+        `https://15.164.134.131/api/room/detail/${roomId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const result = await response.json();
+      if (response.ok) {
+        setRoomDetails(result.data);
+        console.log(result);
+        setShowMore(result.data.introduction.length > 180);
+      } else {
+        throw new Error('Failed to fetch room details');
+      }
+    } catch (error) {
+      console.error('Error fetching room details:', error);
+    }
+  };
+
+  const fetchRoomPosts = async () => {
+    //소통방 게시글 리스트 조회(관리자,의사,엄마)
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await fetch(
+        `https://15.164.134.131/api/roomPost/list?roomId=${roomId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const result = await response.json();
+      if (response.ok) {
+        setPosts(result.data.data);
+        console.log(result.data.data);
+      } else {
+        throw new Error('Failed to fetch room posts');
+      }
+    } catch (error) {
+      console.error('Error fetching room posts:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRoomDetails();
+      fetchRoomPosts();
+    }, [roomId])
+  );
+
+  const renderItem = ({ item }) => (
+    <View style={styles.content}>
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
+        {item.content}
+      </Text>
+      <View style={styles.row2}>
+        <View style={styles.row3}>
+          <Message />
+          <Text style={styles.count}>00</Text>
+        </View>
+        <Text style={styles.minute}>{item.whenCreated}</Text>
+      </View>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.headerLeft}
-      >
-        <Image
-          source={require('../assets/images/leftallow.png')}
-          style={styles.icon}
-        />
-        <Doctor />
-      </TouchableOpacity>
-
-      <View style={styles.blurContainer}>
-        <BlurView style={styles.price} intensity={75}>
-          <View style={[styles.profile, { height: profileHeight }]}>
-            <Text style={styles.communame}>
-              산부인과 전문가 의사 김민주님이
-            </Text>
-            <Text style={styles.communame}>함께하는 커뮤니티</Text>
-            <View style={styles.row}>
-              <Purple />
-              <Text style={styles.people}>90명 참여중</Text>
-            </View>
-            <View style={styles.introcon}>
-              <Text style={styles.intro}>
-                안녕하세요, 산부인과 전문가 김민주 의사입니다. 저희 소통방에서는
-                여성 삶의 모든 단계에서 여성을 포괄적으로 돌보고 지원하는 데
-                전념하고 있습니다. 임신, 생식 건강, 전반적인 웰빙에 관해 궁금한
-                점이 있으시면 수년간의 경험과 여성 건강에 대한 깊은 헌신을
-                바탕으로 성실히 답변드리겠습니다!
-              </Text>
-              <TouchableOpacity
-                style={styles.more}
-                onPress={() => setProfileHeight(286)}
-              >
-                <Text style={styles.moretext}>자세히 보기</Text>
-                <Allow />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </BlurView>
-      </View>
-
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>게시글 제목</Text>
-          <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
-            동해물과 백두산이 동해물과 백두산이동해물과 백두산이동해물과
-            백두산이동해물과 백두산이동해물과 백두산이동해물과 백두산이동해물과
-          </Text>
-
-          <View style={styles.row2}>
-            <View style={styles.row3}>
-              <Message />
-              <Text style={styles.count}>00</Text>
-            </View>
-            <Text style={styles.minute}>3분전</Text>
-          </View>
+      <ScrollView>
+        <View style={styles.headerLeft}>
+          {roomDetails && (
+            <Image
+              source={
+                roomDetails.thumbnail
+                  ? { uri: roomDetails.thumbnail }
+                  : require('../assets/images/doctor.svg')
+              }
+              style={styles.largeImage}
+              resizeMode="cover"
+            />
+          )}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.goBackButton}
+          >
+            <Image
+              source={require('../assets/images/leftallow.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         </View>
-      </View>
+
+        {/* 아래 부분 이미지 추가 */}
+        {/* <Image
+        source={
+          roomDetails.thumbnail
+            ? { uri: roomDetails.thumbnail }
+            : require('../assets/images/doctor.svg')
+        }
+        style={styles.largeImage}
+        resizeMode="cover"
+      /> */}
+
+        <View style={styles.blurContainer}>
+          <BlurView style={styles.price} intensity={75}>
+            <View style={[styles.profile, { height: profileHeight }]}>
+              <Text style={styles.communame}>{roomDetails?.name}</Text>
+              <View style={styles.row}>
+                <Purple />
+                <Text style={styles.people}>
+                  {roomDetails?.peopleCount}명 참여중
+                </Text>
+              </View>
+              <View style={styles.introcon}>
+                <Text style={styles.intro}>{roomDetails?.introduction}</Text>
+                {showMore && (
+                  <TouchableOpacity
+                    style={styles.more}
+                    onPress={() => setProfileHeight(400)}
+                  >
+                    <Text style={styles.moretext}>자세히 보기</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </BlurView>
+        </View>
+
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.roomPostId.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={{
+            paddingRight: 20,
+            paddingLeft: 20,
+            paddingBottom: 100,
+          }}
+        />
+
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => {
+            console.log('Navigating with Room ID:', roomId);
+            navigation.navigate('Commuwrite', { roomId: roomId });
+          }}
+        >
+          <Text style={styles.write}>글쓰기</Text>
+          <Image
+            source={require('../assets/images/pencil.png')}
+            style={styles.fabIcon}
+          />
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  fabIcon: {
+    width: 16,
+    height: 16,
+  },
+  write: {
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    fontSize: 13,
+    fontWeight: '400',
+    lineHeight: 18,
+    letterSpacing: -0.325,
+  },
+  fab: {
+    flexDirection: 'row',
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    width: 90,
+    height: 40,
+    backgroundColor: '#A30FFA',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
+    paddingTop: 9,
+    paddingRight: 16,
+    paddingBottom: 9,
+    paddingLeft: 16,
+  },
+  headerContainer: {
+    height: 260,
+    backgroundColor: 'transparent',
+    position: 'relative',
+  },
+  headerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  goBackButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  largeImage: {
+    width: '100%',
+    height: 200,
+  },
+  doctorImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 25,
+  },
+
   minute: {
     color: '#505050',
     fontFamily: 'Pretendard',
@@ -179,7 +347,7 @@ const styles = StyleSheet.create({
   introcon: {
     width: '100%',
     height: 54,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   people: {
     color: '#A30FFA',
@@ -238,7 +406,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f1f5',
   },
   headerLeft: {
-    paddingTop: 14,
+    // paddingTop: 14,
     paddingBottom: 14,
     width: '100%',
     height: 170,

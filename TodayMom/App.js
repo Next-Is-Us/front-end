@@ -38,6 +38,7 @@ import Choose from './screens/Choose.js';
 import { UserProvider } from './context/UserContext.js';
 import CommunityPage from './components/CommunityPage.js';
 import ConfirmRecordScreen from './screens/ConfirmRecordScreen.js';
+import Commuwrite from './screens/Commuwrite.js';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +71,11 @@ function App() {
                     shadowOpacity: 0,
                   },
                 })}
+              />
+              <Stack.Screen
+                name="Commuwrite"
+                component={Commuwrite}
+                options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="CommunityPage"
@@ -151,7 +157,7 @@ function App() {
                 component={MomRecordConditionAdditionScreen}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen 
+              <Stack.Screen
                 name="ConfirmRecord"
                 component={ConfirmRecordScreen}
                 options={{ headerShown: false }}
