@@ -15,6 +15,7 @@ import axios from "axios";
 export default function SelectForChangeRecordScreen({navigation}) {
   const [completedRecord, setCompletedRecord] = useState();
   const [selectedRecord, setSelctedRecord] = useState([]);
+  const [pdfData, setPdfData] = useState([]);
   const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 더미데이터임
 
   const getToken = async () => {
@@ -61,6 +62,34 @@ export default function SelectForChangeRecordScreen({navigation}) {
   //   },[token])
   // )
 
+  const getPDFData = async () => {
+    let allData = [];
+    for (recordId of selectedRecord) {
+      let currentPage = 0;
+      const pageSize = 10;
+      try {
+        while(true) {
+          const response = await axios.get(`https://15.164.134.131/api/healthRecord/pdf/${recordId}?page=${currentPage}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            }
+          })
+          console.log(response.data.data);
+          const data = response.data.data;
+          allData = [...allData, ...data.data];
+          if (data.isLast) {
+            break;
+          }
+          currentPage++;
+        }
+        setPdfData(allData);
+      } catch(e) {
+        console.error(e);
+      } 
+    }
+  }
+
   const selectRecordHandler = (record) => {
     setSelctedRecord((prevRecord) => {
       return prevRecord.includes(record) ? prevRecord.filter((r) => r!==record) : [...prevRecord, record];
@@ -69,7 +98,8 @@ export default function SelectForChangeRecordScreen({navigation}) {
 
   // 추후 경로 변경 예정
   const changeHandler = () => {
-    selectedRecord.length>0 && navigation.navigate("RecordChange");
+    // selectedRecord.length>0 && navigation.navigate("RecordChange");
+    getPDFData();
   }
 
   const renderItem = ({item}) => {
@@ -138,7 +168,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     gap: 24,
-    paddingBottom: 100
+    paddingBottom:100
   },
   safe: {
     position: "absolute",
