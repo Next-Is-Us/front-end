@@ -1,18 +1,86 @@
 import { StyleSheet, View, Text, Animated, Image, TextInput, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native"
 import HeaderBack from "../components/HeaderBack"
 import Loading from "../assets/images/loading.svg"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import BottomButton from "../components/BottomButton";
 import PDFLogo from "../assets/images/pdfImg.svg";
 import InactiveExportIcon from "../assets/images/export_inactive.svg";
 import ActiveExportIcon from "../assets/images/export_active.svg";
+import jsPDF from "jspdf";
+// import RNFS from 'react-native-fs';
+// import FileViewer from 'react-native-file-viewer';
 
-export default function RecordChangeScreen({navigation}) {
+
+export default function RecordChangeScreen({navigation, route}) {
   const [complete, setComplete] = useState(true);
   const rotateAnimation = useRef(new Animated.Value(0)).current;
   const [userMail, setUserMail] = useState("");
   const [validType, setValidType] = useState(false);
   const emailRegEx = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const pdfData = route.params.pdfData;
+
+  useEffect(() => {
+    console.log(pdfData.length);
+    console.log("new Page");
+  }, []);
+
+  // // pdf 변환
+  // const createPdf = async () => {
+  //   setComplete(false);
+  //   try {
+  //     // jsPDF 객체 생성
+  //   const doc = new jsPDF();
+
+  //   // 제목
+  //   doc.setFontSize(18);
+  //   doc.text("Health Records", 14, 22); // ("텍스트", x축, y축)
+
+  //   // 테이블 헤더 추가
+  //   doc.setFontSize(12);
+  //   const headers = ["Year", "Month", "Day", "Sleep Time", "Is Blushing", "Is Headache", "Is Stomachache", "Is Constipated", "Is Muscle Painful", "Is Skin Troubled", "Is Numbness", "Is Chilled", "Is Depressed", "Record"];
+  //   let row = 30; // 첫 번째 행 위치
+
+  //   headers.forEach((header, index) => {
+  //     doc.text(header, 14 + index * 14, row);
+  //   });
+
+  //   // JSON 데이터를 테이블 형식으로 추가
+  //   pdfData.forEach((item, index) => {
+  //     row += 10;
+  //     doc.text(item.year.toString(), 14, row);
+  //     doc.text(item.month.toString(), 28, row);
+  //     doc.text(item.day.toString(), 42, row);
+  //     doc.text(item.sleepTime, 56, row);
+  //     doc.text(item.isBlushing.toString(), 70, row);
+  //     doc.text(item.isHeadache.toString(), 84, row);
+  //     doc.text(item.isStomachache.toString(), 98, row);
+  //     doc.text(item.isConstipated.toString(), 112, row);
+  //     doc.text(item.isMusclePainful.toString(), 126, row);
+  //     doc.text(item.isSkinTroubled.toString(), 140, row);
+  //     doc.text(item.isNumbness.toString(), 154, row);
+  //     doc.text(item.isChilled.toString(), 168, row);
+  //     doc.text(item.isDepressed.toString(), 182, row);
+  //     doc.text(item.record, 196, row);
+  //   });
+
+  //   // PDF 파일 저장
+  //   // const pdfOutput = doc.output('datauristring');
+  //   // const path = `${RNFS.DocumentDirectoryPath}/ConditionRecords.pdf`;
+
+  //   // await RNFS.writeFile(path, pdfOutput, 'base64');
+  //   // console.log("PDF saved to:", path);
+
+  //   // doc.save("HealthRecords.pdf");
+  //   console.log("complete");
+  //   setComplete(true);
+  //   } catch(e) {
+  //     console.error(e);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   createPdf();
+  // }, [pdfData]);
 
   const userInputHandler = (enteredText) => {
     setUserMail(enteredText);

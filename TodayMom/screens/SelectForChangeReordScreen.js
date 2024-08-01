@@ -62,32 +62,38 @@ export default function SelectForChangeRecordScreen({navigation}) {
   //   },[token])
   // )
 
+  const getPDFDataForRecord = async (recordId) => {
+    let allData = [];
+    let currentPage = 0;
+    try {
+      while (true) {
+        const response = await axios.get(`https://15.164.134.131/api/healthRecord/pdf/${recordId}?page=${currentPage}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        const data = response.data.data;
+        allData = [...allData, ...data.data];
+        if (data.isLast) {
+          break;
+        }
+        currentPage++;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return allData;
+  }
+
   const getPDFData = async () => {
     let allData = [];
-    for (recordId of selectedRecord) {
-      let currentPage = 0;
-      const pageSize = 10;
-      try {
-        while(true) {
-          const response = await axios.get(`https://15.164.134.131/api/healthRecord/pdf/${recordId}?page=${currentPage}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            }
-          })
-          console.log(response.data.data);
-          const data = response.data.data;
-          allData = [...allData, ...data.data];
-          if (data.isLast) {
-            break;
-          }
-          currentPage++;
-        }
-        setPdfData(allData);
-      } catch(e) {
-        console.error(e);
-      } 
+    for (const recordId of selectedRecord) {
+      const data = await getPDFDataForRecord(recordId);
+      allData = [...allData, ...data];
     }
+    setPdfData(allData);
+    return allData;
   }
 
   const selectRecordHandler = (record) => {
@@ -97,9 +103,11 @@ export default function SelectForChangeRecordScreen({navigation}) {
   }
 
   // 추후 경로 변경 예정
-  const changeHandler = () => {
-    // selectedRecord.length>0 && navigation.navigate("RecordChange");
-    getPDFData();
+  const changeHandler = async () => {
+    if(selectedRecord.length > 0) {
+      const allData = await getPDFData();
+      navigation.navigate("RecordChange", { pdfData: allData });
+    }
   }
 
   const renderItem = ({item}) => {
