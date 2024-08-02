@@ -103,25 +103,27 @@ const InfoWrite = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.infoPostId.toString()}
-      />
-      {showButton && (
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => navigation.navigate('NewWrite')}
-        >
-          <Text style={styles.write}>글쓰기</Text>
-          <Image
-            source={require('../assets/images/pencil.png')}
-            style={styles.fabIcon}
-          />
-        </TouchableOpacity>
-      )}
-    </SafeAreaView>
+    <View>
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={posts}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.infoPostId.toString()}
+        />
+        {showButton && (
+          <TouchableOpacity
+            style={styles.fab}
+            onPress={() => navigation.navigate('NewWrite')}
+          >
+            <Text style={styles.write}>글쓰기</Text>
+            <Image
+              source={require('../assets/images/pencil.png')}
+              style={styles.fabIcon}
+            />
+          </TouchableOpacity>
+        )}
+      </SafeAreaView>
+    </View>
   );
 };
 
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     right: 0,
-    bottom: 30,
+    bottom: 40,
     width: 90,
     height: 40,
     backgroundColor: '#A30FFA',

@@ -1,23 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PurpleNav = ({ activeTab, setActiveTab }) => {
+  const [roleNames, setRoleNames] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const setAdminRole = async () => {
+      try {
+        await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_ADMIN']));
+        console.log('User roles set to ROLE_ADMIN');
+      } catch (error) {
+        console.error('Failed to set user roles', error);
+      }
+    };
+
+    setAdminRole();
+  }, []);
+
+  useEffect(() => {
+    const fetchRoleNames = async () => {
+      try {
+        const storedRoleNames = await AsyncStorage.getItem('userRoles');
+        console.log('userRoles:', storedRoleNames);
+        setRoleNames(storedRoleNames ? JSON.parse(storedRoleNames) : []);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch role names from AsyncStorage', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchRoleNames();
+  }, []);
+
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
   };
 
+  if (isLoading) {
+    return null;
+  }
+
+  const canAccessCommunication =
+    roleNames.includes('ROLE_MOM') ||
+    roleNames.includes('ROLE_ADMIN') ||
+    roleNames.includes('ROLE_DOCTOR');
+
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => handleTabPress('Communication')}>
-        <Text
-          style={[
-            styles.textStyle,
-            activeTab === 'Communication' && styles.activeTextStyle,
-          ]}
-        >
-          소통방
-        </Text>
-      </TouchableOpacity>
+      {canAccessCommunication && (
+        <TouchableOpacity onPress={() => handleTabPress('Communication')}>
+          <Text
+            style={[
+              styles.textStyle,
+              activeTab === 'Communication' && styles.activeTextStyle,
+            ]}
+          >
+            소통방
+          </Text>
+        </TouchableOpacity>
+      )}
       <TouchableOpacity onPress={() => handleTabPress('InfoWrite')}>
         <Text
           style={[

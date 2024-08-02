@@ -34,11 +34,18 @@ const NewWrite = () => {
     formData.append('content', contentText);
 
     images.forEach((image, index) => {
+      let uriParts = image.split('.');
+      let fileType = uriParts[uriParts.length - 1].toLowerCase();
+
+      if (fileType === 'jpg') {
+        fileType = 'jpeg';
+      }
+
       console.log(`Uploading image ${index}:`, image); // 각 이미지 정보 출력
       formData.append('imageUrl', {
         uri: image,
-        type: 'image/jpeg',
-        name: `imageFile${index}.jpg`,
+        type: `image/${fileType}`,
+        name: `imageFile${index}.${fileType}`,
       });
     });
 
@@ -51,7 +58,7 @@ const NewWrite = () => {
       body: formData,
     })
       .then((response) => {
-        console.log('HTTP Status:', response.status); // 응답 상태 코드 출력
+        console.log('HTTP Status:', response.status);
         return response.text();
       })
       .then((data) => {
