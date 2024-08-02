@@ -89,6 +89,12 @@ const screenWidth = Dimensions.get('window').width;
 const imageWidth = (screenWidth - 50) / 2;
 
 const styles = StyleSheet.create({
+  image: {
+    width: 170,
+    height: 170,
+    borderRadius: 12,
+    marginRight: 16,
+  },
   date: {
     fontFamily: 'Pretendard',
     fontSize: 12,

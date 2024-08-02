@@ -16,12 +16,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native';
 
 const Commuroom = ({ navigation }) => {
-  const [profileHeight, setProfileHeight] = useState(256); // 초기 높이 256
   const [showMore, setShowMore] = useState(false);
-  const route = useRoute();
-  const roomId = route.params.roomId;
   const [roomDetails, setRoomDetails] = useState(null);
   const [posts, setPosts] = useState([]);
+  const route = useRoute();
+  const roomId = route.params.roomId;
 
   const fetchRoomDetails = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -38,8 +37,6 @@ const Commuroom = ({ navigation }) => {
       const result = await response.json();
       if (response.ok) {
         setRoomDetails(result.data);
-        console.log(result);
-        setShowMore(result.data.introduction.length > 180);
       } else {
         throw new Error('Failed to fetch room details');
       }
@@ -49,7 +46,6 @@ const Commuroom = ({ navigation }) => {
   };
 
   const fetchRoomPosts = async () => {
-    //소통방 게시글 리스트 조회(관리자,의사,엄마)
     const accessToken = await AsyncStorage.getItem('accessToken');
     try {
       const response = await fetch(
@@ -64,7 +60,6 @@ const Commuroom = ({ navigation }) => {
       const result = await response.json();
       if (response.ok) {
         setPosts(result.data.data);
-        console.log(result.data.data);
       } else {
         throw new Error('Failed to fetch room posts');
       }
@@ -81,7 +76,12 @@ const Commuroom = ({ navigation }) => {
   );
 
   const renderItem = ({ item }) => (
-    <View style={styles.content}>
+    <TouchableOpacity
+      style={styles.content}
+      onPress={() =>
+        navigation.navigate('Comment', { roomPostId: item.roomPostId })
+      }
+    >
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
         {item.content}
@@ -93,69 +93,70 @@ const Commuroom = ({ navigation }) => {
         </View>
         <Text style={styles.minute}>{item.whenCreated}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
+
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView>
-        <View style={styles.headerLeft}>
-          {roomDetails && (
-            <Image
-              source={
-                roomDetails.thumbnail
-                  ? { uri: roomDetails.thumbnail }
-                  : require('../assets/images/doctor.svg')
-              }
-              style={styles.largeImage}
-              resizeMode="cover"
-            />
-          )}
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.goBackButton}
-          >
-            <Image
-              source={require('../assets/images/leftallow.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
+        <View style={styles.headerContainer}>
+          <View style={styles.headerLeft}>
+            {roomDetails && (
+              <Image
+                source={
+                  roomDetails.thumbnail
+                    ? { uri: roomDetails.thumbnail }
+                    : require('../assets/images/doctor.svg')
+                }
+                style={styles.largeImage}
+                resizeMode="cover"
+              />
+            )}
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.goBackButton}
+            >
+              <Image
+                source={require('../assets/images/leftallow.png')}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* 아래 부분 이미지 추가 */}
-        {/* <Image
-        source={
-          roomDetails.thumbnail
-            ? { uri: roomDetails.thumbnail }
-            : require('../assets/images/doctor.svg')
-        }
-        style={styles.largeImage}
-        resizeMode="cover"
-      /> */}
-
+        <View style={styles.blurWrapper}>
+          <BlurView style={styles.blurView} intensity={75}></BlurView>
+        </View>
         <View style={styles.blurContainer}>
-          <BlurView style={styles.price} intensity={75}>
-            <View style={[styles.profile, { height: profileHeight }]}>
-              <Text style={styles.communame}>{roomDetails?.name}</Text>
-              <View style={styles.row}>
-                <Purple />
-                <Text style={styles.people}>
-                  {roomDetails?.peopleCount}명 참여중
-                </Text>
-              </View>
-              <View style={styles.introcon}>
-                <Text style={styles.intro}>{roomDetails?.introduction}</Text>
-                {showMore && (
-                  <TouchableOpacity
-                    style={styles.more}
-                    onPress={() => setProfileHeight(400)}
-                  >
-                    <Text style={styles.moretext}>자세히 보기</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
+          <View style={[styles.profile, { height: showMore ? 'auto' : 240 }]}>
+            <Text style={styles.communame}>{roomDetails?.name}</Text>
+            <View style={styles.row}>
+              <Purple />
+              <Text style={styles.people}>
+                {roomDetails?.peopleCount}명 참여중
+              </Text>
             </View>
-          </BlurView>
+            <View style={styles.introcon}>
+              <Text
+                style={styles.intro}
+                numberOfLines={showMore ? undefined : 3}
+                ellipsizeMode="tail"
+              >
+                {roomDetails?.introduction}
+              </Text>
+              {roomDetails?.introduction.length > 150 && (
+                <TouchableOpacity style={styles.more} onPress={toggleShowMore}>
+                  <Text style={styles.moretext}>
+                    {showMore ? '간략히 보기' : '자세히 보기'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
         </View>
 
         <FlatList
@@ -172,7 +173,6 @@ const Commuroom = ({ navigation }) => {
         <TouchableOpacity
           style={styles.fab}
           onPress={() => {
-            console.log('Navigating with Room ID:', roomId);
             navigation.navigate('Commuwrite', { roomId: roomId });
           }}
         >
@@ -222,9 +222,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     position: 'relative',
   },
-  headerImage: {
+  headerLeft: {
+    width: '100%',
+    height: 260,
+  },
+  largeImage: {
     width: '100%',
     height: '100%',
+    position: 'absolute',
+  },
+  blurWrapper: {
+    position: 'absolute',
+    top: 200,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 24,
+  },
+  blurView: {
+    flex: 1,
+    borderRadius: 24,
   },
   goBackButton: {
     position: 'absolute',
@@ -236,50 +253,72 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
-  largeImage: {
+  price: {
     width: '100%',
-    height: 200,
+    height: 300,
+    backgroundColor: '#f1f1f5',
   },
-  doctorImage: {
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f1f1f5',
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  blurContainer: {
     width: '100%',
-    height: '100%',
-    borderRadius: 25,
+    borderRadius: 24,
+    overflow: 'hidden',
+    marginBottom: 32,
   },
-
-  minute: {
-    color: '#505050',
+  profile: {
+    flexDirection: 'column',
+    paddingTop: 24,
+    paddingLeft: 20,
+    paddingRight: 20,
+    width: '100%',
+    borderRadius: 24,
+    backgroundColor: '#FFF',
+    shadowColor: 'rgba(67, 0, 209, 0.04)',
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  communame: {
+    color: '#000',
     fontFamily: 'Pretendard',
-    fontSize: 12,
+    fontSize: 20,
     fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 18,
-    textAlign: 'right',
+    fontWeight: '600',
+    lineHeight: 28,
+    letterSpacing: -0.5,
   },
-  count: {
+  row: {
+    marginBottom: 24,
+    gap: 4,
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  people: {
     color: '#A30FFA',
     fontFamily: 'Pretendard',
-    fontSize: 12,
+    fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 18,
+    lineHeight: 20,
+    letterSpacing: -0.35,
   },
-  row3: {
-    textAlign: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 2,
-  },
-  row2: {
-    alignItems: 'center',
-    textAlign: 'center',
-    marginTop: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  detail: {
+  introcon: {
     width: '100%',
-    height: 36,
-    color: '#767676',
+    alignItems: 'center',
+  },
+  intro: {
+    color: '#505050',
     fontFamily: 'Pretendard',
     fontSize: 12,
     fontStyle: 'normal',
@@ -287,15 +326,34 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     letterSpacing: -0.3,
     overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
-  title: {
+  more: {
+    marginTop: 12,
+    flexDirection: 'row',
+    width: 96,
+    height: 36,
+    paddingTop: 9,
+    paddingRight: 12,
+    paddingBottom: 9,
+    paddingLeft: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#E5E5EC',
     color: '#111',
-    fontFamily: 'Pretendard',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    lineHeight: 24,
-    letterSpacing: -0.4,
+    marginBottom: 10,
+  },
+  moretext: {
+    fontSize: 14,
+    color: '#111',
+  },
+  container: {
+    marginTop: 32,
+    paddingLeft: 20,
+    paddingRight: 20,
+    flex: 1,
   },
   content: {
     marginBottom: 12,
@@ -312,29 +370,19 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  container: {
-    marginTop: 32,
-    paddingLeft: 20,
-    paddingRight: 20,
-    flex: 1,
+  title: {
+    color: '#111',
+    fontFamily: 'Pretendard',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 24,
+    letterSpacing: -0.4,
   },
-  more: {
-    marginTop: 12,
-    flexDirection: 'row',
-    width: 96,
+  detail: {
+    width: '100%',
     height: 36,
-    paddingTop: 9,
-    paddingRight: 12,
-    paddingBottom: 9,
-    paddingLeft: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#E5E5EC',
-  },
-  intro: {
-    color: '#505050',
+    color: '#767676',
     fontFamily: 'Pretendard',
     fontSize: 12,
     fontStyle: 'normal',
@@ -342,80 +390,36 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     letterSpacing: -0.3,
     overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
-  introcon: {
-    width: '100%',
-    height: 54,
-    alignItems: 'flex-start',
+  row2: {
+    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  people: {
+  row3: {
+    textAlign: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 2,
+  },
+  count: {
     color: '#A30FFA',
     fontFamily: 'Pretendard',
-    fontSize: 14,
+    fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 20,
-    letterSpacing: -0.35,
+    lineHeight: 18,
   },
-  row: {
-    marginBottom: 24,
-    gap: 4,
-    flexDirection: 'row',
-    marginTop: 12,
-  },
-  communame: {
-    color: '#000',
+  minute: {
+    color: '#505050',
     fontFamily: 'Pretendard',
-    fontSize: 20,
+    fontSize: 12,
     fontStyle: 'normal',
-    fontWeight: '600',
-    lineHeight: 28,
-    letterSpacing: -0.5,
-  },
-  profile: {
-    flexDirection: 'column',
-    paddingTop: 24,
-    paddingLeft: 20,
-    paddingRight: 20,
-    width: '100%',
-    // height: 256,
-    borderRadius: 24,
-    backgroundColor: '#FFF',
-    shadowColor: 'rgba(67, 0, 209, 0.04)',
-    shadowOffset: { width: 0, height: -10 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 10,
-    marginTop: 50,
-  },
-  blurContainer: {
-    width: '100%',
-    height: 336,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    overflow: 'hidden',
-  },
-  price: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#f1f1f5',
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#f1f1f5',
-  },
-  headerLeft: {
-    // paddingTop: 14,
-    paddingBottom: 14,
-    width: '100%',
-    height: 170,
-    backgroundColor: '#f1f1f5',
-  },
-  icon: {
-    marginLeft: 20,
-    width: 25,
-    height: 25,
+    fontWeight: '400',
+    lineHeight: 18,
+    textAlign: 'right',
   },
 });
 
