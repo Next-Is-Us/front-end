@@ -49,19 +49,19 @@ export default function ChildrenHomeScreen({navigation}) {
     }
   };
 
-  const getUserRole = async () => {
-    try {
-      const userRole = await AsyncStorage.getItem('userRoles');
-      if (userRole) {
-        setUserRole(userRole);
-        console.log(userRole);
-      } else {
-        console.log('not found');
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // const getUserRole = async () => {
+  //   try {
+  //     const userRole = await AsyncStorage.getItem('userRoles');
+  //     if (userRole) {
+  //       setUserRole(userRole);
+  //       console.log(userRole);
+  //     } else {
+  //       console.log('not found');
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   const getDayRecord = async () => {
     if(!token) return;
@@ -81,6 +81,7 @@ export default function ChildrenHomeScreen({navigation}) {
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
+      setUserRole(response.data.data.userRole);
     } catch(e) {
       console.error(e);
     }
@@ -132,7 +133,7 @@ export default function ChildrenHomeScreen({navigation}) {
    useEffect(() => {
     // console.log("토큰 받아오기");
     // getToken();
-    getUserRole();
+    // getUserRole();
   }, []);
 
   useEffect(() => {

@@ -14,11 +14,12 @@ import { useFocusEffect } from "@react-navigation/native";
 //   {recordedNumber: 858, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
 // ]
 
-export default function FlowerRecordScreen({navigation}) {
+export default function FlowerRecordScreen({navigation, route}) {
   const [recordedContent, setRecordedContent] = useState([]); // 추후 백과 통신 예정
-  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
-  const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
-  const [userRole, setUserRole] = useState("");
+  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  // const [userRole, setUserRole] = useState("");
+  const userRole = route.params.userRole;
 
   const getToken = async () => {
     try {
@@ -33,23 +34,23 @@ export default function FlowerRecordScreen({navigation}) {
     }
   }
 
-  const getUserRole = async () => {
-    try {
-      const userRole = await AsyncStorage.getItem('userRoles');
-      if (userRole) {
-        setUserRole(userRole);
-        console.log(userRole);
-      } else {
-        console.log('not found');
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // const getUserRole = async () => {
+  //   try {
+  //     const userRole = await AsyncStorage.getItem('userRoles');
+  //     if (userRole) {
+  //       setUserRole(userRole);
+  //       console.log(userRole);
+  //     } else {
+  //       console.log('not found');
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   const getNFTRecord = async () => {
     try {
-      const response = await axios.get("https://15.164.134.131/api/healthRecord", {
+      const response = await axios.get(`https://15.164.134.131/api/healthRecord?userRole=${userRole}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -65,7 +66,7 @@ export default function FlowerRecordScreen({navigation}) {
   useEffect(() => {
     console.log("get Token");
     // getToken();
-    getUserRole();
+    // getUserRole();
     if(token) {
       getNFTRecord();
     }
@@ -80,7 +81,7 @@ export default function FlowerRecordScreen({navigation}) {
   // )
 
   const selectHospitalScreenHandler = () => {
-    navigation.navigate("SelectForVisitHospital");
+    navigation.navigate("SelectForVisitHospital", {userRole: userRole});
   }
 
   const recordNFTHandler = (item) => {

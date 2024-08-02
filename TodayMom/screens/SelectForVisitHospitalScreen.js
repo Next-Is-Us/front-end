@@ -3,9 +3,10 @@ import HeaderBack from "../components/HeaderBack"
 import { useState } from "react"
 import BottomButton from "../components/BottomButton";
 
-export default function SelectForVisitHospitalScreen({navigation}) {
+export default function SelectForVisitHospitalScreen({navigation, route}) {
   const [selected, setSelcted] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
+  const userRole = route.params.userRole;
 
   const selectHandler = (buttonId) => {
     setSelcted(buttonId);
@@ -13,7 +14,7 @@ export default function SelectForVisitHospitalScreen({navigation}) {
   }
 
   const nextHandler = () => {
-    isSelected && navigation.navigate("SelectForChangeRecord")
+    isSelected && navigation.navigate("SelectForChangeRecord", {userRole: userRole})
   }
 
   const findHospitalHandler = () => {

@@ -20,13 +20,18 @@ export default function BottomNav({ community, home, flower, userRole }) {
     if(userRole.includes("ROLE_SON") || userRole.includes("ROLE_DAUGHTER")) {
       navigation.navigate("ChildrenHome");
     }
-    if(userRole.includes("ROLE_MOM")) {
+    if(userRole == "ROLE_MOM") {
       navigation.navigate("MomHome");
     }
   };
 
   const flowerRecordHandler = () => {
-    navigation.navigate('FlowerRecord');
+    if(userRole == "ROLE_SON" || userRole == "ROLE_DAUGHTER") {
+      navigation.navigate("FlowerRecord", {userRole: userRole});
+    }
+    if(userRole == "ROLE_MOM") {
+      navigation.navigate("FlowerRecord", {userRole: userRole});
+    }
   };
 
   const CommunityHandler = () => {

@@ -12,11 +12,12 @@ import axios from "axios";
 //   {recordedNumber: 856, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
 // ]
 
-export default function SelectForChangeRecordScreen({navigation}) {
+export default function SelectForChangeRecordScreen({navigation, route}) {
   const [completedRecord, setCompletedRecord] = useState();
   const [selectedRecord, setSelctedRecord] = useState([]);
   const [pdfData, setPdfData] = useState([]);
-  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 더미데이터임
+  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
+  const userRole = route.params.userRole;
 
   const getToken = async () => {
     try {
@@ -33,7 +34,7 @@ export default function SelectForChangeRecordScreen({navigation}) {
 
   const getNFTRecord = async () => {
     try {
-      const response = await axios.get("https://15.164.134.131/api/healthRecord", {
+      const response = await axios.get(`https://15.164.134.131/api/healthRecord?userRole=${userRole}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

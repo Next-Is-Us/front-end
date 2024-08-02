@@ -25,14 +25,15 @@ export default function MomHomeScreen({navigation}) {
   const [flowerPieces, setFlowerPieces] = useState(0);
   const today = new Date();
   const [date, setDate] = useState('');
-  const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE'); // 더미데이터임 
+  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 더미데이터임 
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
   const { userDetails } = useUser();
   // const { link } = userDetails;
-  const {userRoles} = userDetails;
+  // const {userRoles} = userDetails;
   const link = "42837137-bf51-449a-8bea-f394911ff0c7"; // 더미 데이터 (추후 삭제 할 것)
+  const [userRole, setUserRole] = useState();
 
   const rotateAnimation = useRef(new Animated.Value(0)).current;
 
@@ -47,6 +48,22 @@ export default function MomHomeScreen({navigation}) {
   //     }
   //   })
   // }, [])
+
+  const getUserRole = async () => {
+    try {
+      const userRole = await AsyncStorage.getItem('userRoles');
+      setUserRole(userRole);
+      console.log(userRole);
+      if(userRole.includes("ROLE_SON") || userRole.includes("ROLE_DAUGHTER")) {
+        navigation.navigate("ChildrenHome");
+      }
+      if(userRole.includes("ROLE_MOM")) {
+        navigation.navigate("MomHome");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   // promise 기반 get
   const getToken = async () => {
@@ -83,6 +100,7 @@ export default function MomHomeScreen({navigation}) {
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
       setInvited(response.data.data.isInvited);
+      setUserRole(response.data.data.userRole);
     } catch(e) {
       console.error(e);
     }
@@ -104,10 +122,12 @@ export default function MomHomeScreen({navigation}) {
     }
   }
 
-  // useEffect(() => {
-  //   console.log("토큰 받아오기");
-  //   getToken();
-  // }, []);
+  useEffect(() => {
+    // console.log("토큰 받아오기");
+    // getToken();
+    // getUserRole();
+    // console.log(userRole);
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -237,7 +257,7 @@ export default function MomHomeScreen({navigation}) {
           </Animated.View>
         </View>
       </View>
-      <BottomNav home />
+      <BottomNav home userRole={userRole} />
     </View>
   );
 }
