@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native';
+import Flower from '../assets/images/flower.svg';
 
 const Commuroom = ({ navigation }) => {
   const [showMore, setShowMore] = useState(false);
@@ -60,6 +61,7 @@ const Commuroom = ({ navigation }) => {
       const result = await response.json();
       if (response.ok) {
         setPosts(result.data.data);
+        console.log(result.data);
       } else {
         throw new Error('Failed to fetch room posts');
       }
@@ -129,8 +131,25 @@ const Commuroom = ({ navigation }) => {
         </View>
 
         <View style={styles.blurWrapper}>
-          <BlurView style={styles.blurView} intensity={75}></BlurView>
+          <BlurView style={styles.blurView} intensity={75}>
+            <View style={styles.iconContainer}>
+              {roomDetails && roomDetails.necessaryNftCount > 0 ? (
+                <>
+                  {Array.from(
+                    { length: roomDetails.necessaryNftCount },
+                    (_, index) => (
+                      <Flower key={index} width={24} height={24} />
+                    )
+                  )}
+                  <Text style={styles.plusText}>가 필요해요</Text>
+                </>
+              ) : (
+                <Text style={styles.plusText}>무료 입장이 가능한 방이에요</Text>
+              )}
+            </View>
+          </BlurView>
         </View>
+
         <View style={styles.blurContainer}>
           <View style={[styles.profile, { height: showMore ? 'auto' : 240 }]}>
             <Text style={styles.communame}>{roomDetails?.name}</Text>
@@ -188,6 +207,21 @@ const Commuroom = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  plusText: {
+    color: '#767676',
+    fontFamily: 'Pretendard',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 20,
+    fontStyle: 'normal',
+    marginBottom: 45,
+  },
   fabIcon: {
     width: 16,
     height: 16,
@@ -204,7 +238,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     right: 20,
-    bottom: 20,
+    bottom: 180,
     width: 90,
     height: 40,
     backgroundColor: '#A30FFA',
@@ -233,15 +267,21 @@ const styles = StyleSheet.create({
   },
   blurWrapper: {
     position: 'absolute',
-    top: 200,
+    top: 210,
     left: 0,
     right: 0,
     bottom: 0,
     borderRadius: 24,
+    height: 100,
+    overflow: 'hidden',
   },
   blurView: {
     flex: 1,
     borderRadius: 24,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
   },
   goBackButton: {
     position: 'absolute',
