@@ -31,6 +31,7 @@ export default function MomHomeScreen({navigation}) {
   const [day, setDay] = useState(today.getDate());
   const { userDetails } = useUser();
   // const { link } = userDetails;
+  const {userRoles} = userDetails;
   const link = "42837137-bf51-449a-8bea-f394911ff0c7"; // 더미 데이터 (추후 삭제 할 것)
 
   const rotateAnimation = useRef(new Animated.Value(0)).current;

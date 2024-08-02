@@ -18,6 +18,7 @@ export default function FlowerRecordScreen({navigation}) {
   const [recordedContent, setRecordedContent] = useState([]); // 추후 백과 통신 예정
   // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
   const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  const [userRole, setUserRole] = useState("");
 
   const getToken = async () => {
     try {
@@ -29,6 +30,20 @@ export default function FlowerRecordScreen({navigation}) {
       }
     } catch(e) {
       console.error(e);
+    }
+  }
+
+  const getUserRole = async () => {
+    try {
+      const userRole = await AsyncStorage.getItem('userRoles');
+      if (userRole) {
+        setUserRole(userRole);
+        console.log(userRole);
+      } else {
+        console.log('not found');
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -50,6 +65,7 @@ export default function FlowerRecordScreen({navigation}) {
   useEffect(() => {
     console.log("get Token");
     // getToken();
+    getUserRole();
     if(token) {
       getNFTRecord();
     }
@@ -97,7 +113,7 @@ export default function FlowerRecordScreen({navigation}) {
         keyExtractor={(item, index) => item.healthRecordId}
         renderItem={renderItem}
       />
-      <BottomNav flower />
+      <BottomNav flower userRole={userRole} />
     </View>
   )
 }

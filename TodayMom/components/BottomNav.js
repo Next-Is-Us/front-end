@@ -13,11 +13,16 @@ import HomeActiveImg from '../assets/images/home_active.svg';
 import HomeInactiveImg from '../assets/images/home_inactive.svg';
 import { useNavigation } from '@react-navigation/native';
 
-export default function BottomNav({ community, home, flower }) {
+export default function BottomNav({ community, home, flower, userRole }) {
   const navigation = useNavigation();
 
   const homeHandler = () => {
-    navigation.navigate('MomHome');
+    if(userRole.includes("ROLE_SON") || userRole.includes("ROLE_DAUGHTER")) {
+      navigation.navigate("ChildrenHome");
+    }
+    if(userRole.includes("ROLE_MOM")) {
+      navigation.navigate("MomHome");
+    }
   };
 
   const flowerRecordHandler = () => {

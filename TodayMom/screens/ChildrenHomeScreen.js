@@ -16,6 +16,8 @@ import Flower6 from "../assets/images/flower6.svg";
 import RecordedContainer from "../components/RecordedContainer";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
+import { useUser } from "../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ChildrenHomeScreen({navigation}) {
   const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정
@@ -25,6 +27,7 @@ export default function ChildrenHomeScreen({navigation}) {
   const today = new Date();
   const [date, setDate] = useState('');
   const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 더미데이터임 
+  const [userRole, setUserRole] = useState("");
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
@@ -36,7 +39,6 @@ export default function ChildrenHomeScreen({navigation}) {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (accessToken) {
-        console.log('token: ' + accessToken);
         setToken(accessToken);
       } else {
         console.log('not found');
@@ -46,6 +48,20 @@ export default function ChildrenHomeScreen({navigation}) {
       console.log(e);
     }
   };
+
+  const getUserRole = async () => {
+    try {
+      const userRole = await AsyncStorage.getItem('userRoles');
+      if (userRole) {
+        setUserRole(userRole);
+        console.log(userRole);
+      } else {
+        console.log('not found');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const getDayRecord = async () => {
     if(!token) return;
@@ -112,6 +128,12 @@ export default function ChildrenHomeScreen({navigation}) {
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   });
+
+   useEffect(() => {
+    // console.log("토큰 받아오기");
+    // getToken();
+    getUserRole();
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -204,7 +226,7 @@ export default function ChildrenHomeScreen({navigation}) {
           </Animated.View>
         </View>
       </View>
-      <BottomNav home />
+      <BottomNav home userRole={userRole} />
     </View>
   );
 }
