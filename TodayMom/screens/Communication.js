@@ -14,12 +14,15 @@ import { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Image } from 'react-native';
 import { ScrollView } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 const Communication = () => {
   const [rooms, setRooms] = useState([]);
   const [userRoles, setUserRoles] = useState([]);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const navigation = useNavigation();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const testAccessToken = //관리자용 토큰 테스트용임
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4';
@@ -74,23 +77,44 @@ const Communication = () => {
     }
   };
 
-  const fetchRooms = async () => {
+  const fetchRooms = async (page) => {
+    if (isLoading) return; // 중복 호출 방지
+    setIsLoading(true);
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
-      const response = await fetch('https://15.164.134.131/api/room/list', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      if (!accessToken) {
+        console.error('Access Token is not available');
+        setIsLoading(false);
+        return;
+      }
+
+      const response = await fetch(
+        `https://15.164.134.131/api/room/list?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
       const result = await response.json();
       if (response.ok) {
-        setRooms(result.data.data);
-        console.log(result.data.data);
+        setRooms(
+          page === 0 ? result.data.data : [...rooms, ...result.data.data]
+        );
+        setCurrentPage(page);
       } else {
-        throw new Error('Failed to fetch rooms');
+        console.error('Failed to fetch rooms:', result.message);
       }
     } catch (error) {
       console.error('Error fetching rooms:', error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleLoadMore = () => {
+    if (!isLoading) {
+      fetchRooms(currentPage + 1);
     }
   };
 
@@ -111,7 +135,7 @@ const Communication = () => {
   useFocusEffect(
     useCallback(() => {
       setupRoles().catch(console.error);
-      fetchRooms();
+      fetchRooms(0);
     }, [])
   );
 
@@ -168,6 +192,11 @@ const Communication = () => {
             </View>
           )}
           contentContainerStyle={{ paddingBottom: 100 }}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isLoading ? <ActivityIndicator size="large" /> : null
+          }
         />
       </ScrollView>
     </SafeAreaView>
