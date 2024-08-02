@@ -5,7 +5,7 @@ import RightArrow from "../assets/images/rightArrow.svg";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ToRecordContainer({ invited, recorded, selectConditionHandler, date, name, year, month, day }) {
+export default function ToRecordContainer({ invited, recorded, selectConditionHandler, date, name, year, month, day, sendLinkHandler }) {
   // const [selectedDate, setSelectedDate] = useState("2024.07.09");
   const navigation = useNavigation();
   const selectedDate = [year, month, day]
@@ -62,7 +62,7 @@ export default function ToRecordContainer({ invited, recorded, selectConditionHa
           메시지를 보내 초대해보아요 :)
         </Text>
       </View>
-      <Pressable style={[styles.addButton, addButton]}>
+      <Pressable style={[styles.addButton, addButton]} onPress={sendLinkHandler}>
         <MailImg />
       </Pressable>
     </View>

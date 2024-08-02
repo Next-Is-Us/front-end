@@ -3,7 +3,7 @@ import TopBackground from "../components/TopBackground";
 import HeaderNav from "../components/HeaderNav";
 import RelationButton from "../components/RelationButton";
 import WeekCalendar from "../components/WeekCalendar";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import ToRecordContainer from "../components/ToRecordContainer";
 import FlowerGrid from "../assets/images/flowerGrid.svg";
 import BottomNav from "../components/BottomNav";
@@ -16,6 +16,7 @@ import Flower6 from "../assets/images/flower6.svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import { useUser } from "../context/UserContext";
 
 export default function MomHomeScreen({navigation}) {
   const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정 (complete)
@@ -28,6 +29,9 @@ export default function MomHomeScreen({navigation}) {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
+  const { userDetails } = useUser();
+  // const { link } = userDetails;
+  const link = "42837137-bf51-449a-8bea-f394911ff0c7"; // 더미 데이터 (추후 삭제 할 것)
 
   const rotateAnimation = useRef(new Animated.Value(0)).current;
 
@@ -77,6 +81,7 @@ export default function MomHomeScreen({navigation}) {
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
+      setInvited(response.data.data.isInvited);
     } catch(e) {
       console.error(e);
     }
@@ -199,6 +204,11 @@ export default function MomHomeScreen({navigation}) {
     setYear(year);
   };
 
+  // 초대 링크 보내기
+  const sendLinkHandler = () => {
+    console.log(link);
+  }
+
   return (
     <View style={styles.screen}>
       {/* <TopBackground>
@@ -218,7 +228,7 @@ export default function MomHomeScreen({navigation}) {
           selectYear={selectYear}
         />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} date={date} name={name} year={year} month={month} day={day} />
+        <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} date={date} name={name} year={year} month={month} day={day} sendLinkHandler={sendLinkHandler} />
         <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>
