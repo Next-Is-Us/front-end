@@ -37,7 +37,19 @@ const Communication = () => {
       }
     };
 
+    const setTestAccessToken = async () => {
+      try {
+        const testAccessToken =
+          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4';
+        await AsyncStorage.setItem('accessToken', testAccessToken);
+        console.log('Test access token set in AsyncStorage');
+      } catch (error) {
+        console.error('Failed to store access token', error);
+      }
+    };
+
     setAdminRole();
+    setTestAccessToken();
   }, []);
 
   const enterRoom = async (roomId) => {
@@ -92,7 +104,7 @@ const Communication = () => {
         `https://15.164.134.131/api/room/list?page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${testAccessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
