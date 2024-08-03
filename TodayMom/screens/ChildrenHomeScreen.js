@@ -55,7 +55,7 @@ export default function ChildrenHomeScreen({navigation}) {
       const userRole = await AsyncStorage.getItem('userRoles2');
       if (userRole) {
         setUserRole(userRole);
-        console.log(userRole);
+        console.log("유저를 받아옵니다" + userRole);
       } else {
         console.log('not found');
       }
@@ -133,6 +133,7 @@ export default function ChildrenHomeScreen({navigation}) {
 
    useEffect(() => {
     // console.log("토큰 받아오기");
+    // AsyncStorage.removeItem("acssesToken");
     getToken();
     getUserRole();
   }, []);

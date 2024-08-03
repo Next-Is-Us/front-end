@@ -65,6 +65,7 @@ export default function FlowerRecordScreen({navigation, route}) {
 
   useEffect(() => {
     console.log("get Token");
+    console.log(userRole);
     // getToken();
     // getUserRole();
     if(token) {
