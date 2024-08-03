@@ -40,6 +40,7 @@ export default function ChildrenHomeScreen({navigation}) {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (accessToken) {
+        console.log("토큰 받아오기");
         setToken(accessToken);
       } else {
         console.log('not found');
@@ -55,7 +56,7 @@ export default function ChildrenHomeScreen({navigation}) {
       const userRole = await AsyncStorage.getItem('userRoles2');
       if (userRole) {
         setUserRole(userRole);
-        console.log("유저를 받아옵니다" + userRole);
+        console.log("유저를 받아옵니다 " + userRole);
       } else {
         console.log('not found');
       }
@@ -65,10 +66,11 @@ export default function ChildrenHomeScreen({navigation}) {
   }
 
   const getDayRecord = async () => {
-    if(!token) return;
-    console.log(token);
+    if(!token || !userRole) return;
+    // console.log(token);
     try {
-      console.log('Sending request with token:', token);
+      console.log('토큰 보내기', token);
+      console.log("유저 보내기", userRole)
       const response = await axios.get(
         `https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}/${userRole}`,
         {
@@ -78,26 +80,26 @@ export default function ChildrenHomeScreen({navigation}) {
           },
         }
       );
-      console.log(response.data.data);
+      console.log("기록 결과" + JSON.stringify(response.data.data));
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
-      setUserRole(response.data.data.userRole);
+      // setUserRole(response.data.data.userRole);
     } catch(e) {
       console.error(e);
     }
   };
 
   const getFlowerRecord = async () => {
-    if(!token) return;
+    if(!token || !userRole) return;
     try {
-      const response = await axios.get("https://15.164.134.131/api/nft", {
+      const response = await axios.get("https://15.164.134.131/api/nft/${userRole}", {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         }
       })
-      console.log(response.data);
+      console.log("꽃피 결과 " + JSON.stringify(response.data));
       setFlowerPieces(response.data.data);
     } catch(e) {
       console.error(e);
@@ -131,24 +133,18 @@ export default function ChildrenHomeScreen({navigation}) {
     outputRange: ["0deg", "360deg"],
   });
 
-   useEffect(() => {
-    // console.log("토큰 받아오기");
-    // AsyncStorage.removeItem("acssesToken");
+  useEffect(() => {
     getToken();
     getUserRole();
   }, []);
 
   useEffect(() => {
-    if (token) {
-      console.log("토큰이 설정되었습니다:", token);
-      console.log(year);
-      console.log(month);
-      console.log(day);
-      console.log('통신 실행');
+    if (token && userRole) {
+      console.log("통신 실행");
       getDayRecord();
       getFlowerRecord();
     }
-  }, [token, year, month, day]);
+  }, [token, year, month, day, userRole]);
   
   useFocusEffect(
     useCallback(() => {
@@ -221,7 +217,7 @@ export default function ChildrenHomeScreen({navigation}) {
           selectYear={selectYear}
         />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <RecordedContainer recorded={recorded} userRole={userRole} year={year} month={month} day={day} />
+        <RecordedContainer recorded={recorded} userRole={userRole} year={year} month={month} day={day} date={date}/>
         <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>

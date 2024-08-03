@@ -4,7 +4,7 @@ import RightArrow from "../assets/images/rightArrow.svg";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function RecordedContainer({ recorded, userRole, year, month, day }) {
+export default function RecordedContainer({ recorded, userRole, year, month, day, date }) {
   // const [date, setDate] = useState("2024.07.09");
   const navigation = useNavigation();
   const selectedDate = [year, month, day];
