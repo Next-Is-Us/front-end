@@ -49,7 +49,7 @@ function App() {
         <UserProvider>
           <StatusBar style="auto" />
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="ChildrenHome">
+            <Stack.Navigator initialRouteName="Splash">
               <Stack.Screen
                 name="Choose"
                 component={Choose}
