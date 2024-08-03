@@ -27,18 +27,18 @@ const Communication = () => {
   const testAccessToken = //관리자용 토큰 테스트용임
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4';
 
-  // useEffect(() => { 임의로 role을 admin으로 바꾸기 위함용 이 또한 테스트용임.
-  //   const setAdminRole = async () => {
-  //     try {
-  //       await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_ADMIN']));
-  //       console.log('User roles set to ROLE_ADMIN');
-  //     } catch (error) {
-  //       console.error('Failed to set user roles', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const setAdminRole = async () => {
+      try {
+        await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_ADMIN']));
+        console.log('User roles set to ROLE_ADMIN');
+      } catch (error) {
+        console.error('Failed to set user roles', error);
+      }
+    };
 
-  //   setAdminRole();
-  // }, []);
+    setAdminRole();
+  }, []);
 
   const enterRoom = async (roomId) => {
     //소통방 입장(엄마,관리자만 가능)
@@ -92,7 +92,7 @@ const Communication = () => {
         `https://15.164.134.131/api/room/list?page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${testAccessToken}`,
           },
         }
       );
