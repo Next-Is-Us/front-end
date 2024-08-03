@@ -26,7 +26,8 @@ export default function ChildrenHomeScreen({navigation}) {
   const [flowerPieces, setFlowerPieces] = useState(0);
   const today = new Date();
   const [date, setDate] = useState('');
-  const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 더미데이터임 
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 더미데이터임 
+  const [token, setToken] = useState("");
   const [userRole, setUserRole] = useState("");
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
@@ -49,19 +50,19 @@ export default function ChildrenHomeScreen({navigation}) {
     }
   };
 
-  // const getUserRole = async () => {
-  //   try {
-  //     const userRole = await AsyncStorage.getItem('userRoles');
-  //     if (userRole) {
-  //       setUserRole(userRole);
-  //       console.log(userRole);
-  //     } else {
-  //       console.log('not found');
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
+  const getUserRole = async () => {
+    try {
+      const userRole = await AsyncStorage.getItem('userRoles2');
+      if (userRole) {
+        setUserRole(userRole);
+        console.log(userRole);
+      } else {
+        console.log('not found');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const getDayRecord = async () => {
     if(!token) return;
@@ -69,7 +70,7 @@ export default function ChildrenHomeScreen({navigation}) {
     try {
       console.log('Sending request with token:', token);
       const response = await axios.get(
-        `https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}`,
+        `https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}/${userRole}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -132,8 +133,8 @@ export default function ChildrenHomeScreen({navigation}) {
 
    useEffect(() => {
     // console.log("토큰 받아오기");
-    // getToken();
-    // getUserRole();
+    getToken();
+    getUserRole();
   }, []);
 
   useEffect(() => {
@@ -219,7 +220,7 @@ export default function ChildrenHomeScreen({navigation}) {
           selectYear={selectYear}
         />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <RecordedContainer recorded={recorded} />
+        <RecordedContainer recorded={recorded} userRole={userRole} year={year} month={month} day={day} />
         <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>

@@ -5,14 +5,14 @@ import RightArrow from "../assets/images/rightArrow.svg";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ToRecordContainer({ invited, recorded, selectConditionHandler, date, name, year, month, day, sendLinkHandler }) {
+export default function ToRecordContainer({ invited, recorded, selectConditionHandler, date, name, year, month, day, sendLinkHandler, userRole }) {
   // const [selectedDate, setSelectedDate] = useState("2024.07.09");
   const navigation = useNavigation();
   const selectedDate = [year, month, day]
 
   const confirmRecordHandler = () => {
     console.log(selectedDate);
-    navigation.navigate("ConfirmRecord", {userName: name, selectedDate: selectedDate});
+    navigation.navigate("ConfirmRecord", {userName: name, selectedDate: selectedDate, userRole: userRole});
   }
 
   const toRecordContainer = invited
