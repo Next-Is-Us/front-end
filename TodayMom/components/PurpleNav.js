@@ -19,21 +19,21 @@ const PurpleNav = ({ activeTab, setActiveTab }) => {
   //   setAdminRole();
   // }, []);
 
-  // useEffect(() => {
-  //   const fetchRoleNames = async () => {
-  //     try {
-  //       const storedRoleNames = await AsyncStorage.getItem('userRoles');
-  //       console.log('userRoles:', storedRoleNames);
-  //       setRoleNames(storedRoleNames ? JSON.parse(storedRoleNames) : []);
-  //       setIsLoading(false);
-  //     } catch (error) {
-  //       console.error('Failed to fetch role names from AsyncStorage', error);
-  //       setIsLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchRoleNames = async () => {
+      try {
+        const storedRoleNames = await AsyncStorage.getItem('userRoles');
+        console.log('userRoles:', storedRoleNames);
+        setRoleNames(storedRoleNames ? JSON.parse(storedRoleNames) : []);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch role names from AsyncStorage', error);
+        setIsLoading(false);
+      }
+    };
 
-  //   fetchRoleNames();
-  // }, []);
+    fetchRoleNames();
+  }, []);
 
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
