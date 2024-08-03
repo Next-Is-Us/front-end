@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const CommunityPage = () => {
   const [activeTab, setActiveTab] = useState('Communication');
   const [roleNames, setRoleNames] = useState([]);
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     const fetchRoleNames = async () => {
@@ -30,7 +31,17 @@ const CommunityPage = () => {
       }
     };
 
+    const getUserRole = async () => {
+      try {
+        const storedUserRole = await AsyncStorage.getItem('userRoles2');
+        setUserRole(storedUserRole || '');
+      } catch (error) {
+        console.error('Failed to fetch user role from AsyncStorage', error);
+      }
+    };
+
     fetchRoleNames();
+    getUserRole();
   }, []);
 
   return (
@@ -40,7 +51,7 @@ const CommunityPage = () => {
         {activeTab === 'Communication' && <Communication />}
         {activeTab === 'InfoWrite' && <InfoWrite />}
       </SafeAreaView>
-      <BottomNav community />
+      <BottomNav community userRole={userRole} />
     </View>
   );
 };
