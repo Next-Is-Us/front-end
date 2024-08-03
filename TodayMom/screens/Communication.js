@@ -27,31 +27,6 @@ const Communication = () => {
   const testAccessToken = //관리자용 토큰 테스트용임
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4';
 
-  useEffect(() => {
-    const setAdminRole = async () => {
-      try {
-        await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_ADMIN']));
-        console.log('User roles set to ROLE_ADMIN');
-      } catch (error) {
-        console.error('Failed to set user roles', error);
-      }
-    };
-
-    const setTestAccessToken = async () => {
-      try {
-        const testAccessToken =
-          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYXV0aCI6WyJST0xFX0FETUlOIl0sImlhdCI6MTcyMjI5OTg5NCwiZXhwIjoxNzI0ODkxODk0fQ.YJKYS0wRx2MxNNvAbIjvvg10Qtr08YM1W1hneZbCAq4';
-        await AsyncStorage.setItem('accessToken', testAccessToken);
-        console.log('Test access token set in AsyncStorage');
-      } catch (error) {
-        console.error('Failed to store access token', error);
-      }
-    };
-
-    setAdminRole();
-    setTestAccessToken();
-  }, []);
-
   const enterRoom = async (roomId) => {
     //소통방 입장(엄마,관리자만 가능)
     const accessToken = await AsyncStorage.getItem('accessToken');

@@ -6,34 +6,34 @@ const PurpleNav = ({ activeTab, setActiveTab }) => {
   const [roleNames, setRoleNames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const setAdminRole = async () => {
-      try {
-        await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_ADMIN']));
-        console.log('User roles set to ROLE_ADMIN');
-      } catch (error) {
-        console.error('Failed to set user roles', error);
-      }
-    };
+  // useEffect(() => {
+  //   const setAdminRole = async () => {
+  //     try {
+  //       await AsyncStorage.setItem('userRoles', JSON.stringify(['ROLE_ADMIN']));
+  //       console.log('User roles set to ROLE_ADMIN');
+  //     } catch (error) {
+  //       console.error('Failed to set user roles', error);
+  //     }
+  //   };
 
-    setAdminRole();
-  }, []);
+  //   setAdminRole();
+  // }, []);
 
-  useEffect(() => {
-    const fetchRoleNames = async () => {
-      try {
-        const storedRoleNames = await AsyncStorage.getItem('userRoles');
-        console.log('userRoles:', storedRoleNames);
-        setRoleNames(storedRoleNames ? JSON.parse(storedRoleNames) : []);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch role names from AsyncStorage', error);
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchRoleNames = async () => {
+  //     try {
+  //       const storedRoleNames = await AsyncStorage.getItem('userRoles');
+  //       console.log('userRoles:', storedRoleNames);
+  //       setRoleNames(storedRoleNames ? JSON.parse(storedRoleNames) : []);
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error('Failed to fetch role names from AsyncStorage', error);
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchRoleNames();
-  }, []);
+  //   fetchRoleNames();
+  // }, []);
 
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
