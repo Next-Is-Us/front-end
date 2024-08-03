@@ -2,9 +2,16 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import MailPlane from "../assets/images/mailPlane.svg";
 import RightArrow from "../assets/images/rightArrow.svg";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
-export default function RecordedContainer({ recorded }) {
-  const [date, setDate] = useState("2024.07.09");
+export default function RecordedContainer({ recorded, userRole, year, month, day }) {
+  // const [date, setDate] = useState("2024.07.09");
+  const navigation = useNavigation();
+  const selectedDate = [year, month, day];
+
+  const confirmRecordHandler = () => {
+    navigation.navigate("ConfirmRecord", {selectedDate: selectedDate, userRole: userRole});
+  }
 
   return recorded ? (
     <View style={styles.completeContainer}>
@@ -12,7 +19,7 @@ export default function RecordedContainer({ recorded }) {
         <Text style={styles.completeDate}>{date}</Text>
         <Text style={styles.completeText}>기록이 완료되었습니다.</Text>
       </View>
-      <Pressable>
+      <Pressable onPress={confirmRecordHandler}>
         <RightArrow />
       </Pressable>
     </View>

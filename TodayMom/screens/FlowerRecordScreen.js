@@ -111,7 +111,7 @@ export default function FlowerRecordScreen({navigation, route}) {
         style={styles.listContainer}
         contentContainerStyle={styles.listItem}
         data={recordedContent}
-        keyExtractor={(item, index) => item.healthRecordId}
+        keyExtractor={(item, index) => `${item.healthRecordId}_${item.recordPeriod}`}
         renderItem={renderItem}
       />
       <BottomNav flower userRole={userRole} />
