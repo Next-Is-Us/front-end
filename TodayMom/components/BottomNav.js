@@ -20,7 +20,7 @@ export default function BottomNav({ community, home, flower, userRole }) {
     if(userRole == "ROLE_SON" || userRole == "ROLE_DAUGHTER") {
       navigation.navigate("ChildrenHome");
     }
-    if(userRole == "ROLE_MOM" && userRole == "ROLE_ADMIN") {
+    if(userRole == "ROLE_MOM" || userRole == "ROLE_ADMIN") {
       navigation.navigate("MomHome");
     }
   };

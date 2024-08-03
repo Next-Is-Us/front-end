@@ -31,7 +31,8 @@ export default function ConfirmRecordScreen({navigation, route }) {
   const name = route.params.userName;
   const userRole = route.params.userRole;
   const date = route.params.selectedDate;
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
   const [year, month, day] = date;
   const [conditionStates, setConditionStates] = useState(
     conditions.reduce((acc, condition) => {
@@ -57,8 +58,8 @@ export default function ConfirmRecordScreen({navigation, route }) {
   };
 
   useEffect(() => {
-    getToken();
-    console.log(conditionStates);
+    // getToken();
+    console.log(userRole);
   }, []);
 
   const getStateRecords = async () => {
