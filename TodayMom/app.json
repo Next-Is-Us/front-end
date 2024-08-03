@@ -7,6 +7,8 @@
     "backgroundColor": "white",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "todaysmom",
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
