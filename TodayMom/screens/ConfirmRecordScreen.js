@@ -29,7 +29,6 @@ const conditions = [
 
 export default function ConfirmRecordScreen({navigation, route }) {
   const name = route.params.userName;
-  const userRole = route.params.userRole;
   const date = route.params.selectedDate;
   const [token, setToken] = useState("");
   const [year, month, day] = date;
@@ -64,7 +63,7 @@ export default function ConfirmRecordScreen({navigation, route }) {
   const getStateRecords = async () => {
     try {
       const response = await axios.get(
-        `https://15.164.134.131/api/condition/detail/${year}/${month}/${day}/${userRole}`,
+        `https://15.164.134.131/api/condition/detail/${year}/${month}/${day}`,
         {
           headers: {
             "Content-Type": "application/json",

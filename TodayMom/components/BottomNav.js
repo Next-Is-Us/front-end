@@ -17,10 +17,10 @@ export default function BottomNav({ community, home, flower, userRole }) {
   const navigation = useNavigation();
 
   const homeHandler = () => {
-    if(userRole == "ROLE_SON" || userRole == "ROLE_DAUGHTER") {
+    if(userRole.includes("ROLE_SON") || userRole.includes("ROLE_DAUGHTER")) {
       navigation.navigate("ChildrenHome");
     }
-    if(userRole == "ROLE_MOM" && userRole == "ROLE_ADMIN") {
+    if(userRole == "ROLE_MOM") {
       navigation.navigate("MomHome");
     }
   };
@@ -36,12 +36,6 @@ export default function BottomNav({ community, home, flower, userRole }) {
 
   const CommunityHandler = () => {
     navigation.navigate('CommunityPage');
-    if(userRole == "ROLE_SON" || userRole == "ROLE_DAUGHTER") {
-      navigation.navigate('CommunityPage', {userRole: userRole});
-    }
-    if(userRole == "ROLE_MOM") {
-      navigation.navigate('CommunityPage', {userRole: userRole});
-    }
   };
 
   return (

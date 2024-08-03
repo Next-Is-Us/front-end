@@ -33,7 +33,7 @@ export default function MomHomeScreen({navigation}) {
   // const { link } = userDetails;
   // const {userRoles} = userDetails;
   const link = "42837137-bf51-449a-8bea-f394911ff0c7"; // 더미 데이터 (추후 삭제 할 것)
-  const [userRole, setUserRole] = useState("ROLE_MOM");
+  const [userRole, setUserRole] = useState();
 
   const rotateAnimation = useRef(new Animated.Value(0)).current;
 
@@ -54,10 +54,10 @@ export default function MomHomeScreen({navigation}) {
       const userRole = await AsyncStorage.getItem('userRoles');
       setUserRole(userRole);
       console.log(userRole);
-      if(userRole == "ROLE_SON" || userRole == "ROLE_DAUGHTER") {
+      if(userRole.includes("ROLE_SON") || userRole.includes("ROLE_DAUGHTER")) {
         navigation.navigate("ChildrenHome");
       }
-      if(userRole == "ROLE_MOM") {
+      if(userRole.includes("ROLE_MOM")) {
         navigation.navigate("MomHome");
       }
     } catch (e) {
@@ -87,7 +87,7 @@ export default function MomHomeScreen({navigation}) {
     try {
       console.log('Sending request with token:', token);
       const response = await axios.get(
-        `https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}/${userRole}`,
+        `https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export default function MomHomeScreen({navigation}) {
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
       setInvited(response.data.data.isInvited);
-      // setUserRole(response.data.data.userRole);
+      setUserRole(response.data.data.userRole);
     } catch(e) {
       console.error(e);
     }
@@ -249,7 +249,7 @@ export default function MomHomeScreen({navigation}) {
           selectYear={selectYear}
         />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} date={date} name={name} year={year} month={month} day={day} sendLinkHandler={sendLinkHandler} userRole={userRole}/>
+        <ToRecordContainer invited={invited} recorded={recorded} selectConditionHandler={selectConditionHandler} date={date} name={name} year={year} month={month} day={day} sendLinkHandler={sendLinkHandler} />
         <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>
