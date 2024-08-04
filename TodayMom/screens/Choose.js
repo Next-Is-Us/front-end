@@ -45,7 +45,7 @@ const Choose = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subText}>사랑하는 어머님의</Text>
+      <Text style={styles.subText}>사랑하는 엄마의</Text>
       <Text style={[styles.subText, { marginBottom: 32 }]}>
         어떤 자녀 분이실까요?
       </Text>
