@@ -90,7 +90,7 @@ export default function SelectForChangeRecordScreen({ navigation, route }) {
           }
         );
         const data = response.data.data;
-        console.log(data);
+        // console.log(data);
         allData = [...allData, ...data.data];
         if (data.isLast) {
           break;
@@ -125,6 +125,7 @@ export default function SelectForChangeRecordScreen({ navigation, route }) {
   const changeHandler = async () => {
     if (selectedRecord.length > 0) {
       const allData = await getPDFData();
+      console.log('All Data:', allData);
       navigation.navigate('RecordChange', { pdfData: allData });
     }
   };
