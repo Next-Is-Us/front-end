@@ -109,7 +109,7 @@ export default function MomHomeScreen({navigation}) {
   const getFlowerRecord = async () => {
     if(!token) return;
     try {
-      const response = await axios.get("https://15.164.134.131/api/nft", {
+      const response = await axios.get("https://15.164.134.131/api/nft/${userRole}", {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

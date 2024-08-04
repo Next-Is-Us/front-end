@@ -1,42 +1,34 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  SafeAreaView,
-  Animated,
-} from 'react-native';
-import TopBackground from '../components/TopBackground';
-import HeaderNav from '../components/HeaderNav';
-import RelationButton from '../components/RelationButton';
-import WeekCalendar from '../components/WeekCalendar';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import ToRecordContainer from '../components/ToRecordContainer';
-import FlowerGrid from '../assets/images/flowerGrid.svg';
-import BottomNav from '../components/BottomNav';
-import Flower1 from '../assets/images/flower1.svg';
-import Flower2 from '../assets/images/flower2.svg';
-import Flower3 from '../assets/images/flower3.svg';
-import Flower4 from '../assets/images/flower4.svg';
-import Flower5 from '../assets/images/flower5.svg';
-import Flower6 from '../assets/images/flower6.svg';
-import RecordedContainer from '../components/RecordedContainer';
-import { useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
-import { useUser } from '../context/UserContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, Image, Pressable, SafeAreaView, Animated } from "react-native";
+import TopBackground from "../components/TopBackground";
+import HeaderNav from "../components/HeaderNav";
+import RelationButton from "../components/RelationButton";
+import WeekCalendar from "../components/WeekCalendar";
+import { useState, useRef, useEffect, useCallback } from "react";
+import ToRecordContainer from "../components/ToRecordContainer";
+import FlowerGrid from "../assets/images/flowerGrid.svg";
+import BottomNav from "../components/BottomNav";
+import Flower1 from "../assets/images/flower1.svg";
+import Flower2 from "../assets/images/flower2.svg";
+import Flower3 from "../assets/images/flower3.svg";
+import Flower4 from "../assets/images/flower4.svg";
+import Flower5 from "../assets/images/flower5.svg";
+import Flower6 from "../assets/images/flower6.svg";
+import RecordedContainer from "../components/RecordedContainer";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function ChildrenHomeScreen({ navigation }) {
-  const [name, setName] = useState('갱년기'); // userName 추후에 백과 통신 예정
+export default function ChildrenHomeScreen({navigation}) {
+  const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정
   // const [invited, setInvited] = useState(true);
   const [recorded, setRecorded] = useState(false);
   const [flowerPieces, setFlowerPieces] = useState(0);
   const today = new Date();
   const [date, setDate] = useState('');
-  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 더미데이터임
-  const [token, setToken] = useState('');
-  const [userRole, setUserRole] = useState('');
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 더미데이터임 
+  const [token, setToken] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
@@ -48,10 +40,11 @@ export default function ChildrenHomeScreen({ navigation }) {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (accessToken) {
+        console.log("토큰 받아오기");
         setToken(accessToken);
       } else {
         console.log('not found');
-        navigation.navigate('Splash');
+        navigation.navigate("Splash");
       }
     } catch (e) {
       console.log(e);
@@ -63,20 +56,21 @@ export default function ChildrenHomeScreen({ navigation }) {
       const userRole = await AsyncStorage.getItem('userRoles2');
       if (userRole) {
         setUserRole(userRole);
-        console.log(userRole);
+        console.log("유저를 받아옵니다 " + userRole);
       } else {
         console.log('not found');
       }
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   const getDayRecord = async () => {
-    if (!token) return;
-    console.log(token);
+    if(!token || !userRole) return;
+    // console.log(token);
     try {
-      console.log('Sending request with token:', token);
+      console.log('토큰 보내기', token);
+      console.log("유저 보내기", userRole)
       const response = await axios.get(
         `https://15.164.134.131/api/condition/byDate/${year}/${month}/${day}/${userRole}`,
         {
@@ -86,41 +80,36 @@ export default function ChildrenHomeScreen({ navigation }) {
           },
         }
       );
-      console.log(response.data.data);
+      console.log("기록 결과" + JSON.stringify(response.data.data));
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
-      setUserRole(response.data.data.userRole);
-    } catch (e) {
+      // setUserRole(response.data.data.userRole);
+    } catch(e) {
       console.error(e);
     }
   };
 
   const getFlowerRecord = async () => {
-    if (!token) return;
+    if(!token || !userRole) return;
     try {
-      const response = await axios.get('https://15.164.134.131/api/nft', {
+      const response = await axios.get("https://15.164.134.131/api/nft/${userRole}", {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(response.data);
+        }
+      })
+      console.log("꽃피 결과 " + JSON.stringify(response.data));
       setFlowerPieces(response.data.data);
-    } catch (e) {
+    } catch(e) {
       console.error(e);
     }
-  };
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      if (
-        flowerPieces === 6 &&
-        now.getHours() === 0 &&
-        now.getMinutes() === 0 &&
-        now.getSeconds() === 0
-      ) {
+      if (flowerPieces === 6 && now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
         setFlowerPieces(0);
       }
     }, 1000);
@@ -137,31 +126,26 @@ export default function ChildrenHomeScreen({ navigation }) {
     }).start(() => {
       rotateAnimation.setValue(0);
     });
-  }, [flowerPieces]);
+  },[flowerPieces]);
 
   const rotate = rotateAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   useEffect(() => {
-    // console.log("토큰 받아오기");
     getToken();
     getUserRole();
   }, []);
 
   useEffect(() => {
-    if (token) {
-      console.log('토큰이 설정되었습니다:', token);
-      console.log(year);
-      console.log(month);
-      console.log(day);
-      console.log('통신 실행');
+    if (token && userRole) {
+      console.log("통신 실행");
       getDayRecord();
       getFlowerRecord();
     }
-  }, [token, year, month, day]);
-
+  }, [token, year, month, day, userRole]);
+  
   useFocusEffect(
     useCallback(() => {
       const today = new Date();
@@ -226,23 +210,15 @@ export default function ChildrenHomeScreen({ navigation }) {
         <HeaderNav relation="자녀" name={name} />
       </SafeAreaView>
       <View style={styles.bodyContainer}>
-        <WeekCalendar
+      <WeekCalendar
           relation="자녀"
           selectDay={selectDay}
           selectMonth={selectMonth}
           selectYear={selectYear}
         />
         <Text style={styles.momHomeTitleText}>오늘의 상태를 알려주세요!</Text>
-        <RecordedContainer
-          recorded={recorded}
-          userRole={userRole}
-          year={year}
-          month={month}
-          day={day}
-        />
-        <Text style={[styles.momHomeTitleText, { marginTop: 40 }]}>
-          우리의 꽃을 피워보아요
-        </Text>
+        <RecordedContainer recorded={recorded} userRole={userRole} year={year} month={month} day={day} date={date}/>
+        <Text style={[styles.momHomeTitleText, {marginTop: 40}]}>우리의 꽃을 피워보아요</Text>
         <View style={styles.flowerGridContainer}>
           <Animated.View style={{ transform: [{ rotate }] }}>
             {renderFlower()}
@@ -257,11 +233,11 @@ export default function ChildrenHomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   bodyContainer: {
     paddingHorizontal: 20,
@@ -269,16 +245,16 @@ const styles = StyleSheet.create({
     // flex: 1
   },
   momHomeTitleText: {
-    color: 'black',
-    fontFamily: 'Pretendard',
+    color: "black",
+    fontFamily: "Pretendard",
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: "400",
     marginTop: 24,
   },
   flowerGridContainer: {
-    width: '100%',
+    width: "100%",
     marginTop: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });

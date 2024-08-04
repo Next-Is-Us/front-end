@@ -28,11 +28,12 @@ const conditions = [
 ];
 
 export default function ConfirmRecordScreen({navigation, route }) {
-  const name = route.params.userName;
+  const [name, setName] = useState("User");
   const userRole = route.params.userRole;
   const date = route.params.selectedDate;
-  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
-  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임
+  const [token, setToken] = useState(""); 
   const [year, month, day] = date;
   const [conditionStates, setConditionStates] = useState(
     conditions.reduce((acc, condition) => {
@@ -58,42 +59,53 @@ export default function ConfirmRecordScreen({navigation, route }) {
   };
 
   useEffect(() => {
-    // getToken();
+    getToken();
     console.log(userRole);
+    console.log(year, month, day);
   }, []);
 
+  useEffect(() => {
+    if (token && userRole) {
+      console.log("통신 실행");
+      getStateRecords();
+    }
+  }, [token, userRole]);
+
   const getStateRecords = async () => {
-    try {
-      const response = await axios.get(
-        `https://15.164.134.131/api/condition/detail/${year}/${month}/${day}/${userRole}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data.data);
-      const recordeStates = conditions.reduce((acc, condition) => {
-        acc[condition.state] = response.data.data[condition.state];
-        return acc;
-      }, {});
-      setConditionStates(recordeStates);
-      setSleepTime(response.data.data.sleepTime);
-      setRecordedText(response.data.data.record);
-    } catch (e) {
-      console.error(e);
+    if(token && userRole) {
+      console.log("호출");
+      try {
+        const response = await axios.get(
+          `https://15.164.134.131/api/condition/detail/${year}/${month}/${day}/${userRole}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        const recordeStates = conditions.reduce((acc, condition) => {
+          acc[condition.state] = response.data.data[condition.state];
+          return acc;
+        }, {});
+        setConditionStates(recordeStates);
+        setSleepTime(response.data.data.sleepTime);
+        setRecordedText(response.data.data.record);
+        setName(response.data.data.nickname);
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      getStateRecords();
-    }
-  }, [token]);
-
   const homeHandler = () => {
-    navigation.navigate("MomHome");
+    if(userRole == "ROLE_MOM") {
+      navigation.navigate("MomHome");
+    }
+    if(userRole == "ROLE_SON" || userRole == "ROLE_DAUGHTER") {
+      navigation.navigate("ChildrenHome");
+    }
   }
 
   return (

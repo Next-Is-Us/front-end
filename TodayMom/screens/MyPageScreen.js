@@ -18,12 +18,13 @@ import { Clipboard } from 'react-native';
 
 const familyMemberDummyData = [{ name: '김지은' }, { name: '박제준' }];
 
-export default function MyPageScreen({ route }) {
-  const name = route.params.userName;
+export default function MyPageScreen() {
+  const [name, setName] = useState("User");
   const [familyCount, setFamilyCount] = useState();
   const [familyList, setFamilyList] = useState([]);
   // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
-  const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  const [token, setToken] = useState("");
   const [link, setLink] = useState('www.todays.mom');
 
   const getToken = async () => {
@@ -40,41 +41,66 @@ export default function MyPageScreen({ route }) {
   }
 
   const getLink = async () => {
-    try {
-      const response = await axios.get("https://15.164.134.131/api/myPage/link", {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        }
-      })
-      console.log(response.data);
-      setLink(response.data.data.link);
-    } catch(e) {
-      console.error(e);
+    if(token) {
+      try {
+        const response = await axios.get("https://15.164.134.131/api/myPage/link", {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        console.log(response.data);
+        setLink(response.data.data.link);
+      } catch(e) {
+        console.error(e);
+      }
+    }
+  }
+
+  const getName = async () => {
+    if(token) {
+      try {
+        const response = await axios.get("https://15.164.134.131/api/myPage/nickname", {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        console.log(response.data.data);
+        setName(response.data.data.nickname);
+      } catch(e) {
+        console.error(e);
+      }
     }
   }
 
   const getFamilyInfo = async () => {
-    try {
-      const response  = await axios.get("https://15.164.134.131/api/myPage/familyInformation", {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        }
-      });
-      console.log(response.data);
-      setFamilyCount(response.data.data.length);
-      setFamilyList(response.data.data);
-    } catch(e) {
-      console.error(e);
+    if(token) {
+      try {
+        const response  = await axios.get("https://15.164.134.131/api/myPage/familyInformation", {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log(response.data);
+        setFamilyCount(response.data.data.length);
+        setFamilyList(response.data.data);
+      } catch(e) {
+        console.error(e);
+      }
     }
   }
 
   useEffect(() => {
-    // getToken();
+    getToken();
+  }, []);
+
+  useEffect(() => {
     if(token) {
       getLink();
       getFamilyInfo();
+      getName();
     }
   }, [token]);
 
