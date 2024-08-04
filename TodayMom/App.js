@@ -39,6 +39,7 @@ import { UserProvider } from './context/UserContext.js';
 import CommunityPage from './components/CommunityPage.js';
 import ConfirmRecordScreen from './screens/ConfirmRecordScreen.js';
 import Commuwrite from './screens/Commuwrite.js';
+import InviteLink from './screens/InviteLink.js';
 
 const Stack = createStackNavigator();
 
@@ -49,7 +50,7 @@ function App() {
         <UserProvider>
           <StatusBar style="auto" />
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="MomHome">
+            <Stack.Navigator initialRouteName="InviteLink">
               <Stack.Screen
                 name="Choose"
                 component={Choose}
@@ -201,6 +202,29 @@ function App() {
                 name="NFTCard"
                 component={NFTCardScreen}
                 options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="InviteLink"
+                component={InviteLink}
+                options={({ navigation }) => ({
+                  headerTitle: '',
+                  headerLeft: () => (
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                      <Image
+                        source={require('./assets/images/leftallow.png')}
+                        style={{ width: 25, height: 25 }}
+                      />
+                    </TouchableOpacity>
+                  ),
+                  headerLeftContainerStyle: {
+                    paddingLeft: 20,
+                  },
+                  headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                  },
+                })}
               />
 
               <Stack.Screen
