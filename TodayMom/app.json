@@ -12,11 +12,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "todaysmom",
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "이 앱에서는 사진을 사용하려면 사진 라이브러리 접근 권한이 필요합니다.",
-        "NSCameraUsageDescription": "이 앱에서는 카메라를 사용하려면 카메라 접근 권한이 필요합니다."
+        "NSCameraUsageDescription": "이 앱에서는 카메라를 사용하려면 카메라 접근 권한이 필요합니다.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["todaysmom"]
+          }
+        ]
       }
     },
     "android": {

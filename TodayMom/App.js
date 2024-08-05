@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Linking from 'expo-linking';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Nickname from './screens/Nickname';
@@ -43,13 +44,24 @@ import InviteLink from './screens/InviteLink.js';
 
 const Stack = createStackNavigator();
 
+const prefix = Linking.createURL('/');
+
+const linking = {
+  prefixes: [prefix],
+  config: {
+    screens: {
+      Splash: "splash/:link"
+    },
+  },
+};
+
 function App() {
   return (
     <>
       <PostProvider>
         <UserProvider>
           <StatusBar style="auto" />
-          <NavigationContainer>
+          <NavigationContainer linking={linking}>
             <Stack.Navigator initialRouteName="InviteLink">
               <Stack.Screen
                 name="Choose"

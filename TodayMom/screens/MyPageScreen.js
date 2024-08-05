@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Clipboard } from 'react-native';
 
-const familyMemberDummyData = [{ name: '김지은' }, { name: '박제준' }];
+// const familyMemberDummyData = [{ name: '김지은' }, { name: '박제준' }];
 
 export default function MyPageScreen() {
   const [name, setName] = useState("User");

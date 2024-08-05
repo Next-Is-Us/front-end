@@ -71,7 +71,7 @@ const Choose = () => {
         style={getNextButtonStyle()}
         onPress={() => {
           if (selectedButton) {
-            navigation.navigate('Nickname');
+            navigation.navigate('InviteLink');
           }
         }}
         disabled={!selectedButton}

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../context/UserContext';
+import axios from 'axios';
 
 const InviteLink = () => {
   const [link, setLink] = useState('');
@@ -16,8 +17,9 @@ const InviteLink = () => {
 
   const navigation = useNavigation();
 
-  const handleLinkChange = (link) => {
-    setLink(link);
+  const handleLinkChange = (userInput) => {
+    setLink(userInput);
+    console.log(userInput);
   };
 
   const handleFocus = () => {
@@ -28,10 +30,20 @@ const InviteLink = () => {
     setIsFocused(false);
   };
 
+  const linkHandler = async () => {
+    try {
+      const response = await axios.get(`https://15.164.134.131/api/link/${link}`);
+      console.log(response.data);
+      navigation.navigate('Nickname');
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.subText}>엄마에게 받은</Text>
-      <Text style={styles.subText}>초대 링크를 기입해 주세요!</Text>
+      <Text style={styles.subText}>초대 코드를 기입해 주세요!</Text>
 
       <TextInput
         style={[styles.input, isFocused && styles.focusedInput]}
@@ -39,14 +51,14 @@ const InviteLink = () => {
         onFocus={handleFocus}
         onBlur={handleBlur}
         value={link}
-        placeholder="이렇게 불러주세요!!"
+        placeholder="초대코드를 입력해주세요"
       />
 
       <TouchableOpacity
         style={[styles.nextButton, link.length > 0 && styles.buttonActive]}
         onPress={() => {
           if (link.length > 0) {
-            navigation.navigate('Invite');
+            linkHandler();
           }
         }}
         disabled={link.length === 0}

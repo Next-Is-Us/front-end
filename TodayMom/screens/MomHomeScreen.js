@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable, SafeAreaView, Animated, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, SafeAreaView, Animated, Dimensions, Share } from "react-native";
 import TopBackground from "../components/TopBackground";
 import HeaderNav from "../components/HeaderNav";
 import RelationButton from "../components/RelationButton";
@@ -17,6 +17,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import { useUser } from "../context/UserContext";
+import * as Linking from 'expo-linking';
+// import Share from 'react-native-share';
 
 export default function MomHomeScreen({navigation}) {
   const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정 (complete)
@@ -32,7 +34,8 @@ export default function MomHomeScreen({navigation}) {
   const { userDetails } = useUser();
   // const { link } = userDetails;
   // const {userRoles} = userDetails;
-  const link = "42837137-bf51-449a-8bea-f394911ff0c7"; // 더미 데이터 (추후 삭제 할 것)
+  // const link = "42837137-bf51-449a-8bea-f394911ff0c7"; // 더미 데이터 (추후 삭제 할 것)
+  const [link, setLink] = useState("");
   const [userRole, setUserRole] = useState("ROLE_MOM");
 
   const rotateAnimation = useRef(new Animated.Value(0)).current;
@@ -100,6 +103,7 @@ export default function MomHomeScreen({navigation}) {
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
       setInvited(response.data.data.isInvited);
+      setLink(response.data.data.link);
       // setUserRole(response.data.data.userRole);
     } catch(e) {
       console.error(e);
@@ -227,8 +231,20 @@ export default function MomHomeScreen({navigation}) {
 
   // 초대 링크 보내기
   const sendLinkHandler = () => {
-    console.log(link);
-  }
+    const encodedLink = encodeURIComponent(link);
+    const url = Linking.createURL(`splash/${encodedLink}`);
+    const shareHandler = () => {
+      Share.share({
+        // title: "오늘의맘 초대장이 왔어요!",
+        message: `엄마의 초대를 받아보세요! \n\n앱 링크: ${url} \n\n초대코드: ${link}`,
+      })
+    }
+    // Linking.openURL(url).catch(err => {
+    //   console.error('Error:', err);
+    // });
+
+    shareHandler();
+  };
 
   return (
     <View style={styles.screen}>
