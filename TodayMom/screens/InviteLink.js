@@ -34,7 +34,9 @@ const InviteLink = () => {
     try {
       const response = await axios.get(`https://15.164.134.131/api/link/${link}`);
       console.log(response.data);
-      navigation.navigate('Nickname');
+      if(response.status == 200) {
+        navigation.navigate('Nickname', {invitedLink : link});
+      }
     } catch(e) {
       console.error(e);
     }

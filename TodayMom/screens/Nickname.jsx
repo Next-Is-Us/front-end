@@ -9,10 +9,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../context/UserContext';
 
-const Nickname = () => {
+const Nickname = ({route}) => {
   const [nickname, setNickname] = useState('');
   const { userDetails, setUserDetails } = useUser();
   const isButtonEnabled = nickname.length > 0;
+  const invitedLink = route.params.invitedLink;
 
   const navigation = useNavigation();
 
@@ -40,7 +41,7 @@ const Nickname = () => {
         style={[styles.nextButton, isButtonEnabled && styles.buttonActive]}
         onPress={() => {
           if (isButtonEnabled) {
-            navigation.navigate('Invite');
+            navigation.navigate('Invite', {invitedLink : invitedLink});
           }
         }}
         disabled={!isButtonEnabled}

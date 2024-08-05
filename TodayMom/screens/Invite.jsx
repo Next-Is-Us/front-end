@@ -12,11 +12,12 @@ import { useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Invite = () => {
+const Invite = ({route}) => {
   const [link, setLink] = useState('');
   const fadeAnim = useRef(new Animated.Value(0)).current; // opacity의 초기값을 0으로 설정
   const navigation = useNavigation();
   const { userDetails, setUserDetails } = useUser();
+  const invitedLink = route.params.invitedLink;
 
   useEffect(() => {
     fetch('https://15.164.134.131/api/link', {
@@ -37,12 +38,29 @@ const Invite = () => {
   }, []);
 
   const handleCompleteSignup = () => {
+    let requestBody;
+    if (userDetails.userRoles.includes('ROLE_MOM')) {
+      requestBody = JSON.stringify(userDetails);
+    } else if (
+      userDetails.userRoles.includes('ROLE_SON') ||
+      userDetails.userRoles.includes('ROLE_DAUGHTER')
+    ) {
+      console.log(invitedLink);
+      console.log(userDetails.userRoles);
+      console.log(userDetails.nickname);
+      requestBody = JSON.stringify({
+        nickname: userDetails.nickname,
+        link: invitedLink,
+        userRoles: userDetails.userRoles,
+      });
+    }
+
     fetch('https://15.164.134.131/api/user/signUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userDetails),
+      body: requestBody
     })
       .then((response) => {
         if (response.ok) {
