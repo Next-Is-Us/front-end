@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useEffect, useState, useCallback } from "react";
-import { FlatList, StyleSheet, View, Text, Pressable } from "react-native";
+import { FlatList, StyleSheet, View, Text, Pressable, Dimensions } from "react-native";
 
 const getWeekDays = () => {
   const dates = [];
@@ -11,9 +11,12 @@ const getWeekDays = () => {
   const day = date.getDate(); // 현재 날짜
   const monday = new Date(year, month, day - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // 월요일 구하는 법
 
-  for (let i = 0; i < 7; i++) {
-    const weeks = new Date(monday);
-    weeks.setDate(monday.getDate() + i);
+  const lastMonday = new Date(monday);
+  lastMonday.setDate(monday.getDate() - 7);
+
+  for (let i = 0; i < 14; i++) {
+    const weeks = new Date(lastMonday);
+    weeks.setDate(lastMonday.getDate() + i);
     dates.push({
       day: weeks.getDate(),
       month: weeks.getMonth() + 1,
@@ -41,6 +44,7 @@ const DayItem = ({ day, date, selected, relation, onPress }) => {
 export default function WeekCalendar({relation, selectDay, selectMonth, selectYear}) {
   const [week, setWeek] = useState([]);
   const [selectedDay, setSelectedDay] = useState(new Date().getDate());
+  const deviceWidth = Dimensions.get("window").width;
 
   useEffect(() => {
     const weekDays = getWeekDays();
@@ -65,6 +69,8 @@ export default function WeekCalendar({relation, selectDay, selectMonth, selectYe
     console.log("변경");
   }
 
+  const itemWidth = (deviceWidth-40) / 7;
+
   return (
     <>
       <FlatList
@@ -78,6 +84,13 @@ export default function WeekCalendar({relation, selectDay, selectMonth, selectYe
             <DayItem day={itemData.item.day} date={itemData.item.date} selected={itemData.item.day === selectedDay} relation={relation} onPress={() => {selectDayHandler(itemData.item)}} />
           )
         }}
+        initialNumToRender={7}
+        initialScrollIndex={7}
+        getItemLayout={(data, index) => ({
+          length: itemWidth,
+          offset: itemWidth * index,
+          index
+        })}
       />
     </>
   );
@@ -94,12 +107,15 @@ const styles = StyleSheet.create({
   },
   calenderInnerStyle: {
     justifyContent: "space-between",
-    width: "100%",
-    gap: 2
+    // width: "100%",
+    height: 80,
+    gap: 2,
+    // flex: 1
   },
   dayContainer: {
     gap: 8,
-    // width: 50,
+    width: (Dimensions.get("window").width-52) / 7,
+    // height: 80,
     paddingHorizontal: 5,
     paddingVertical: 12,
     alignItems: "center",
