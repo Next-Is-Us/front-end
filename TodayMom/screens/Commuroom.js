@@ -172,7 +172,12 @@ const Commuroom = ({ navigation }) => {
                       {Array.from(
                         { length: roomDetails.necessaryNftCount },
                         (_, index) => (
-                          <Flower key={index} width={24} height={24} />
+                          <Flower
+                            key={index}
+                            width={24}
+                            height={24}
+                            marginBottom={45}
+                          />
                         )
                       )}
                       <Text style={styles.plusText}>가 필요해요</Text>
@@ -303,7 +308,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     right: 20,
-    bottom: 180,
+    bottom: -35,
     width: 90,
     height: 40,
     backgroundColor: '#A30FFA',

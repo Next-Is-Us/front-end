@@ -64,8 +64,7 @@ const Communication = () => {
     }
   };
 
-  const fetchRooms = async (page) => {
-    if (isLoading) return; // 중복 호출 방지
+  const fetchRooms = async () => {
     setIsLoading(true);
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -75,27 +74,28 @@ const Communication = () => {
         return;
       }
 
-      const response = await fetch(
-        `https://15.164.134.131/api/room/list?page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await fetch(`https://15.164.134.131/api/room/list`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       const result = await response.json();
+
       if (response.ok) {
-        setRooms(
-          page === 0 ? result.data.data : [...rooms, ...result.data.data]
-        );
-        setCurrentPage(page);
-        console.log(result.data.data);
+        if (result.data && result.data.data) {
+          setRooms(result.data.data);
+          console.log(result.data.data);
+        } else {
+          console.error('No room data available');
+        }
       } else {
         console.error('Failed to fetch rooms:', result.message);
+        alert('Failed to fetch rooms: ' + result.message);
       }
     } catch (error) {
       console.error('Error fetching rooms:', error);
+      alert('Error fetching rooms: ' + error.message);
     }
     setIsLoading(false);
   };
@@ -120,10 +120,26 @@ const Communication = () => {
     }
   };
 
+  // const momToken =
+  //   'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U';
+
+  // useEffect(() => {
+  //   const storeTestAccessToken = async () => {
+  //     try {
+  //       await AsyncStorage.setItem('accessToken', momToken);
+  //       console.log('Test access token saved successfully');
+  //     } catch (error) {
+  //       console.error('Error saving test access token:', error);
+  //     }
+  //   };
+
+  //   storeTestAccessToken();
+  // }, []);
+
   useFocusEffect(
     useCallback(() => {
       setupRoles().catch(console.error);
-      fetchRooms(0);
+      fetchRooms();
     }, [])
   );
 
@@ -139,51 +155,50 @@ const Communication = () => {
         </TouchableOpacity>
       )}
 
-      <FlatList
-        data={rooms}
-        keyExtractor={(item) => item.roomId.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.Wholecontainer}>
-            <Image source={{ uri: item.thumbnail }} style={styles.profile} />
-            <Text style={styles.communame}>{item.name}</Text>
-            <View style={styles.row}>
-              <Text style={styles.communame}>함께 하는 커뮤니티</Text>
-              <View style={styles.count}>
-                <MiniProfile />
-                <Text style={styles.people}>{item.peopleCount}명</Text>
-              </View>
-            </View>
-            {item.isPossibleToEnter ? (
-              <TouchableOpacity
-                style={styles.enter}
-                onPress={() => enterRoom(item.roomId)}
-              >
-                <Text style={styles.entertext}>입장 하기</Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.enter2}>
-                <View style={styles.iconContainer}>
-                  {Array.from(
-                    { length: item.necessaryNftCount },
-                    (_, index) => (
-                      <Flower key={index} width={24} height={24} />
-                    )
-                  )}
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <FlatList
+          data={rooms}
+          keyExtractor={(item) => item.roomId.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.Wholecontainer}>
+              <Image source={{ uri: item.thumbnail }} style={styles.profile} />
+              <Text style={styles.communame}>{item.name}</Text>
+              <View style={styles.row}>
+                <Text style={styles.communame}>함께 하는 커뮤니티</Text>
+                <View style={styles.count}>
+                  <MiniProfile />
+                  <Text style={styles.people}>{item.peopleCount}명</Text>
                 </View>
-                <Text style={styles.plusText}>가 필요해요</Text>
               </View>
-            )}
-          </View>
-        )}
-        contentContainerStyle={{ paddingBottom: 100 }}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isLoading ? <ActivityIndicator size="large" /> : null
-        }
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-      />
+              {item.isPossibleToEnter ? (
+                <TouchableOpacity
+                  style={styles.enter}
+                  onPress={() => enterRoom(item.roomId)}
+                >
+                  <Text style={styles.entertext}>입장 하기</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.enter2}>
+                  <View style={styles.iconContainer}>
+                    {Array.from(
+                      { length: item.necessaryNftCount },
+                      (_, index) => (
+                        <Flower key={index} width={24} height={24} />
+                      )
+                    )}
+                  </View>
+                  <Text style={styles.plusText}>가 필요해요</Text>
+                </View>
+              )}
+            </View>
+          )}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        />
+      )}
     </SafeAreaView>
   );
 };

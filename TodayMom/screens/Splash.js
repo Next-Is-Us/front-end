@@ -5,7 +5,7 @@ import Icon from '../assets/images/splash_icon.svg';
 import SecondIcon from '../assets/images/todaymom.svg';
 import * as Linking from 'expo-linking';
 
-const Splash = ({route}) => {
+const Splash = ({ route }) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const secondTranslateY = useRef(new Animated.Value(-18)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -15,7 +15,7 @@ const Splash = ({route}) => {
   useEffect(() => {
     console.log(route.params);
     console.log(decodeURIComponent(invitedLink));
-  }, [])
+  }, []);
 
   useEffect(() => {
     Animated.sequence([
