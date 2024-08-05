@@ -13,6 +13,18 @@ import Flower3 from "../assets/images/flower3.svg";
 import Flower4 from "../assets/images/flower4.svg";
 import Flower5 from "../assets/images/flower5.svg";
 import Flower6 from "../assets/images/flower6.svg";
+import YellowFlower1 from "../assets/images/yellowFlower1.svg";
+import YellowFlower2 from "../assets/images/yellowFlower2.svg";
+import YellowFlower3 from "../assets/images/yellowFlower3.svg";
+import YellowFlower4 from "../assets/images/yellowFlower4.svg";
+import YellowFlower5 from "../assets/images/yellowFlower5.svg";
+import YellowFlower6 from "../assets/images/yellowFlower6.svg";
+import GreenFlower1 from "../assets/images/greenFlower1.svg";
+import GreenFlower2 from "../assets/images/greenFlower2.svg";
+import GreenFlower3 from "../assets/images/greenFlower3.svg";
+import GreenFlower4 from "../assets/images/greenFlower4.svg";
+import GreenFlower5 from "../assets/images/greenFlower5.svg";
+import GreenFlower6 from "../assets/images/greenFlower6.svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
@@ -22,9 +34,10 @@ import * as Linking from 'expo-linking';
 
 export default function MomHomeScreen({navigation}) {
   const [name, setName] = useState("갱년기"); // userName 추후에 백과 통신 예정 (complete)
-  const [invited, setInvited] = useState(true);
+  const [invited, setInvited] = useState(false);
   const [recorded, setRecorded] = useState(false);
   const [flowerPieces, setFlowerPieces] = useState(0);
+  const [totalNft, setTotalNft] = useState();
   const today = new Date();
   const [date, setDate] = useState('');
   const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 더미데이터임 
@@ -102,7 +115,7 @@ export default function MomHomeScreen({navigation}) {
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
-      setInvited(response.data.data.isInvited);
+      // setInvited(response.data.data.isInvited);
       setLink(response.data.data.link);
       // setUserRole(response.data.data.userRole);
     } catch(e) {
@@ -120,7 +133,8 @@ export default function MomHomeScreen({navigation}) {
         }
       })
       console.log(response.data);
-      setFlowerPieces(response.data.data);
+      setFlowerPieces(response.data.data.pieceOfNft);
+      setTotalNft(response.data.data.totalNftCount);
     } catch(e) {
       console.error(e);
     }
@@ -191,17 +205,53 @@ export default function MomHomeScreen({navigation}) {
   const renderFlower = () => {
     switch (flowerPieces) {
       case 1:
-        return <Flower1 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower1 />}
+            {totalNft % 3 == 2 && <YellowFlower1 />}
+            {totalNft % 3 == 0 && <GreenFlower1 />}
+          </>
+        );
       case 2:
-        return <Flower2 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower2 />}
+            {totalNft % 3 == 2 && <YellowFlower2 />}
+            {totalNft % 3 == 0 && <GreenFlower2 />}
+          </>
+        );
       case 3:
-        return <Flower3 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower3 />}
+            {totalNft % 3 == 2 && <YellowFlower3 />}
+            {totalNft % 3 == 0 && <GreenFlower3 />}
+          </>
+        );
       case 4:
-        return <Flower4 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower4 />}
+            {totalNft % 3 == 2 && <YellowFlower4 />}
+            {totalNft % 3 == 0 && <GreenFlower4 />}
+          </>
+        );
       case 5:
-        return <Flower5 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower5 />}
+            {totalNft % 3 == 2 && <YellowFlower5 />}
+            {totalNft % 3 == 0 && <GreenFlower5 />}
+          </>
+        );
       case 6:
-        return <Flower6 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower6 />}
+            {totalNft % 3 == 2 && <YellowFlower6 />}
+            {totalNft % 3 == 0 && <GreenFlower6 />}
+          </>
+        );
       default:
         return <FlowerGrid />;
     }
