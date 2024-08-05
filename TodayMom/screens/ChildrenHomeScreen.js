@@ -13,6 +13,18 @@ import Flower3 from "../assets/images/flower3.svg";
 import Flower4 from "../assets/images/flower4.svg";
 import Flower5 from "../assets/images/flower5.svg";
 import Flower6 from "../assets/images/flower6.svg";
+import YellowFlower1 from "../assets/images/yellowFlower1.svg";
+import YellowFlower2 from "../assets/images/yellowFlower2.svg";
+import YellowFlower3 from "../assets/images/yellowFlower3.svg";
+import YellowFlower4 from "../assets/images/yellowFlower4.svg";
+import YellowFlower5 from "../assets/images/yellowFlower5.svg";
+import YellowFlower6 from "../assets/images/yellowFlower6.svg";
+import GreenFlower1 from "../assets/images/greenFlower1.svg";
+import GreenFlower2 from "../assets/images/greenFlower2.svg";
+import GreenFlower3 from "../assets/images/greenFlower3.svg";
+import GreenFlower4 from "../assets/images/greenFlower4.svg";
+import GreenFlower5 from "../assets/images/greenFlower5.svg";
+import GreenFlower6 from "../assets/images/greenFlower6.svg";
 import RecordedContainer from "../components/RecordedContainer";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
@@ -160,17 +172,53 @@ export default function ChildrenHomeScreen({navigation}) {
   const renderFlower = () => {
     switch (flowerPieces) {
       case 1:
-        return <Flower1 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower1 />}
+            {totalNft % 3 == 2 && <YellowFlower1 />}
+            {totalNft % 3 == 0 && <GreenFlower1 />}
+          </>
+        );
       case 2:
-        return <Flower2 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower2 />}
+            {totalNft % 3 == 2 && <YellowFlower2 />}
+            {totalNft % 3 == 0 && <GreenFlower2 />}
+          </>
+        );
       case 3:
-        return <Flower3 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower3 />}
+            {totalNft % 3 == 2 && <YellowFlower3 />}
+            {totalNft % 3 == 0 && <GreenFlower3 />}
+          </>
+        );
       case 4:
-        return <Flower4 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower4 />}
+            {totalNft % 3 == 2 && <YellowFlower4 />}
+            {totalNft % 3 == 0 && <GreenFlower4 />}
+          </>
+        );
       case 5:
-        return <Flower5 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower5 />}
+            {totalNft % 3 == 2 && <YellowFlower5 />}
+            {totalNft % 3 == 0 && <GreenFlower5 />}
+          </>
+        );
       case 6:
-        return <Flower6 />;
+        return (
+          <>
+            {totalNft % 3 == 1 && <Flower6 />}
+            {totalNft % 3 == 2 && <YellowFlower6 />}
+            {totalNft % 3 == 0 && <GreenFlower6 />}
+          </>
+        );
       default:
         return <FlowerGrid />;
     }

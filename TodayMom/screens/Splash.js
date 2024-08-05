@@ -10,7 +10,7 @@ const Splash = ({ route }) => {
   const secondTranslateY = useRef(new Animated.Value(-18)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
-  const invitedLink = route.params.link;
+  const invitedLink = route?.params?.link || null;
 
   useEffect(() => {
     console.log(route.params);

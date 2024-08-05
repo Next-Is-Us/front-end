@@ -13,7 +13,7 @@ const Nickname = ({route}) => {
   const [nickname, setNickname] = useState('');
   const { userDetails, setUserDetails } = useUser();
   const isButtonEnabled = nickname.length > 0;
-  const invitedLink = route.params.invitedLink;
+  const invitedLink = route?.params?.invitedLink || null;
 
   const navigation = useNavigation();
 
