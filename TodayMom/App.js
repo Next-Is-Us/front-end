@@ -41,6 +41,9 @@ import CommunityPage from './components/CommunityPage.js';
 import ConfirmRecordScreen from './screens/ConfirmRecordScreen.js';
 import Commuwrite from './screens/Commuwrite.js';
 import InviteLink from './screens/InviteLink.js';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { Asset } from 'expo-asset';
 
 const Stack = createStackNavigator();
 
@@ -50,12 +53,42 @@ const linking = {
   prefixes: [prefix],
   config: {
     screens: {
-      Splash: "splash/:link"
+      Splash: 'splash/:link',
     },
   },
 };
 
 function App() {
+  const [isReady, setIsReady] = useState(false);
+
+  const cacheResourcesAsync = async () => {
+    const images = [
+      require('./assets/images/NFTBackground.png'),
+      require('./assets/images/NFTContainer.png'),
+      require('./assets/images/recordphoneshadow.png'),
+      require('./assets/images/intronft.png'),
+      require('./assets/images/Introcom.png'),
+    ];
+
+    const cacheImages = images.map((image) =>
+      Asset.fromModule(image).downloadAsync()
+    );
+    return Promise.all(cacheImages);
+  };
+
+  useEffect(() => {
+    cacheResourcesAsync()
+      .then(() => setIsReady(true))
+      .catch((error) => {
+        console.error('Failed to load assets', error);
+        setIsReady(true);
+      });
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <>
       <PostProvider>

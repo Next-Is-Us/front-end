@@ -20,7 +20,9 @@
         "NSCameraUsageDescription": "이 앱에서는 카메라를 사용하려면 카메라 접근 권한이 필요합니다.",
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["todaysmom"]
+            "CFBundleURLSchemes": [
+              "todaysmom"
+            ]
           }
         ]
       }
@@ -29,11 +31,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "permissions": ["CAMERA", "WRITE_EXTERNAL_STORAGE"]
+        "permissions": [
+          "CAMERA",
+          "WRITE_EXTERNAL_STORAGE"
+        ]
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

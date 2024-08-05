@@ -91,7 +91,7 @@ const Commuroom = ({ navigation }) => {
       <View style={styles.row2}>
         <View style={styles.row3}>
           <Message />
-          <Text style={styles.count}>00</Text>
+          <Text style={styles.count}>{item.commentCount}</Text>
         </View>
         <Text style={styles.minute}>{item.whenCreated}</Text>
       </View>
