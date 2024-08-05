@@ -15,6 +15,8 @@ import { useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native';
 import Flower from '../assets/images/flower.svg';
+import { useRef } from 'react';
+import { Animated } from 'react-native';
 
 const Commuroom = ({ navigation }) => {
   const [showMore, setShowMore] = useState(false);
@@ -22,6 +24,9 @@ const Commuroom = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const route = useRoute();
   const roomId = route.params.roomId;
+
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const fetchRoomDetails = async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -77,25 +82,38 @@ const Commuroom = ({ navigation }) => {
     }, [roomId])
   );
 
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event) => {
+        const currentOffset = event.nativeEvent.contentOffset.y;
+        setHeaderVisible(currentOffset < 50);
+      },
+    }
+  );
+
   const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.content}
-      onPress={() =>
-        navigation.navigate('Comment', { roomPostId: item.roomPostId })
-      }
-    >
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
-        {item.content}
-      </Text>
-      <View style={styles.row2}>
-        <View style={styles.row3}>
-          <Message />
-          <Text style={styles.count}>{item.commentCount}</Text>
+    <View style={styles.viewstyle}>
+      <TouchableOpacity
+        style={styles.content}
+        onPress={() =>
+          navigation.navigate('Comment', { roomPostId: item.roomPostId })
+        }
+      >
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.detail} numberOfLines={2} ellipsizeMode="tail">
+          {item.content}
+        </Text>
+        <View style={styles.row2}>
+          <View style={styles.row3}>
+            <Message />
+            <Text style={styles.count}>{item.commentCount}</Text>
+          </View>
+          <Text style={styles.minute}>{item.whenCreated}</Text>
         </View>
-        <Text style={styles.minute}>{item.whenCreated}</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 
   const toggleShowMore = () => {
@@ -104,109 +122,156 @@ const Commuroom = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView>
-        <View style={styles.headerContainer}>
-          <View style={styles.headerLeft}>
-            {roomDetails && (
-              <Image
-                source={
-                  roomDetails.thumbnail
-                    ? { uri: roomDetails.thumbnail }
-                    : require('../assets/images/doctor.svg')
-                }
-                style={styles.largeImage}
-                resizeMode="cover"
-              />
-            )}
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.goBackButton}
-            >
-              <Image
-                source={require('../assets/images/leftallow.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.blurWrapper}>
-          <BlurView style={styles.blurView} intensity={75}>
-            <View style={styles.iconContainer}>
-              {roomDetails && roomDetails.necessaryNftCount > 0 ? (
-                <>
-                  {Array.from(
-                    { length: roomDetails.necessaryNftCount },
-                    (_, index) => (
-                      <Flower key={index} width={24} height={24} />
-                    )
-                  )}
-                  <Text style={styles.plusText}>가 필요해요</Text>
-                </>
-              ) : (
-                <Text style={styles.plusText}>무료 입장이 가능한 방이에요</Text>
-              )}
-            </View>
-          </BlurView>
-        </View>
-
-        <View style={styles.blurContainer}>
-          <View style={[styles.profile, { height: showMore ? 'auto' : 240 }]}>
-            <Text style={styles.communame}>{roomDetails?.name}</Text>
-            <View style={styles.row}>
-              <Purple />
-              <Text style={styles.people}>
-                {roomDetails?.peopleCount}명 참여중
-              </Text>
-            </View>
-            <View style={styles.introcon}>
-              <Text
-                style={styles.intro}
-                numberOfLines={showMore ? undefined : 3}
-                ellipsizeMode="tail"
-              >
-                {roomDetails?.introduction}
-              </Text>
-              {roomDetails?.introduction.length > 150 && (
-                <TouchableOpacity style={styles.more} onPress={toggleShowMore}>
-                  <Text style={styles.moretext}>
-                    {showMore ? '간략히 보기' : '자세히 보기'}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.roomPostId.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={{
-            paddingRight: 20,
-            paddingLeft: 20,
-            paddingBottom: 100,
-          }}
-        />
-
+      <Animated.View
+        style={[styles.headerContainers, { opacity: headerVisible ? 1 : 0 }]}
+      >
         <TouchableOpacity
-          style={styles.fab}
-          onPress={() => {
-            navigation.navigate('Commuwrite', { roomId: roomId });
-          }}
+          onPress={() => navigation.goBack()}
+          style={styles.iconWrapper}
         >
-          <Text style={styles.write}>글쓰기</Text>
           <Image
-            source={require('../assets/images/pencil.png')}
-            style={styles.fabIcon}
+            source={require('../assets/images/leftallow.png')}
+            style={styles.icon}
           />
         </TouchableOpacity>
-      </ScrollView>
+        <Text style={styles.headerTitle}>{roomDetails?.name}</Text>
+      </Animated.View>
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <View style={styles.headerContainer}>
+              <View style={styles.headerLeft}>
+                {roomDetails && (
+                  <Image
+                    source={
+                      roomDetails.thumbnail
+                        ? { uri: roomDetails.thumbnail }
+                        : require('../assets/images/doctor.svg')
+                    }
+                    style={styles.largeImage}
+                    resizeMode="cover"
+                  />
+                )}
+                {/* <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={styles.goBackButton}
+                >
+                  <Image
+                    source={require('../assets/images/leftallow.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity> */}
+              </View>
+            </View>
+
+            <View style={styles.blurWrapper}>
+              <BlurView style={styles.blurView} intensity={75}>
+                <View style={styles.iconContainer}>
+                  {roomDetails && roomDetails.necessaryNftCount > 0 ? (
+                    <>
+                      {Array.from(
+                        { length: roomDetails.necessaryNftCount },
+                        (_, index) => (
+                          <Flower key={index} width={24} height={24} />
+                        )
+                      )}
+                      <Text style={styles.plusText}>가 필요해요</Text>
+                    </>
+                  ) : (
+                    <Text style={styles.plusText}>
+                      무료 입장이 가능한 방이에요
+                    </Text>
+                  )}
+                </View>
+              </BlurView>
+            </View>
+
+            <View style={styles.blurContainer}>
+              <View
+                style={[styles.profile, { height: showMore ? 'auto' : 240 }]}
+              >
+                <Text style={styles.communame}>{roomDetails?.name}</Text>
+                <View style={styles.row}>
+                  <Purple />
+                  <Text style={styles.people}>
+                    {roomDetails?.peopleCount}명 참여중
+                  </Text>
+                </View>
+                <View style={styles.introcon}>
+                  <Text
+                    style={styles.intro}
+                    numberOfLines={showMore ? undefined : 3}
+                    ellipsizeMode="tail"
+                  >
+                    {roomDetails?.introduction}
+                  </Text>
+                  {roomDetails?.introduction.length > 150 && (
+                    <TouchableOpacity
+                      style={styles.more}
+                      onPress={toggleShowMore}
+                    >
+                      <Text style={styles.moretext}>
+                        {showMore ? '간략히 보기' : '자세히 보기'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            </View>
+          </>
+        }
+        data={posts}
+        keyExtractor={(item) => item.roomPostId.toString()}
+        renderItem={renderItem}
+        contentContainerStyle={{
+          paddingBottom: 100,
+          // paddingHorizontal: 20, // 좌우 패딩 추가
+        }}
+        ListFooterComponent={
+          <TouchableOpacity
+            style={styles.fab}
+            onPress={() => {
+              navigation.navigate('Commuwrite', { roomId: roomId });
+            }}
+          >
+            <Text style={styles.write}>글쓰기</Text>
+            <Image
+              source={require('../assets/images/pencil.png')}
+              style={styles.fabIcon}
+            />
+          </TouchableOpacity>
+        }
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  headerTitle: {
+    color: '#111',
+    fontFamily: 'Pretendard',
+    fontSize: 20,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 28,
+    letterSpacing: -0.5,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  headerContainers: {
+    height: 56,
+    flexDirection: 'row',
+    paddingTop: 14,
+    paddingBottom: 14,
+    paddingRight: 56,
+    gap: 8,
+    paddingLeft: 20,
+    alignItems: 'center',
+  },
+  viewstyle: {
+    paddingHorizontal: 20,
+  },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',

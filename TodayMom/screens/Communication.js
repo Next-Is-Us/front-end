@@ -90,6 +90,7 @@ const Communication = () => {
           page === 0 ? result.data.data : [...rooms, ...result.data.data]
         );
         setCurrentPage(page);
+        console.log(result.data.data);
       } else {
         console.error('Failed to fetch rooms:', result.message);
       }
@@ -128,64 +129,61 @@ const Communication = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
+      {showCreateRoom && (
+        <TouchableOpacity
+          style={styles.createRoom}
+          onPress={() => navigation.navigate('Commucreate')}
+        >
+          <Text style={styles.create}>새로운 소통방 개설하기</Text>
+          <Create />
+        </TouchableOpacity>
+      )}
+
+      <FlatList
+        data={rooms}
+        keyExtractor={(item) => item.roomId.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.Wholecontainer}>
+            <Image source={{ uri: item.thumbnail }} style={styles.profile} />
+            <Text style={styles.communame}>{item.name}</Text>
+            <View style={styles.row}>
+              <Text style={styles.communame}>함께 하는 커뮤니티</Text>
+              <View style={styles.count}>
+                <MiniProfile />
+                <Text style={styles.people}>{item.peopleCount}명</Text>
+              </View>
+            </View>
+            {item.isPossibleToEnter ? (
+              <TouchableOpacity
+                style={styles.enter}
+                onPress={() => enterRoom(item.roomId)}
+              >
+                <Text style={styles.entertext}>입장 하기</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.enter2}>
+                <View style={styles.iconContainer}>
+                  {Array.from(
+                    { length: item.necessaryNftCount },
+                    (_, index) => (
+                      <Flower key={index} width={24} height={24} />
+                    )
+                  )}
+                </View>
+                <Text style={styles.plusText}>가 필요해요</Text>
+              </View>
+            )}
+          </View>
+        )}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isLoading ? <ActivityIndicator size="large" /> : null
+        }
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-      >
-        {showCreateRoom && (
-          <TouchableOpacity
-            style={styles.createRoom}
-            onPress={() => navigation.navigate('Commucreate')}
-          >
-            <Text style={styles.create}>새로운 소통방 개설하기</Text>
-            <Create />
-          </TouchableOpacity>
-        )}
-
-        <FlatList
-          data={rooms}
-          keyExtractor={(item) => item.roomId.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.Wholecontainer}>
-              <Image source={{ uri: item.thumbnail }} style={styles.profile} />
-              <Text style={styles.communame}>{item.name}</Text>
-              <View style={styles.row}>
-                <Text style={styles.communame}>함께 하는 커뮤니티</Text>
-                <View style={styles.count}>
-                  <MiniProfile />
-                  <Text style={styles.people}>{item.peopleCount}명</Text>
-                </View>
-              </View>
-              {item.isPossibleToEnter ? (
-                <TouchableOpacity
-                  style={styles.enter}
-                  onPress={() => enterRoom(item.roomId)}
-                >
-                  <Text style={styles.entertext}>입장 하기</Text>
-                </TouchableOpacity>
-              ) : (
-                <View style={styles.enter2}>
-                  <View style={styles.iconContainer}>
-                    {Array.from(
-                      { length: item.necessaryNftCount },
-                      (_, index) => (
-                        <Flower key={index} width={24} height={24} />
-                      )
-                    )}
-                  </View>
-                  <Text style={styles.plusText}>가 필요해요</Text>
-                </View>
-              )}
-            </View>
-          )}
-          contentContainerStyle={{ paddingBottom: 100 }}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            isLoading ? <ActivityIndicator size="large" /> : null
-          }
-        />
-      </ScrollView>
+      />
     </SafeAreaView>
   );
 };
