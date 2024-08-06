@@ -8,7 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MomRecordConditionAdditionScreen({route, navigation}) {
   const name = route.params.userName;
-  const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE'); // 더미데이터임 
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U'); // 더미데이터임 
+  const [token, setToken] = useState("");
   const sleepTime = route.params.sleepTime;
   const conditionStates = route.params.conditionStates;
   const [isFocused, setIsFocused] = useState(false);
@@ -27,9 +28,9 @@ export default function MomRecordConditionAdditionScreen({route, navigation}) {
     }
   }
 
-  // useEffect(() => {
-  //   getToken();
-  // }, []);
+  useEffect(() => {
+    getToken();
+  }, []);
 
   const completeHandler = async () => {
     console.log(token);

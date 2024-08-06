@@ -8,18 +8,13 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
-// const recordItem = [
-//   {recordedNumber: 860, complete: true, startedDate: "2024.7.9", endedDate: "2024.9.29", recordCount: 6},
-//   {recordedNumber: 859, complete: false, completedCount: 4, recordCount: 4},
-//   {recordedNumber: 858, complete: true, startedDate: "2024.5.1", endedDate: "2024.7.6", recordCount: 6},
-// ]
-
 export default function FlowerRecordScreen({navigation, route}) {
   const [recordedContent, setRecordedContent] = useState([]); // 추후 백과 통신 예정
-  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
-  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U"); // 엄마 더미데이터임
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwiYXV0aCI6WyJST0xFX1NPTiJdLCJpYXQiOjE3MjI4NzUxOTUsImV4cCI6MTcyNTQ2NzE5NX0.917lOkbQYf3PFrE7uCH-FPZDzWXnQox3i3E0IN1tgvU'); // 자식 더미데이터임 
   // const [userRole, setUserRole] = useState("");
   const userRole = route.params.userRole;
+  const [token, setToken] = useState("");
 
   const getToken = async () => {
     try {
@@ -66,7 +61,7 @@ export default function FlowerRecordScreen({navigation, route}) {
   useEffect(() => {
     console.log("get Token");
     console.log(userRole);
-    // getToken();
+    getToken();
     // getUserRole();
     if(token) {
       getNFTRecord();
@@ -112,7 +107,7 @@ export default function FlowerRecordScreen({navigation, route}) {
         style={styles.listContainer}
         contentContainerStyle={styles.listItem}
         data={recordedContent}
-        keyExtractor={(item, index) => `${item.healthRecordId}_${item.recordPeriod}`}
+        keyExtractor={(item, index) => index}
         renderItem={renderItem}
       />
       <BottomNav flower userRole={userRole} />

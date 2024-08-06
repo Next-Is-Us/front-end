@@ -38,7 +38,7 @@ export default function ChildrenHomeScreen({navigation}) {
   const [flowerPieces, setFlowerPieces] = useState(0);
   const today = new Date();
   const [date, setDate] = useState('');
-  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 더미데이터임 
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwiYXV0aCI6WyJST0xFX1NPTiJdLCJpYXQiOjE3MjI4NzUxOTUsImV4cCI6MTcyNTQ2NzE5NX0.917lOkbQYf3PFrE7uCH-FPZDzWXnQox3i3E0IN1tgvU'); // 더미데이터임 
   const [token, setToken] = useState("");
   const [userRole, setUserRole] = useState("");
   const [year, setYear] = useState(today.getFullYear());

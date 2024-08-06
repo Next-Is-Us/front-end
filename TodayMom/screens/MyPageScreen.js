@@ -22,8 +22,8 @@ export default function MyPageScreen() {
   const [name, setName] = useState("User");
   const [familyCount, setFamilyCount] = useState();
   const [familyList, setFamilyList] = useState([]);
-  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 엄마 더미데이터임
-  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImF1dGgiOlsiUk9MRV9TT04iXSwiaWF0IjoxNzIyNTc0NzczLCJleHAiOjE3MjUxNjY3NzN9.iTe1AfZp7C4PmZu-9bwdT9qWicgujP3pQo_LZ8BeEYk'); // 자식 더미데이터임 
+  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U"); // 엄마 더미데이터임
+  // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwiYXV0aCI6WyJST0xFX1NPTiJdLCJpYXQiOjE3MjI4NzUxOTUsImV4cCI6MTcyNTQ2NzE5NX0.917lOkbQYf3PFrE7uCH-FPZDzWXnQox3i3E0IN1tgvU'); // 자식 더미데이터임 
   const [token, setToken] = useState("");
   const [link, setLink] = useState('www.todays.mom');
 
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   connectedFamilyContainer: {
     borderRadius: 24,
     padding: 20,
-    marginTop: 32,
+    marginTop: 25,
     backgroundColor: 'white',
     gap: 20,
   },

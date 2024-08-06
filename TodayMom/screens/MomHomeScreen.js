@@ -40,7 +40,8 @@ export default function MomHomeScreen({navigation}) {
   const [totalNft, setTotalNft] = useState();
   const today = new Date();
   const [date, setDate] = useState('');
-  const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE"); // 더미데이터임 
+  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U"); // 더미데이터임 
+  const [token, setToken] = useState();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
@@ -115,7 +116,7 @@ export default function MomHomeScreen({navigation}) {
       setName(response.data.data.nickname);
       setRecorded(response.data.data.isRecording);
       setDate(response.data.data.date);
-      // setInvited(response.data.data.isInvited);
+      setInvited(response.data.data.isInvited);
       setLink(response.data.data.link);
       // setUserRole(response.data.data.userRole);
     } catch(e) {
@@ -141,10 +142,10 @@ export default function MomHomeScreen({navigation}) {
   }
 
   useEffect(() => {
-    // console.log("토큰 받아오기");
-    // getToken();
-    // getUserRole();
-    // console.log(userRole);
+    console.log("토큰 받아오기");
+    getToken();
+    getUserRole();
+    console.log(userRole);
   }, []);
 
   useEffect(() => {

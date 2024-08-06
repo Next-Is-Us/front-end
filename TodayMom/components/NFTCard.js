@@ -36,6 +36,7 @@ export default function NFTCard({
   useEffect(() => {
     const loadAssets = async () => {
       await Asset.loadAsync(require('../assets/images/NFTContainer.png'));
+      await Asset.loadAsync(require('../assets/images/NFTBack.png'));
     };
 
     loadAssets().catch((e) => console.error('Failed to prefetch image', e));
