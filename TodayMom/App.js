@@ -95,7 +95,7 @@ function App() {
         <UserProvider>
           <StatusBar style="auto" />
           <NavigationContainer linking={linking}>
-            <Stack.Navigator initialRouteName="Splash">
+            <Stack.Navigator initialRouteName="MomHome">
               <Stack.Screen
                 name="Choose"
                 component={Choose}

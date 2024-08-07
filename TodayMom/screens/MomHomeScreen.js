@@ -40,7 +40,7 @@ export default function MomHomeScreen({navigation}) {
   const [totalNft, setTotalNft] = useState();
   const today = new Date();
   const [date, setDate] = useState('');
-  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U"); // 더미데이터임 
+  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMSIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyOTU3MTc1LCJleHAiOjE3MjU1NDkxNzV9.RWlSC6l1YLT38y66RB9D2Wu2phaCj-7adkejV79ef5I");
   const [token, setToken] = useState();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);

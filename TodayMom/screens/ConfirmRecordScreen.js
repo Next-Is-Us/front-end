@@ -31,7 +31,7 @@ export default function ConfirmRecordScreen({navigation, route }) {
   const [name, setName] = useState("User");
   const userRole = route.params.userRole;
   const date = route.params.selectedDate;
-  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3IiwiYXV0aCI6WyJST0xFX01PTSJdLCJpYXQiOjE3MjI4NzM5MzUsImV4cCI6MTcyNTQ2NTkzNX0.cP65jJ8FoUtLjYe2J-G4boNhWT1riWOKqtl_BuMAl6U"); // 엄마 더미데이터임
+  // const [token, setToken] = useState("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMSIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyOTU3MTc1LCJleHAiOjE3MjU1NDkxNzV9.RWlSC6l1YLT38y66RB9D2Wu2phaCj-7adkejV79ef5I"); // 엄마 더미데이터임
   // const [token, setToken] = useState('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwiYXV0aCI6WyJST0xFX1NPTiJdLCJpYXQiOjE3MjI4NzUxOTUsImV4cCI6MTcyNTQ2NzE5NX0.917lOkbQYf3PFrE7uCH-FPZDzWXnQox3i3E0IN1tgvU'); // 자식 더미데이터임
   const [token, setToken] = useState(""); 
   const [year, month, day] = date;

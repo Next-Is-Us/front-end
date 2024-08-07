@@ -23,9 +23,10 @@ export default function SelectForChangeRecordScreen({ navigation, route }) {
   const [completedRecord, setCompletedRecord] = useState();
   const [selectedRecord, setSelctedRecord] = useState([]);
   const [pdfData, setPdfData] = useState([]);
-  const [token, setToken] = useState(
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMCIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyNDE0MTQzLCJleHAiOjE3MjUwMDYxNDN9.5zi_P7WsX7GYY5o6pXqxvbV5V_j8F80e-1vtl1Ny3eE'
-  ); // 엄마 더미데이터임
+  // const [token, setToken] = useState(
+  //   'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMSIsImF1dGgiOlsiUk9MRV9NT00iXSwiaWF0IjoxNzIyOTU3MTc1LCJleHAiOjE3MjU1NDkxNzV9.RWlSC6l1YLT38y66RB9D2Wu2phaCj-7adkejV79ef5I'
+  // ); // 엄마 더미데이터임
+  const [token, setToken] = useState("");
   const userRole = route.params.userRole;
 
   const getToken = async () => {
@@ -61,7 +62,7 @@ export default function SelectForChangeRecordScreen({ navigation, route }) {
 
   useEffect(() => {
     console.log('get Token');
-    // getToken();
+    getToken();
     if (token) {
       getNFTRecord();
     }
